@@ -261,33 +261,39 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                   <span class="arrow"></span>
               </a>
               <ul class="sub-menu">
-                <li class="nav-item <%if(details.getSub_menu1().equals("Top 15 Investigator")){%>active<%}%>">
-                  <a href="${pageContext.request.contextPath}/report/top15investigator" class="nav-link nav-toggle">
-                    <i class="icon-bar-chart"></i> Top 15 Investigator  
-
-                  </a>
-                </li>
-
+              	<%if(user_permission.contains("report/investigator")){ %>
+	                <li class="nav-item <%if(details.getSub_menu1().equals("Top 15 Investigator")){%>active<%}%>">
+	                  <a href="${pageContext.request.contextPath}/report/top15investigator" class="nav-link nav-toggle">
+	                    <i class="icon-bar-chart"></i> Top 15 Investigator  
+	                  </a>
+	                </li>
+                <%}%>
+                <%if(user_permission.contains("report/vendorwise")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Vendor wise screen")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/vendorWiseScreen" class="nav-link nav-toggle">
                     <i class="icon-envelope-open"></i>  Vendor wise screen
                   </a>
                 </li>
-
+                <%}%>
+                <%if(user_permission.contains("report/regionwise")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Region wise screen")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/regionWiseScreen" class="nav-link nav-toggle">
                     <i class="icon-like"></i> Region wise screen
                   </a>
                 </li>
+                <%}%>
+                <%if(user_permission.contains("report/uploadedDocument")){ %>                
                   <li class="nav-item <%if(details.getSub_menu1().equals("Uploaded Document")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/uploadedDocument" class="nav-link nav-toggle">
                     <i class="icon-like"></i> Uploaded Document
                   </a>
                 </li>
+                <%}%>
                 
               </ul>
             </li>
            <%} %>
+           <%if(user_permission.contains("billingManagement")){ %> 
             <li class="nav-item <%if(details.getMain_menu().equals("Billing Management")){%>active open<%}%>">
               <a href="javascript:;" class="nav-link nav-toggle">
                   <i class="icon-grid"></i>
@@ -295,24 +301,23 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                   <span class="arrow "></span>
               </a>
               <ul class="sub-menu">
+              <%if(user_permission.contains("billingManagement/enquiry")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Bill Enquiry")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/billManagement/bill_enquiry" class="nav-link nav-toggle">
                     <i class="icon-plus"></i> Bill Enquiry
                   </a>
                 </li>
-                <li class="nav-item <%if(details.getSub_menu1().equals("Bill Payment")){%>active<%}%>">
+                 <%} %>
+                 <%if(user_permission.contains("billingManagement/payment")){ %>
+                 <li class="nav-item <%if(details.getSub_menu1().equals("Bill Payment")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/billManagement/bill_payment" class="nav-link nav-toggle">
                     <i class="icon-clock"></i> Bill Payment
                   </a>
                 </li>
-                <li class="nav-item <%if(details.getSub_menu1().equals("Capturing payment details")){%>active<%}%>">
-                  <a href="#" class="nav-link nav-toggle">
-                    <i class="icon-check"></i> Capturing payment details
-                  </a>
-                </li>
+                 <%} %>
               </ul>
             </li>
-
+           <%} %>
             
         </ul>
         <!-- END SIDEBAR MENU -->

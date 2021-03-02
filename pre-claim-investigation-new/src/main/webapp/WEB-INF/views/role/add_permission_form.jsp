@@ -145,13 +145,10 @@ session.removeAttribute("role_list");
 			                    		<input type="checkbox" <%if(role_permission.contains("report")) {%>checked <%} %> name="report[]" id="report" class="allPLCheck10" value="report"> <label for="report">Report</label>
 			                    	</td>
 			                    	<td>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/index")) {%>checked <%} %> name="report[]" id="report_index" class="indPLCheck10" value="report/index"> <label for="report_index">View</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/messages")) {%>checked <%} %> name="report[]" id="report_messagesStatus" class="indPLCheck10" value="report/messagesStatus"> <label for="report_messagesStatus">Message Status</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/readmessages")) {%>checked <%} %> name="report[]" id="report_readmessages" class="indPLCheck10" value="report/readmessages"> <label for="report_readmessages">Read Messages</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/likemessage")) {%>checked <%} %> name="report[]" id="report_likemessage" class="indPLCheck10" value="report/likemessage"> <label for="report_likemessage">Like</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/favouritemessage")) {%>checked <%} %> name="report[]" id="report_favouritemessage" class="indPLCheck10" value="report/favouritemessage"> <label for="report_favouritemessage">Favourite</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/viewrating")) {%>checked <%} %> name="report[]" id="report_viewrating" class="indPLCheck10" value="report/viewrating"> <label for="report_viewrating">Rate App</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("report/loginDetails")) {%>checked <%} %> name="report[]" id="report_loginDetails" class="indPLCheck10" value="report/loginDetails"> <label for="report_loginDetails">Log In Details</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("report/investigator")) {%>checked <%} %> name="report[]" id="report_investigator" class="indPLCheck10" value="report/investigator"> <label for="report_investigator">Top 15 Investigator</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("report/regionwise")) {%>checked <%} %> name="report[]" id="report_regionwise" class="indPLCheck10" value="report/regionwise"> <label for="report_regionwise">Region-wise Report </label>
+			                    		<input type="checkbox" <%if(role_permission.contains("report/vendorwise")) {%>checked <%} %> name="report[]" id="report_vendorwise" class="indPLCheck10" value="report/vendorwise"> <label for="report_vendorwise">Vendor-wise Report</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("report/uploadedDocument")) {%>checked <%} %> name="report[]" id="report_uploadedDocument" class="indPLCheck10" value="report/uploadedDocument"> <label for="report_uploadedDocument">Uploaded Document</label>
 			                    	</td>
 			                    </tr>
 			                    
@@ -160,11 +157,9 @@ session.removeAttribute("role_list");
 			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement")) {%>checked <%} %> name="billingManagement[]" id="billingManagement" class="allPLCheck11" value="billingManagement"> <label for="billingManagement">Billing Management</label>
 			                    	</td>
 			                    	<td>
-			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/index")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_index" class="indPLCheck11" value="billingManagement/index"> <label for="billingManagement_index">View</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/add")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_add" class="indPLCheck11" value="billingManagement/add"> <label for="billingManagement_add">Add</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/delete")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_delete" class="indPLCheck11" value="billingManagement/delete"> <label for="billingManagement_delete">Delete</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/status")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_status" class="indPLCheck11" value="billingManagement/status"> <label for="billingManagement_status">Approve Status</label>
-			                    	</td>
+			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/enquiry")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_enquiry" class="indPLCheck11" value="billingManagement/enquiry"> <label for="billingManagement_enquiry">Bill Enquiry</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("billingManagement/payment")) {%>checked <%} %> name="billingManagement[]" id="billingManagement_payment" class="indPLCheck11" value="billingManagement/payment"> <label for="billingManagement_payment">Bill Payment</label>	
+		                    		</td>
 			                    </tr>
 			                    
 			                     <tr>

@@ -29,7 +29,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 				<div class="row">
 					<div class="col-md-12 table-container">
 						<div class="box-body no-padding">
-							<table id="pending_group_list"
+							<table id="fileList"
 								class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
 								<thead>
 									<tr class="tbl_head_bg">
@@ -71,7 +71,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 
                                                                    <td><%=item.getName() %></td>
 
-                                                                   <td><a href = "#"><i class="fa fa-download pr-1"></i>Download</a></td>
+                                                                   <td><a href = "#"><i class="fa fa-download pr-1"></i> Download</a></td>
 
                                                             </tr>
 
@@ -145,50 +145,14 @@ $(function(){
 
 </script>
 <script>
-function uploadFiles() {
-    var formData = new FormData();
-	var files = $("#file_upload");
-	if($("#file_upload").val() == "")
-		return false;
-	debugger;
-	
-	console.log($("#file_upload").val());
-	    $(files).each(function (i,value) {
-          		formData.append('file[]', value.files[i]);
-        });
-        
-	    
-    formData.append('file_upDir', $("#fileDir").val());
-    $.ajax({
-        type: "POST",
-        url: 'fileuploader.html',
-        data: formData,
-        contentType: false, //used for multipart/form-data
-        processData: false, //doesn't modify or encode the String
-        cache: false, 
-        async: false,//wait till the execution finishes
-        success:function(result)
-        {
-			if(result == "****")
-				swal("Sucess","File uploaded successfully","success");
-        }
-    });
-    return false;
-}
-
 $("#fileList tbody tr").on("click","a",function()
 	{
-	let filename = $(this).parent().parent().children().eq(1).text();
-	console.log(filename);
-	let fileDir = $("#fileDir").val();
-	window.location.href = "${pageContext.request.contextPath}/downloadSysFile?fileDir=" + 
-		encodeURIComponent(fileDir) + "&fileName=" + filename;	
+		let filename = $(this).parent().parent().children().eq(1).text();
+		console.log(filename);
+		let fileDir = $("#fileDir").val();
+		window.location.href = "${pageContext.request.contextPath}/report/downloadSysFile?filename=" + 
+			encodeURIComponent(filename);	
 	});
 	
-$("#fileDir").change(function(){
-	let fileDir = $("#fileDir").val();
-	window.location.href = "${pageContext.request.contextPath}/sysdir?dirname=" +
-		encodeURIComponent(fileDir);
-});
 
 </script>

@@ -45,7 +45,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
         <div class="box-footer">
           <div class="col-md-offset-4 col-md-10">
             <button class="btn btn-info" id="addIntimationTypesubmit" onClick="return addIntimationType();" type="button">Download</button>
-            <button class="btn btn-danger" type="reset" value="">clear</button>
+            <button class="btn btn-danger" type="reset">Clear</button>
           </div>
         </div>
       </form>

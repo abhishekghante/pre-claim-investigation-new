@@ -1,5 +1,12 @@
 package com.preclaim.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -64,9 +71,55 @@ public class ReportController {
     	return "common/templatecontent";
     }
 	
-	/*
-	 * @RequestMapping(value = "/downloadSysFile", method = RequestMethod.GET)
-	 * public void downloadSysFile(HttpServletRequest request) throws IOException {
-	 * downloadFile(request); }
-	 */
+	
+	  @RequestMapping(value = "/downloadSysFile", method = RequestMethod.GET)
+	  public void downloadSysFile(HttpServletRequest request, HttpServletResponse response) 
+	  {
+		  
+		  try 
+		  {
+		  	ServletContext context = request.getSession().getServletContext();
+
+	        String rootPath = Config.upload_directory + request.getParameter("filename");
+	        File downloadFile = new File(rootPath);
+	        FileInputStream inputStream = new FileInputStream(downloadFile);
+
+	        // get MIME type of the file
+	        String mimeType = context.getMimeType(rootPath);
+	        if (mimeType == null) {
+	            // set to binary type if MIME mapping not found
+	            mimeType = "application/octet-stream";
+	        }
+	        System.out.println("MIME type: " + mimeType);
+
+	        // set content attributes for the response
+	        response.setContentType(mimeType);
+	        response.setContentLength((int) downloadFile.length());
+
+	        // set headers for the response
+	        String headerKey = "Content-Disposition";
+	        String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+	        response.setHeader(headerKey, headerValue);
+
+	        // get output stream of the response
+	        OutputStream outStream = response.getOutputStream();
+
+	        byte[] buffer = new byte[4096];
+	        int bytesRead = -1;
+
+	        // write bytes read from the input stream into the output stream
+	        while ((bytesRead = inputStream.read(buffer)) != -1) {
+	            outStream.write(buffer, 0, bytesRead);
+	        }
+
+	        inputStream.close();
+	        outStream.close();
+		  }
+		  catch(Exception e) 
+		  {
+			  e.printStackTrace();
+			  CustomMethods.logError(e);
+		  }
+	  }
+	  	
 }
