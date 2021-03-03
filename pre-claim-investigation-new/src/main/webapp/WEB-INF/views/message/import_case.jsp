@@ -71,13 +71,13 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
                   </select>
                 </div>
                 
-                <label class="col-md-2 control-label" for="assigneeId">Select User 
+              <!--   <label class="col-md-2 control-label" for="assigneeId">Select User 
                 	<span class="text-danger">*</span></label>
                 <div class="col-md-2">
                   <select name="assigneeId" id="assigneeId" class="form-control" required>
                   	<option value = '-1' selected disabled>Select</option>
                   </select>
-                </div>
+                </div> -->
                 
               </div>
             </form>
@@ -96,7 +96,7 @@ $(document).ready(function(){
 function importData()
 {
 	var roleName = $("#import_user_form #roleName").val();
-	var userId = $("#import_user_form #assigneeId").val();
+/* 	var userId = $("#import_user_form #assigneeId").val(); */
 	var importfile = $('input[type="file"]').val();
 	
 	var userfile = $('#userfile').val().toLowerCase();
@@ -172,7 +172,7 @@ function importData()
 </script>
 
 
-<script>
+<!-- <script>
 $("#roleName").change(function(){
 	console.log($("#roleName option:selected").val());
 	var roleCode = $(this).val();
@@ -198,4 +198,4 @@ $("#roleName").change(function(){
 });
 
 });
-</script>
+</script> -->

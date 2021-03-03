@@ -30,7 +30,7 @@
 
 	<beans:bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">    
 		<beans:property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>  
-		<beans:property name="url" value="jdbc:sqlserver://13.235.150.162;database=PreClaimInvestigation;" />    
+		<beans:property name="url" value="jdbc:sqlserver://13.235.150.162;database=pre-claim-investigations;" />    
 		<beans:property name="username" value="claims"/>    
 		<beans:property name="password" value="Pass@123"/>     
 	</beans:bean>

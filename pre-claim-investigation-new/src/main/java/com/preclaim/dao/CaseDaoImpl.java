@@ -83,16 +83,16 @@ public class CaseDaoImpl implements CaseDao {
 			String query = "INSERT INTO case_lists (policyNumber, investigationId, insuredName, "
 					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, "	
 					+ "nominee_name, nominee_ContactNumber, nominee_address, insured_address,"
-					+ "case_description, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
+					+ "case_description,fees, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
 					+ "audioFilePath, videoFilePath, signatureFilePath , capturedDate, createdBy, "
 					+ "createdDate, updatedDate, updatedBy) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned', ?, ?, ?, ?, '', '', '', '', '', '', "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned', ?, ?, ?, ?, '', ?, '', '', '', '', '', "
 					+ "'', '', '', '', ?, ?, getdate(), '')";    
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(), 
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(), 
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(), 
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), 
-					casedetail.getNominee_address(), casedetail.getInsured_address(), 
+					casedetail.getNominee_address(), casedetail.getInsured_address(),casedetail.getFees(), 
 					casedetail.getCreatedBy(), current_date);				    	
 			
 			query = "SELECT caseId FROM case_lists where policyNumber = ? and createdBy = ? and "
@@ -114,12 +114,11 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public List<CaseDetailList> getPendingCaseList(String username) {
+	public List<CaseDetailList> getPendingCaseList(String user_role,String zone, String username) {
 		try
 		{
-			String sql ="SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and"
-					+ " a.caseStatus <> 'Closed' and b.toId = ?"; 			   
-			List<CaseDetailList> casedetailList = template.query(sql, new Object[] {username},
+			String sql ="SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and( b.toId = ? OR (b.user_role = 'REGMAN' and b.zone = ? and b.toId =''));"; 
+			List<CaseDetailList> casedetailList = template.query(sql, new Object[] {username,zone},
 					(ResultSet rs, int rowCount) -> 
 					{
 						CaseDetailList casedetail = new CaseDetailList();
@@ -249,13 +248,13 @@ public class CaseDaoImpl implements CaseDao {
 		{
 			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, insuredDOD = ?, insuredDOB = ?, sumAssured = ?, "
 					+ "intimationType = ?, locationId = ?, nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
-					+ "insured_address = ?, updatedDate = getdate(), updatedBy = ?  where caseId = ?";
+					+ "insured_address = ?, updatedDate = getdate(), updatedBy = ?,fees = ?  where caseId = ?";
 			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationId(), 
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(), 
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), 
 					casedetail.getNominee_address(), casedetail.getInsured_address(), 
-					casedetail.getUpdatedBy(), casedetail.getCaseId());
+					casedetail.getUpdatedBy(),casedetail.getFees(), casedetail.getCaseId());
 					
 		}
 		catch(Exception e)

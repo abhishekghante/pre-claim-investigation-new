@@ -28,5 +28,5 @@ public interface UserDAO {
 	UserDetails getUserDetails(String username);
 	List<UserDetails> getActiveUserList();
 	List<UserRole> getAssigneeRole();
-	
+	List<UserDetails> getUserRoleList(String zone);
 }

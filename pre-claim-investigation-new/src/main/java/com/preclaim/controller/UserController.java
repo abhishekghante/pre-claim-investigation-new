@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.preclaim.config.CustomMethods;
 import com.preclaim.dao.LocationDao;
+import com.preclaim.dao.MailConfigDao;
 import com.preclaim.dao.UserDAO;
+import com.preclaim.models.MailConfig;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.UserDetails;
 import com.preclaim.models.UserList;
@@ -32,6 +35,9 @@ public class UserController {
 	
 	@Autowired
 	LocationDao locationDao;
+	
+	@Autowired
+	MailConfigDao mailConfigDao;
 	
 	@RequestMapping(value = "/add_user", method = RequestMethod.GET)
 	public String add_user(HttpSession session,Model m)
@@ -72,6 +78,25 @@ public class UserController {
     	details.setSub_menu1("User Lists");
     	if(message.equals("****"))
     	{
+    		
+    		try {
+				MailConfig mail = mailConfigDao.getActiveConfig();
+				if (mail != null) {
+					// From ID
+					mail.setSubject("User Registration");
+					String message_body = "Dear <User>, \n Registration successfully done. Your Login Credential are Below \n Username :- "+user.getUsername() +"\n Pass :- "+user.getDecodedPassword()+"\n";
+					message_body = message_body.replaceAll("<User>", user.getFull_name());
+					message_body += "Thanks & Regards,\n Claims";
+					mail.setMessageBody(message_body);
+					mail.setReceipent(user.getUser_email());
+					mailConfigDao.sendMail(mail);
+
+				}
+			} catch (Exception e) {
+				CustomMethods.logError(e);
+			}
+    		
+    		
     		details.setSuccess_message1("User created successfully");
     		dao.activity_log("USER", user.getUsername(), "ADD", userlogin.getUsername());
     	}    		

@@ -460,5 +460,26 @@ public class UserDAOImpl implements UserDAO{
 			}
 		});
 	}
-		
+
+	@Override
+	public List<UserDetails> getUserRoleList(String zone) {
+			try
+			{
+				String sql = "select * from admin_user where role_name='REGMAN' and city IN(select city from location_lists where zone =?)";			
+				List<UserDetails> user_list = this.template.query(sql,new Object[] {zone}, 
+						(ResultSet rs, int count) -> {
+							UserDetails user = new UserDetails();
+							user.setFull_name(rs.getString("full_name"));
+							user.setUser_email(rs.getString("user_email"));
+							return user;
+						});
+				return user_list;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return null;
+			}		
+		}
 }

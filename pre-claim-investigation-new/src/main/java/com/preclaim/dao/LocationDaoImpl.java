@@ -155,4 +155,27 @@ public class LocationDaoImpl implements LocationDao {
 			return location;
 		});
 	}
+	
+	public Location getActiveLocationList(String city) {
+			try
+			{
+				String sql = "SELECT * FROM location_lists where city = ?";
+				return template.query(sql, new Object[] {city}, 
+						(ResultSet rs, int rowNum) -> 
+						{
+							Location location = new Location();
+							location.setCity(rs.getString("city"));
+							location.setState(rs.getString("state"));
+							location.setZone(rs.getString("zone"));
+							return location;
+						}).get(0);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return null;
+			}
+		}
+	
 }

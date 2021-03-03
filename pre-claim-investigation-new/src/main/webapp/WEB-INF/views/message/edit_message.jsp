@@ -1,3 +1,4 @@
+<%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import="java.util.List" %>
 <%@page import="java.util.ArrayList" %>
 <%@page import="com.preclaim.models.CaseDetails"%>
@@ -17,6 +18,7 @@ session.removeAttribute("intimation_list");
 List<Location> location_list = (List<Location>) session.getAttribute("location_list");
 session.removeAttribute("location_list");
 List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
+System.out.println("userRolejsp"+userRole);
 session.removeAttribute("userRole");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
@@ -129,6 +131,15 @@ boolean allow_closure = user_permission.contains("messages/close");
                   <input type="number" value="<%=case_detail.getSumAssured()%>" placeholder="Sum Assured" 
                   	name="sumAssured" id="sumAssured" class="form-control" 
                   	<%if(!allow_edit) {%>disabled<%} %>>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="fees">Fees
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="number"  value="<%=case_detail.getSumAssured()%> placeholder="fees" name="fees" id="fees" 
+                  	class="form-control">
                 </div>
               </div>
               <div class="form-group selectDiv">
@@ -541,6 +552,8 @@ $("#assignmessagesubmit").click(function()
     var toRole         = $( '#edit_message_form #toRole' ).val();
     var toStatus       = $( '#edit_message_form #toStatus' ).val();
     var toRemarks      = $( '#edit_message_form #toRemarks' ).val();
+    var fees           = $( '#edit_message_form #fees' ).val();
+    
     
     var currentDate = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
@@ -561,6 +574,7 @@ $("#assignmessagesubmit").click(function()
     $("#insuredAdd").removeClass('has-error-2');
     $("#toRole").removeClass('has-error-2');
     $("#toId").removeClass('has-error-2');
+    $("#fees").removeClass('has-error-2');
     
     var errorFlag = 0;
    
@@ -662,6 +676,13 @@ $("#assignmessagesubmit").click(function()
         $("#sumAssured").focus();
         errorFlag = 1;
     }
+    if(fees == '')
+    {
+        toastr.error('fees cannot be empty','Error');
+        $("#fees").addClass('has-error-2');
+        $("#fees").focus();
+        errorFlag = 1;
+    }
     if(insuredDOB == '')
     {
       	toastr.error('Insured Date of Birth cannot be empty','Error');
@@ -729,7 +750,7 @@ $("#assignmessagesubmit").click(function()
 	    		'insuredDOD':insuredDOB,'insuredDOB':insuredDOD, 'sumAssured':sumAssured,   
 	    		'msgIntimationType':msgIntimationType,'locationId':locationId,
 	    		'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,
-	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, 
+	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"fees":fees, 
 	    		"caseId": caseId},
 	    success: function( data )
 	    {

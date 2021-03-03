@@ -1,5 +1,7 @@
 package com.preclaim.models;
 
+import java.math.BigDecimal;
+
 public class CaseDetails {
 
 	private long caseId;
@@ -39,6 +41,7 @@ public class CaseDetails {
 	private String createdDate;
 	private String updatedDate;
 	private String updatedBy;
+	private double fees;
 
 	public CaseDetails() {
 		caseId = 0;
@@ -76,6 +79,7 @@ public class CaseDetails {
 		createdDate = "";
 		updatedDate = "";
 		updatedBy = "";
+		fees = 0;
 	}
 
 	public long getCaseId() {
@@ -374,6 +378,14 @@ public class CaseDetails {
 		this.updatedBy = updatedBy;
 	}
 
+	public double getFees() {
+		return fees;
+	}
+
+	public void setFees(double fees) {
+		this.fees = fees;
+	}
+
 	@Override
 	public String toString() {
 		return "CaseDetails [caseId=" + caseId + ", policyNumber=" + policyNumber + ", investigationId="
@@ -389,7 +401,8 @@ public class CaseDetails {
 				+ signatureFilePath + ", capturedDate=" + capturedDate + ", approvedStatus=" + approvedStatus
 				+ ", assignerRole=" + assignerRole + ", assignerName=" + assignerName + ", assignerStatus="
 				+ assignerStatus + ", assignerRemarks=" + assignerRemarks + ", createdBy=" + createdBy
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy + "]";
+				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
+				+ ", fees=" + fees + "]";
 	}
-}
 
+}

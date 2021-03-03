@@ -31,15 +31,15 @@ public class Case_movementDaoImpl implements Case_movementDao {
 	public String CreatecaseMovement(CaseMovement caseMovement) {
 		try
 		{
-		   String query="INSERT INTO case_movement(caseId, fromID, toId, caseStatus, remarks, "
-		   		+ "createdDate, updatedDate) values(?, ?, ?, ?, ?, getdate(), getdate()) ";
+		   String query="INSERT INTO case_movement(caseId, fromID, toId, caseStatus, remarks, user_role, zone,"
+		   		+ "createdDate, updatedDate) values(?, ?, ?, ?, ?, ?, ?, getdate(), getdate()) ";
 		   this.template.update(query,caseMovement.getCaseId(), caseMovement.getFromId(), 
-				   caseMovement.getToId(), caseMovement.getCaseStatus(), caseMovement.getRemarks());
+				   caseMovement.getToId(), caseMovement.getCaseStatus(), caseMovement.getRemarks(), caseMovement.getUser_role(), caseMovement.getZone());
 		 
-		   query="INSERT INTO audit_case_movement(caseId, fromID, toId, caseStatus, remarks, "
-		   		+ "createdDate, updatedDate) values(?, ?, ?, ?, ?, getdate(), getdate()) ";
+		   query="INSERT INTO audit_case_movement(caseId, fromID, toId, caseStatus, remarks,user_role, zone,"
+		   		+ "createdDate, updatedDate) values(?, ?, ?, ?, ?, ?, ?, getdate(), getdate()) ";
 		   this.template.update(query,caseMovement.getCaseId(), caseMovement.getFromId(), 
-				   caseMovement.getToId(),caseMovement.getCaseStatus(), caseMovement.getRemarks());
+				   caseMovement.getToId(),caseMovement.getCaseStatus(), caseMovement.getRemarks() , caseMovement.getUser_role(), caseMovement.getZone());
 			
 	    }
 		catch(Exception e) 

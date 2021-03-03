@@ -9,6 +9,8 @@ public class CaseMovement {
 	private String remarks;
 	private String createdDate;
 	private String updatedDate;
+	private String user_role;
+	private String zone;
 
 	public CaseMovement() {
 		this.caseId = 0;
@@ -18,6 +20,8 @@ public class CaseMovement {
 		this.remarks = "";
 		this.createdDate = "";
 		this.updatedDate = "";
+		this.user_role = "";
+		this.zone = "";
 	}
 
 	public CaseMovement(long caseId, String fromId, String toId, String caseStatus, String remarks) {
@@ -27,6 +31,20 @@ public class CaseMovement {
 		this.toId = toId;
 		this.caseStatus = caseStatus;
 		this.remarks = remarks;
+	}
+
+	public CaseMovement(long caseId, String fromId, String toId, String caseStatus, String remarks, String createdDate,
+			String updatedDate, String user_role, String zone) {
+		super();
+		this.caseId = caseId;
+		this.fromId = fromId;
+		this.toId = toId;
+		this.caseStatus = caseStatus;
+		this.remarks = remarks;
+		this.createdDate = createdDate;
+		this.updatedDate = updatedDate;
+		this.user_role = user_role;
+		this.zone = zone;
 	}
 
 	public long getCaseId() {
@@ -85,11 +103,27 @@ public class CaseMovement {
 		this.updatedDate = updatedDate;
 	}
 
-	@Override
-	public String toString() {
-		return "caseMovement [caseId=" + caseId + ", fromId=" + fromId + ", toId=" + toId + ", caseStatus=" + caseStatus
-				+ ", remarks=" + remarks + ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + "]";
+	public String getUser_role() {
+		return user_role;
 	}
 
-	
+	public void setUser_role(String user_role) {
+		this.user_role = user_role;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	@Override
+	public String toString() {
+		return "CaseMovement [caseId=" + caseId + ", fromId=" + fromId + ", toId=" + toId + ", caseStatus=" + caseStatus
+				+ ", remarks=" + remarks + ", createdDate=" + createdDate + ", updatedDate=" + updatedDate
+				+ ", user_role=" + user_role + ", zone=" + zone + "]";
+	}
+
 }
