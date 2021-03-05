@@ -127,10 +127,10 @@ $(document).ready(function() {
   var table = $('#pending_case_list').DataTable();
 
    $('#pending_case_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 3 || i == 5){
+	    if( i == 1 || i == 2 || i == 5 || i == 6 ){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
-    else if(i == 4)
+    else if(i == 3)
     {
       var cat_selectbox = '<select name="category" id="category" class="form-control">'
                               +'<option value="">All</option>';
@@ -143,7 +143,7 @@ $(document).ready(function() {
 		cat_selectbox += '</select>';
         $(this).html( cat_selectbox );
     }
-    else if(i == 6)
+    else if(i == 4)
     {
       var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
                               +'<option value="">All</option>';

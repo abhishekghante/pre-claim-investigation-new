@@ -18,5 +18,7 @@ public interface CaseDao {
 	List<CaseDetailList> getAssignedCaseList(String username);
 	List<UserDetails> getUserListByRole(String role_code);
 	List<CaseDetails> getLiveCaseList(String username);
+    void getExcelMail(String zone);
+    String updateCaseTypeAndSubType(CaseDetails casedetail);
     
 }

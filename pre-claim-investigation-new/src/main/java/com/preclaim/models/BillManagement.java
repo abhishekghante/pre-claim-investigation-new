@@ -4,9 +4,9 @@ public class BillManagement {
 
 	private long caseID;
 	private String policyNumber;
-	private String investigationType;
+	private int investigationId;
 	private String initimationType;
-	private int supervisorID;
+	private String supervisorID;
 	private String SupervisorName;
 	private double Charges;
 	private String createdBy;
@@ -18,9 +18,9 @@ public class BillManagement {
 
 		this.caseID = 0;
 		this.policyNumber = "";
-		this.investigationType = "";
+		this.investigationId = 0;
 		this.initimationType = "";
-		this.supervisorID = 0;
+		this.supervisorID = "";
 		this.SupervisorName = "";
 		this.Charges = 0;
 		this.createdBy = "";
@@ -46,12 +46,12 @@ public class BillManagement {
 		this.policyNumber = policyNumber;
 	}
 
-	public String getInvestigationType() {
-		return investigationType;
+	public int getInvestigationId() {
+		return investigationId;
 	}
 
-	public void setInvestigationType(String investigationType) {
-		this.investigationType = investigationType;
+	public void setInvestigationId(int investigationId) {
+		this.investigationId = investigationId;
 	}
 
 	public String getInitimationType() {
@@ -62,11 +62,11 @@ public class BillManagement {
 		this.initimationType = initimationType;
 	}
 
-	public int getSupervisorID() {
+	public String getSupervisorID() {
 		return supervisorID;
 	}
 
-	public void setSupervisorID(int supervisorID) {
+	public void setSupervisorID(String supervisorID) {
 		this.supervisorID = supervisorID;
 	}
 
@@ -120,8 +120,8 @@ public class BillManagement {
 
 	@Override
 	public String toString() {
-		return "BillManagement [caseID=" + caseID + ", policyNumber=" + policyNumber + ", investigationType="
-				+ investigationType + ", initimationType=" + initimationType + ", supervisorID=" + supervisorID
+		return "BillManagement [caseID=" + caseID + ", policyNumber=" + policyNumber + ", investigationId="
+				+ investigationId + ", initimationType=" + initimationType + ", supervisorID=" + supervisorID
 				+ ", SupervisorName=" + SupervisorName + ", Charges=" + Charges + ", createdBy=" + createdBy
 				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy + "]";
 	}

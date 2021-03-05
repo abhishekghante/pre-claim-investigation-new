@@ -42,6 +42,8 @@ public class CaseDetails {
 	private String updatedDate;
 	private String updatedBy;
 	private double fees;
+	private String caseType;
+	private String caseSubStatus;
 
 	public CaseDetails() {
 		caseId = 0;
@@ -80,6 +82,8 @@ public class CaseDetails {
 		updatedDate = "";
 		updatedBy = "";
 		fees = 0;
+		caseType = "";
+		caseSubStatus = "";
 	}
 
 	public long getCaseId() {
@@ -386,6 +390,22 @@ public class CaseDetails {
 		this.fees = fees;
 	}
 
+	public String getCaseType() {
+		return caseType;
+	}
+
+	public void setCaseType(String caseType) {
+		this.caseType = caseType;
+	}
+
+	public String getCaseSubStatus() {
+		return caseSubStatus;
+	}
+
+	public void setCaseSubStatus(String caseSubStatus) {
+		this.caseSubStatus = caseSubStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "CaseDetails [caseId=" + caseId + ", policyNumber=" + policyNumber + ", investigationId="
@@ -402,7 +422,7 @@ public class CaseDetails {
 				+ ", assignerRole=" + assignerRole + ", assignerName=" + assignerName + ", assignerStatus="
 				+ assignerStatus + ", assignerRemarks=" + assignerRemarks + ", createdBy=" + createdBy
 				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
-				+ ", fees=" + fees + "]";
+				+ ", fees=" + fees + ", caseType=" + caseType + ", caseSubStatus=" + caseSubStatus + "]";
 	}
 
 }

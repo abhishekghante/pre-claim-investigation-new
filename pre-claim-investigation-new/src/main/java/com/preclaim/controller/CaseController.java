@@ -169,7 +169,7 @@ public class CaseController {
 			try {
 				byte[] temp = userfile.get(0).getBytes();
 				String filename = userfile.get(0).getOriginalFilename();
-				String toId = request.getParameter("userId");
+				 String toId = ""; 
 				filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-SS")) + "_"
 						+ filename;
 				Path path = Paths.get(Config.upload_directory + filename);
@@ -192,14 +192,15 @@ public class CaseController {
 							mailConfigDao.sendMail(mail);
 
 							// To ID
-							UserDetails toUser = userDao.getUserDetails(toId);
-							mail.setSubject("New Case Assigned - Claims");
-							message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";
-							message_body = message_body.replace("<User>", toUser.getFull_name());
-							message_body += "Thanks & Regards,\n Claims";
-							mail.setMessageBody(message_body);
-							mail.setReceipent(toUser.getUser_email());
-							mailConfigDao.sendMail(mail);
+							/*
+							 * UserDetails toUser = userDao.getUserDetails(toId);
+							 * mail.setSubject("New Case Assigned - Claims"); message_body =
+							 * "Dear <User>, \n Your are required to take action on new cases\n\n";
+							 * message_body = message_body.replace("<User>", toUser.getFull_name());
+							 * message_body += "Thanks & Regards,\n Claims";
+							 * mail.setMessageBody(message_body); mail.setReceipent(toUser.getUser_email());
+							 * mailConfigDao.sendMail(mail);
+							 */
 						}
 					} catch (Exception e) {
 						CustomMethods.logError(e);
@@ -363,10 +364,18 @@ public class CaseController {
 	@RequestMapping(value = "/assignCase", method = RequestMethod.POST)
 	public @ResponseBody String assignToRM(HttpServletRequest request, HttpSession session) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		CaseDetails caseDetail = new CaseDetails();
 		long caseId = Integer.parseInt(request.getParameter("caseId"));
 		String toId = request.getParameter("toId");
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
+		String caseType = request.getParameter("caseType");
+		String caseSubStatus= toStatus+" by "+user.getAccount_type();
+		System.out.println(caseSubStatus);
+		caseDetail.setCaseId(caseId);
+		caseDetail.setCaseType(caseType);
+		caseDetail.setCaseSubStatus(caseSubStatus);
+		caseDao.updateCaseTypeAndSubType(caseDetail);
 		String toRemarks = request.getParameter("toRemarks");
 		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks);
 		String message = caseMovementDao.updateCaseMovement(case_movement);
@@ -386,6 +395,7 @@ public class CaseController {
 					mailConfigDao.sendMail(mail);
 
 					// To ID
+					if(toId.length() > 0) {
 					UserDetails toUser = userDao.getUserDetails(toId);
 					mail.setSubject("New Case Assigned - Claims");
 					message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";
@@ -394,6 +404,7 @@ public class CaseController {
 					mail.setMessageBody(message_body);
 					mail.setReceipent(toUser.getUser_email());
 					mailConfigDao.sendMail(mail);
+					}
 				}
 			} catch (Exception e) {
 				CustomMethods.logError(e);

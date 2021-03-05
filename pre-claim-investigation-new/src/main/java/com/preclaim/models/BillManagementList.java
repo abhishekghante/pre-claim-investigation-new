@@ -1,13 +1,13 @@
 package com.preclaim.models;
 
 public class BillManagementList {
-	
+
 	private int srNo;
 	private long caseID;
 	private String policyNumber;
-	private String investigationType;
+	private int investigationId;
 	private String initimationType;
-	private int supervisorID;
+	private String supervisorID;
 	private String SupervisorName;
 	private double Charges;
 
@@ -16,9 +16,9 @@ public class BillManagementList {
 		this.srNo = 0;
 		this.caseID = 0;
 		this.policyNumber = "";
-		this.investigationType = "";
+		this.investigationId = 0;
 		this.initimationType = "";
-		this.supervisorID = 0;
+		this.supervisorID = "";
 		this.SupervisorName = "";
 		this.Charges = 0;
 	}
@@ -47,12 +47,12 @@ public class BillManagementList {
 		this.policyNumber = policyNumber;
 	}
 
-	public String getInvestigationType() {
-		return investigationType;
+	public int getInvestigationId() {
+		return investigationId;
 	}
 
-	public void setInvestigationType(String investigationType) {
-		this.investigationType = investigationType;
+	public void setInvestigationId(int investigationId) {
+		this.investigationId = investigationId;
 	}
 
 	public String getInitimationType() {
@@ -63,11 +63,11 @@ public class BillManagementList {
 		this.initimationType = initimationType;
 	}
 
-	public int getSupervisorID() {
+	public String getSupervisorID() {
 		return supervisorID;
 	}
 
-	public void setSupervisorID(int supervisorID) {
+	public void setSupervisorID(String supervisorID) {
 		this.supervisorID = supervisorID;
 	}
 
@@ -90,9 +90,8 @@ public class BillManagementList {
 	@Override
 	public String toString() {
 		return "BillManagementList [srNo=" + srNo + ", caseID=" + caseID + ", policyNumber=" + policyNumber
-				+ ", investigationType=" + investigationType + ", initimationType=" + initimationType
-				+ ", supervisorID=" + supervisorID + ", SupervisorName=" + SupervisorName + ", Charges=" + Charges
-				+ "]";
+				+ ", investigationId=" + investigationId + ", initimationType=" + initimationType + ", supervisorID="
+				+ supervisorID + ", SupervisorName=" + SupervisorName + ", Charges=" + Charges + "]";
 	}
 
 }

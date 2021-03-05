@@ -83,4 +83,8 @@
 	<beans:bean id="dashboardDao" class="com.preclaim.dao.DashboardDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
 	</beans:bean>
+	
+	<beans:bean id="billingManagementDao" class="com.preclaim.dao.BillingManagementDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
 </beans:beans>

@@ -116,6 +116,7 @@ session.removeAttribute("role_list");
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/assign")) {%>checked <%} %> name="messages[]" id="messages_assign" class="indPLCheck7" value="messages/assign"> <label for="messages_assign">Assign</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/reassign")) {%>checked <%} %> name="messages[]" id="messages_reassign" class="indPLCheck7" value="messages/reassign"> <label for="messages_reassign">Re-Assign</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/close")) {%>checked <%} %> name="messages[]" id="messages_close" class="indPLCheck7" value="messages/close"> <label for="messages_close">Case Closure</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("messages/caseSubStatus")) {%>checked <%} %> name="messages[]" id="messages_caseSubStatus" class="indPLCheck7" value="messages/caseSubStatus"> <label for="messages_caseSubStatus">Case Sub-status</label>
 			                    	</td>
 			                    </tr>
 			                    <tr>

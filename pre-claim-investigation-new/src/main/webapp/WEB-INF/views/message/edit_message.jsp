@@ -18,12 +18,13 @@ session.removeAttribute("intimation_list");
 List<Location> location_list = (List<Location>) session.getAttribute("location_list");
 session.removeAttribute("location_list");
 List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
-System.out.println("userRolejsp"+userRole);
 session.removeAttribute("userRole");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reassign = user_permission.contains("messages/reassign");
 boolean allow_closure = user_permission.contains("messages/close");
+boolean allow_caseType = user_permission.contains("messages/caseType");
+boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus");
 %>
 <style type="text/css">
 .placeImg { display:none !important;}
@@ -138,8 +139,8 @@ boolean allow_closure = user_permission.contains("messages/close");
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  <input type="number"  value="<%=case_detail.getSumAssured()%> placeholder="fees" name="fees" id="fees" 
-                  	class="form-control">
+                  <input type="number" value="<%=case_detail.getFees()%>" placeholder="fees" name="fees" id="fees" 
+                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
               <div class="form-group selectDiv">
@@ -347,9 +348,9 @@ boolean allow_closure = user_permission.contains("messages/close");
 	                </div>
               	 </div>
 		         <div class="form-group selectDiv" id = "case-closure">
-		                <label class="col-md-4 control-label" for="toRole">Select Role Name 
+		                <label class="col-sm-4 control-label" for="toRole">Select Role Name 
 		                	<span class="text-danger">*</span></label>
-		                <div class="col-md-3">
+		                <div class="col-sm-3">
 		                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
 		                  	>
 		                    <option value="-1" selected disabled>Select</option>
@@ -367,13 +368,12 @@ boolean allow_closure = user_permission.contains("messages/close");
 		                  <select name="toId" id="toId" class="form-control">
 		                  	<option value = '-1' selected disabled>Select</option>
 		                  </select>
-		            	</div>
-	                
+		            	</div >
 	              </div>
 	             <div class="form-group selectDiv">
 	                <label class="col-md-4 control-label" for="toStatus">Case Status 
 	                	<span class="text-danger">*</span></label>
-	                <div class="col-md-8">
+	                <div class="col-md-2">
 	                  <select name="toStatus" id="toStatus" class="form-control" 
 	                  	tabindex="-1">
 	                    <option value="-1" disabled>Select</option>
@@ -386,7 +386,26 @@ boolean allow_closure = user_permission.contains("messages/close");
 	                    <%} %> 
 	                  </select>
 	                </div>
-	              </div>
+	                 <label class="col-md-1 control-label" for="caseSubStatus">Case Sub-status 
+		                	<span class="text-danger">*</span></label>
+		                <div class="col-md-2">
+		                  <input name="caseSubStatus" id="caseSubStatus" class="form-control" readonly disabled>
+		                </div>
+	                <div class="form-group selectDiv" id = "case-type">
+	                 <label class="col-md-1 control-label" for="caseType">Case Type 
+		                	<span class="text-danger">*</span></label>
+		                <div class="col-md-2">
+		                  <select name="caseType" id="caseType" class="form-control">
+		                  	<option value = '-1' selected disabled>Select</option>
+		                  	 <%if(allow_caseType) {%>		                  	
+		                  	<option value = '1'>Clean</option>
+		                  	<option value = '2'>Not-Clean</option>
+		                     <%} %> 
+		                  </select>
+		            	</div>
+		            	</div>
+	  
+	   	             </div>	              
 	              <div class="form-group">
 	                <label class="col-md-4 control-label" for="toRemarks">Remarks</label>
 	                <div class="col-md-8">
@@ -427,7 +446,7 @@ boolean allow_closure = user_permission.contains("messages/close");
 </div>
 <script>
 $("document").ready(function(){
-	
+	$("#case-type").hide();
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
@@ -439,10 +458,12 @@ $("document").ready(function(){
 		if($(this).val() == "Closed")
 		{
 			$("#case-closure").hide();
+			$("#case-type").show();
 		}
 		else
 		{
 			$("#case-closure").show();
+			$("#case-type").hide();
 		}
 		
 	});
@@ -456,16 +477,24 @@ $("#assignmessagesubmit").click(function()
 	var caseId = $( '#edit_message_form #caseId' ).val();
 	var toStatus = $( '#edit_message_form #toStatus' ).val();
     var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
+    var caseType = $( '#edit_message_form #caseType').val();
     var toId = "";
     var toRole = "";
     var validFlag = 1;
     
+   
     if(toStatus == null)
    	{
    		toastr.error("Kindly select status", "Error");
    		validFlag = 0;
    	}
+    if(caseType == null)
+   	{
+   		toastr.error("Kindly select Case type", "Error");
+   		validFlag = 0;
+   	}
     
+  
     if(toStatus != "Closed")
    	{
 	    toId = $( '#edit_message_form #toId' ).val();
@@ -490,6 +519,7 @@ $("#assignmessagesubmit").click(function()
    		validFlag = 0;
    	}
     
+    
     if(validFlag == 0)
    	{
 		return false;    	
@@ -503,7 +533,7 @@ $("#assignmessagesubmit").click(function()
     $.ajax({
 	    type: "POST",
 	    url: 'assignCase',
-	    data:{"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, "caseId": caseId},
+	    data:{"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, "caseId": caseId,"caseType":caseType},
 	    success:function(message)
 	    {
 	    	$("#editmessagesubmit").html('Assign Case');
@@ -553,7 +583,8 @@ $("#assignmessagesubmit").click(function()
     var toStatus       = $( '#edit_message_form #toStatus' ).val();
     var toRemarks      = $( '#edit_message_form #toRemarks' ).val();
     var fees           = $( '#edit_message_form #fees' ).val();
-    
+    var caseType       = $( '#edit_message_form #caseType' ).val();
+    var caseSubstatus  = $( '#edit_message_form #caseSubstatus').val();
     
     var currentDate = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
@@ -575,6 +606,8 @@ $("#assignmessagesubmit").click(function()
     $("#toRole").removeClass('has-error-2');
     $("#toId").removeClass('has-error-2');
     $("#fees").removeClass('has-error-2');
+    $("#caseType").removeClass('has-error-2');
+    $("#caseSubstatus").removeClass('has-error-2');
     
     var errorFlag = 0;
    
@@ -735,6 +768,20 @@ $("#assignmessagesubmit").click(function()
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
+    if(caseType == '')
+    {
+    	toastr.error('Case type cannot be empty','Error');
+    	$('#caseType').addClass('has-error-2');
+    	$('#caseType').focus();
+    	errorFlag = 1;
+    }
+    if(caseSubstatus == '')
+    {
+    	toastr.error('Case type cannot be empty','Error');
+    	$('#caseSubstatus').addClass('has-error-2');
+    	$('#caseSubstatus').focus();
+    	errorFlag = 1;
+    }
     
     if(errorFlag == 1)
     	return false;
@@ -750,7 +797,7 @@ $("#assignmessagesubmit").click(function()
 	    		'insuredDOD':insuredDOB,'insuredDOB':insuredDOD, 'sumAssured':sumAssured,   
 	    		'msgIntimationType':msgIntimationType,'locationId':locationId,
 	    		'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,
-	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"fees":fees, 
+	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"caseType":caseType,"fees":fees,"caseSubstatus":caseSubstatus, 
 	    		"caseId": caseId},
 	    success: function( data )
 	    {

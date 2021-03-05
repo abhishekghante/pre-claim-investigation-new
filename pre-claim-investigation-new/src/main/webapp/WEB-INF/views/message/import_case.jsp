@@ -108,12 +108,12 @@ function importData()
 		toastr.error("Kindly select Assignee Role","Error");	
 		return false;
 	}
-	if(userId == null)
+/* 	if(userId == null)
 	{
 		
 		toastr.error("Kindly select Assignee","Error");
 		return false;
-	}
+	} */
 	if(userfile == "" )
 	{
 		
@@ -137,7 +137,7 @@ function importData()
             count++;
             formData.append('userfile', value.files[0]);
         });
-        formData.append("userId", userId);
+       /*  formData.append("userId", userId); */
     }
     $("#importfile").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
     $("#importfile").prop('disabled', true);

@@ -13,9 +13,11 @@ public class CaseDetailList {
 	private int assigneeId;
 	private String assigneeName;
 	private String caseStatus;
-	
-	public CaseDetailList()
-	{
+	private double fees;
+	private String caseType;
+	private String caseSubStatus;
+
+	public CaseDetailList() {
 		srNo = 0;
 		caseId = 0;
 		policyNumber = "";
@@ -27,6 +29,10 @@ public class CaseDetailList {
 		assigneeId = 0;
 		assigneeName = "";
 		caseStatus = "";
+		fees = 0;
+		caseType = "";
+		caseSubStatus = "";
+
 	}
 
 	public int getSrNo() {
@@ -117,5 +123,28 @@ public class CaseDetailList {
 		this.caseStatus = caseStatus;
 	}
 
-	
+	public double getFees() {
+		return fees;
+	}
+
+	public void setFees(double fees) {
+		this.fees = fees;
+	}
+
+	public String getCaseType() {
+		return caseType;
+	}
+
+	public void setCaseType(String caseType) {
+		this.caseType = caseType;
+	}
+
+	public String getCaseSubStatus() {
+		return caseSubStatus;
+	}
+
+	public void setCaseSubStatus(String caseSubStatus) {
+		this.caseSubStatus = caseSubStatus;
+	}
+
 }
