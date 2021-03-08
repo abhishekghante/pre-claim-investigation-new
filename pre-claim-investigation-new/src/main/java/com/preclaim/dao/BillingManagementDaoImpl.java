@@ -43,6 +43,26 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 				return billManagementList;
 			});
 		}
+		
+		@Override
+		public List<BillManagementList> billingEnquiryPendingList(Integer list) 
+		{
+			String sql="SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus = 'Closed' and b.caseId in('"+list+"')";
+		 
+			return template.query(sql, (ResultSet rs, int rowNum) -> {
+				
+				BillManagementList billManagementList = new BillManagementList();
+				billManagementList.setSrNo(rowNum + 1);
+				billManagementList.setCaseID(rs.getInt("caseId"));
+				billManagementList.setPolicyNumber(rs.getString("policyNumber"));
+				billManagementList.setInitimationType(rs.getString("intimationType"));
+				billManagementList.setInvestigationId(rs.getInt("investigationId"));
+				billManagementList.setSupervisorID(rs.getString("fromId"));
+				billManagementList.setSupervisorName(rs.getString("createdBy"));
+				billManagementList.setCharges(rs.getDouble("fees"));
+				return billManagementList;
+			});
+		}
 
 
 }

@@ -8,4 +8,5 @@ import com.preclaim.models.BillManagementList;
 public interface BillingManagementDao {
 
 	List<BillManagementList> billingEnquiryPendingList();
+	List<BillManagementList> billingEnquiryPendingList(Integer list);
 }

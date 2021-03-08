@@ -44,6 +44,7 @@ session.removeAttribute("billingPendingList");
                     <table id="pending_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
+                         <th class="head1 no-sort"><input type="checkbox" id="checkall" /></th>
                           <th class="head1 no-sort">Sr No.</th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
@@ -66,6 +67,7 @@ session.removeAttribute("billingPendingList");
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
                        <tbody>
@@ -73,7 +75,8 @@ session.removeAttribute("billingPendingList");
                         	for(BillManagementList list_case :billManagementList){%>                       
                           
                           <tr>
-                  				<td><%= list_case.getSrNo()%></td>
+                                <td><input type="checkbox" id="selectedCategory" value="<%=list_case.getCaseID()%>" /></td>
+                  				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getCaseID()%></td>
                   			   	<td><%=list_case.getPolicyNumber()%></td>
                   				<td><%=list_case.getInvestigationId()%></td>
@@ -101,12 +104,14 @@ session.removeAttribute("billingPendingList");
                        <% 		
                        	}
                         } 
-                        %>
-                      
-                      
-                      
+                        %>  
                       </tbody> 
                     </table>
+                     <div class="row">
+                      <div class="col-md-offset-4 col-md-8">
+                        <input type="button"  class="btn btn-info" id="createExcelData" onClick="createExcelData()" value="Add Intimation"/>
+                      </div>
+                    </div>
                   </div>                 
                 </div>
               <div class="clearfix"></div>
@@ -176,4 +181,67 @@ $(document).ready(function() {
   });
 });
 
+</script>
+<script type="text/javascript">
+    $("#pending_case_list #checkall").click(function () {
+        if ($("#pending_case_list #checkall").is(':checked')) {
+            $("#pending_case_list input[type=checkbox]").each(function () {
+                $(this).prop("checked", true);
+            });
+
+        } else {
+            $("#pending_case_list input[type=checkbox]").each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>
+
+
+<script>
+function createExcelData() { 
+	
+        //Create an Array.
+        var selected = new Array();
+ 
+        //Reference the Table.
+        var pending_case_list =$("#pending_case_list");
+ 
+        //Reference all the CheckBoxes in Table.
+        var chks = $("#pending_case_list").find("INPUT")
+ 
+        
+        // Loop and push the checked CheckBox value in Array.
+        for (var i = 0; i < chks.length; i++) {
+            if (chks[i].checked) {
+                selected.push(chks[i].value);
+            }
+        }
+       //Display the selected CheckBox values.
+        console.log("chks"+selected);
+       
+        $.ajax({
+	        type    : 'POST',
+	        url     : 'getCheckboxValue',
+	        dataType: 'json',
+	        data    : {'selected':selected},
+	        success : function( msg ) {
+	            if( msg != "****" ) 
+	                toastr.error(msg,'Error');
+	            else
+	            	toastr.error(msg,'Sucess');
+	            
+	        }
+	    });
+
+
+
+
+};
+
+
+    
+    
+    
+    
 </script>

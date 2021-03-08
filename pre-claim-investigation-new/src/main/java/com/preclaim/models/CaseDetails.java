@@ -42,8 +42,8 @@ public class CaseDetails {
 	private String updatedDate;
 	private String updatedBy;
 	private double fees;
-	private String caseType;
 	private String caseSubStatus;
+	private String notCleanCategory;
 
 	public CaseDetails() {
 		caseId = 0;
@@ -82,7 +82,7 @@ public class CaseDetails {
 		updatedDate = "";
 		updatedBy = "";
 		fees = 0;
-		caseType = "";
+		notCleanCategory = "";
 		caseSubStatus = "";
 	}
 
@@ -390,12 +390,12 @@ public class CaseDetails {
 		this.fees = fees;
 	}
 
-	public String getCaseType() {
-		return caseType;
+	public String getNotCleanCategory() {
+		return notCleanCategory;
 	}
 
-	public void setCaseType(String caseType) {
-		this.caseType = caseType;
+	public void setNotCleanCategory(String notCleanCategory) {
+		this.notCleanCategory = notCleanCategory;
 	}
 
 	public String getCaseSubStatus() {
@@ -422,7 +422,8 @@ public class CaseDetails {
 				+ ", assignerRole=" + assignerRole + ", assignerName=" + assignerName + ", assignerStatus="
 				+ assignerStatus + ", assignerRemarks=" + assignerRemarks + ", createdBy=" + createdBy
 				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
-				+ ", fees=" + fees + ", caseType=" + caseType + ", caseSubStatus=" + caseSubStatus + "]";
+				+ ", fees=" + fees + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory=" + notCleanCategory
+				+ "]";
 	}
 
 }

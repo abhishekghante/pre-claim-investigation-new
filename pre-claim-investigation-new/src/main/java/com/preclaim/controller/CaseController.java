@@ -9,9 +9,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +35,7 @@ import com.preclaim.dao.MailConfigDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.CaseDetails;
 import com.preclaim.models.CaseMovement;
+import com.preclaim.models.CaseSubStatus;
 import com.preclaim.models.Location;
 import com.preclaim.models.MailConfig;
 import com.preclaim.models.ScreenDetails;
@@ -303,7 +302,23 @@ public class CaseController {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if (user == null)
 			return "common/login";
-
+		 CaseDetails case_detail = caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId")));
+		 List<CaseSubStatus> caseSubStatus = caseDao.getCaseDetailByLevel(user.getAccount_type());
+		 CaseSubStatus caseSubStatus1=new CaseSubStatus();
+		 int i=0;
+		 
+		 for(CaseSubStatus iterate : caseSubStatus) {
+			
+			 if(i==1)
+			 
+			 i++;
+		 }
+		 
+		 
+		 if(!case_detail.getLongitude().equals("") && !case_detail.getLatitude().equals(""))
+		 {
+			 
+		 }
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../message/edit_message.jsp");
@@ -317,7 +332,8 @@ public class CaseController {
 		session.setAttribute("location_list", locationDao.getActiveLocationList());
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
-		session.setAttribute("case_detail", caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId"))));
+		session.setAttribute("case_detail", case_detail);
+		//session.setAttribute("level", iterate);
 		return "common/templatecontent";
 	}
 
@@ -369,11 +385,10 @@ public class CaseController {
 		String toId = request.getParameter("toId");
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
-		String caseType = request.getParameter("caseType");
-		String caseSubStatus= toStatus+" by "+user.getAccount_type();
-		System.out.println(caseSubStatus);
+		String caseSubStatus = request.getParameter("caseSubStatus");
+		String NotCleanCategory= request.getParameter("NotCleanCategory");
 		caseDetail.setCaseId(caseId);
-		caseDetail.setCaseType(caseType);
+		caseDetail.setNotCleanCategory(NotCleanCategory);
 		caseDetail.setCaseSubStatus(caseSubStatus);
 		caseDao.updateCaseTypeAndSubType(caseDetail);
 		String toRemarks = request.getParameter("toRemarks");

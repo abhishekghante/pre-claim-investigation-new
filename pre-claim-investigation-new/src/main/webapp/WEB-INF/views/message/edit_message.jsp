@@ -1,3 +1,4 @@
+<%@page import="com.preclaim.models.CaseSubStatus"%>
 <%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import="java.util.List" %>
 <%@page import="java.util.ArrayList" %>
@@ -6,11 +7,13 @@
 <%@page import="com.preclaim.models.Location"%>
 <%@page import="com.preclaim.models.InvestigationType"%>
 <%@page import="com.preclaim.models.IntimationType"%>
-
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
 session.removeAttribute("case_detail");
+List<CaseSubStatus> CaseSubStatus = (List<CaseSubStatus>) session.getAttribute("level");
+System.out.println(CaseSubStatus);
+session.removeAttribute("level");
 List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
 session.removeAttribute("investigation_list");
 List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
@@ -23,7 +26,6 @@ boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reassign = user_permission.contains("messages/reassign");
 boolean allow_closure = user_permission.contains("messages/close");
-boolean allow_caseType = user_permission.contains("messages/caseType");
 boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus");
 %>
 <style type="text/css">
@@ -274,7 +276,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
                           <span data-imgID="imgMsgEnLbl_3" data-ID="imgMsgEn_3" id="enLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgEn_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
-                            <i class="fa fa-remove"></i>
+                            <i class="fa fa-remove"></i>d
                           </span>
                           <img src="${pageContext.request.contextPath}/resources/uploads/default_img.png" class="imgMsgEnLbl" id="imgMsgEnLbl_3" style="height:height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload Image 3" />
                         </div>
@@ -339,7 +341,17 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 	                  <input type="text" value="<%=case_detail.getApprovedStatus()%>" 
 	                  	name="fromStatus" id="fromStatus" class="form-control" readonly disabled>
 	                </div>
+	              </div>	              
+	              <div class="form-group">
+	                <label class="col-md-4 control-label" for="caseLevel">Case Level
+	                	<span class="text-danger">*</span>
+	                </label>
+	                <div class="col-md-8">
+	                  <input type="text" value="" 
+	                  	name="caseLevel" id="caseLevel" class="form-control" readonly disabled>
+	                </div>
 	              </div>
+	                           
 	              <div class="form-group">
 	                <label class="col-md-4 control-label" for="fromRemarks">Remarks</label>
 	                <div class="col-md-8">
@@ -385,26 +397,34 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 	                    <option value = "Closed">Closure</option>
 	                    <%} %> 
 	                  </select>
-	                </div>
+	                </div>            
+	                <div class="form-group selectDiv" id ="case-SubStatus">
 	                 <label class="col-md-1 control-label" for="caseSubStatus">Case Sub-status 
 		                	<span class="text-danger">*</span></label>
 		                <div class="col-md-2">
-		                  <input name="caseSubStatus" id="caseSubStatus" class="form-control" readonly disabled>
-		                </div>
-	                <div class="form-group selectDiv" id = "case-type">
-	                 <label class="col-md-1 control-label" for="caseType">Case Type 
-		                	<span class="text-danger">*</span></label>
-		                <div class="col-md-2">
-		                  <select name="caseType" id="caseType" class="form-control">
-		                  	<option value = '-1' selected disabled>Select</option>
-		                  	 <%if(allow_caseType) {%>		                  	
-		                  	<option value = '1'>Clean</option>
-		                  	<option value = '2'>Not-Clean</option>
-		                     <%} %> 
+		                  <select name="caseSubStatus" id="caseSubStatus" class="form-control">
+		                  	<option value = '-1' selected disabled>Select</option>             	
+		                  	<option value = "Clean">Clean</option>
+		                  	<option value = "Not-Clean">Not-Clean</option>
 		                  </select>
 		            	</div>
 		            	</div>
-	  
+		            	 <div class="form-group selectDiv" id ="Not-CleanCategory">
+	                 <label class="col-md-4 control-label" for="NotCleanCategory">Not Clean Category 
+		                	<span class="text-danger">*</span></label>
+		                <div class="col-md-2">
+		                  <select name="NotCleanCategory" id="NotCleanCategory" class="form-control">
+		                  	<option value = '-1' selected disabled>Select</option>		                  	
+		                  	<option value = 'Death Prior Application'> Death Prior Application</option>
+		                  	<option value = 'Medical Non-Disclosure'> Medical Non-Disclosure</option>
+		                  	<option value = 'Address not traceable'>Address not traceable</option>
+		                  	<option value = 'Mis-statement of Age'>Mis-statement of Age</option>
+		                  	<option value = 'Mis-statement of Income / Occupation'>Mis-statement of Income / Occupation</option>
+		                  	<option value = 'Personal Habit non-disclosure'>Personal Habit non-disclosure</option>
+		                  	<option value = 'Others'>Others</option> 
+		                  </select>
+		            	</div>
+		            	</div>	  
 	   	             </div>	              
 	              <div class="form-group">
 	                <label class="col-md-4 control-label" for="toRemarks">Remarks</label>
@@ -446,7 +466,10 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 </div>
 <script>
 $("document").ready(function(){
-	$("#case-type").hide();
+	$("#Not-CleanCategory").hide();
+	$("#case-SubStatus").hide();
+	
+	
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
@@ -458,15 +481,29 @@ $("document").ready(function(){
 		if($(this).val() == "Closed")
 		{
 			$("#case-closure").hide();
-			$("#case-type").show();
+			$("#case-SubStatus").show();
 		}
 		else
 		{
 			$("#case-closure").show();
-			$("#case-type").hide();
+			$("#case-SubStatus").hide();
+			$("#Not-CleanCategory").hide();
 		}
 		
 	});
+
+	$("#caseSubStatus").change(function(){
+		if($(this).val() == "Not-Clean")
+		{
+			$("#Not-CleanCategory").show();
+		}
+		else
+		{
+			$("#Not-CleanCategory").hide();
+		}
+		
+	});
+	
 });
 </script>
 
@@ -477,7 +514,11 @@ $("#assignmessagesubmit").click(function()
 	var caseId = $( '#edit_message_form #caseId' ).val();
 	var toStatus = $( '#edit_message_form #toStatus' ).val();
     var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
-    var caseType = $( '#edit_message_form #caseType').val();
+    var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
+    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+    
+    console.log("caseSubStatus"+caseSubStatus)
+    console.log("NotCleanCategory"+NotCleanCategory)
     var toId = "";
     var toRole = "";
     var validFlag = 1;
@@ -488,13 +529,8 @@ $("#assignmessagesubmit").click(function()
    		toastr.error("Kindly select status", "Error");
    		validFlag = 0;
    	}
-    if(caseType == null)
-   	{
-   		toastr.error("Kindly select Case type", "Error");
-   		validFlag = 0;
-   	}
     
-  
+    
     if(toStatus != "Closed")
    	{
 	    toId = $( '#edit_message_form #toId' ).val();
@@ -511,6 +547,36 @@ $("#assignmessagesubmit").click(function()
 	   		toastr.error("Kindly select User Role", "Error");
 	   		validFlag = 0;
 	   	}
+   	}else if(toStatus == "Closed"){
+   		
+   		toId = $( '#edit_message_form #toId' ).val();
+	    toRole = $( '#edit_message_form #toRole' ).val();
+   	
+	    if(toId == null)
+	   	{
+	   		toastr.error("Kindly select user", "Error");
+	   		validFlag = 0;
+	   	}
+	    
+	    if(toRole == null)
+	   	{
+	   		toastr.error("Kindly select User Role", "Error");
+	   		validFlag = 0;
+	   	}
+	    
+	    if(caseSubStatus == null)
+	   	{
+	   		toastr.error("Kindly select Case Sub-status", "Error");
+	   		validFlag = 0;
+	   	}
+	    
+	    if(NotCleanCategory == null)
+	   	{
+	   		toastr.error("Kindly select Not-clean category", "Error");
+	   		validFlag = 0;
+	   	}
+   		
+   		
    	}
     
     if(toStatus == "Rejected" && toRemarks == "")
@@ -533,7 +599,7 @@ $("#assignmessagesubmit").click(function()
     $.ajax({
 	    type: "POST",
 	    url: 'assignCase',
-	    data:{"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, "caseId": caseId,"caseType":caseType},
+	    data:{"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, "caseId": caseId,"caseSubStatus":caseSubStatus,"NotCleanCategory":NotCleanCategory},
 	    success:function(message)
 	    {
 	    	$("#editmessagesubmit").html('Assign Case');

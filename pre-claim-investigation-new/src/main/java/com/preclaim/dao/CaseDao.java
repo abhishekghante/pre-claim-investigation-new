@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
+import com.preclaim.models.CaseSubStatus;
 import com.preclaim.models.UserDetails;
 
 public interface CaseDao {
@@ -20,5 +21,8 @@ public interface CaseDao {
 	List<CaseDetails> getLiveCaseList(String username);
     void getExcelMail(String zone);
     String updateCaseTypeAndSubType(CaseDetails casedetail);
+    List<CaseSubStatus> getCaseDetailByLevel(String user_role);
+    
+    
     
 }

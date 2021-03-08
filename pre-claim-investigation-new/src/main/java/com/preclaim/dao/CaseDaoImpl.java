@@ -32,6 +32,7 @@ import com.preclaim.config.CustomMethods;
 import com.preclaim.models.CaseDetailList;
 import com.preclaim.models.CaseDetails;
 import com.preclaim.models.CaseMovement;
+import com.preclaim.models.CaseSubStatus;
 import com.preclaim.models.InvestigationType;
 import com.preclaim.models.Location;
 import com.preclaim.models.MailConfig;
@@ -131,7 +132,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
-							casedetail.setCaseType(rs.getString("caseType"));
+							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							return casedetail;
 						});
@@ -155,7 +156,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
-							casedetail.setCaseType(rs.getString("caseType"));
+							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							return casedetail;
 						});
@@ -179,7 +180,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
-							casedetail.setCaseType(rs.getString("caseType"));
+							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							return casedetail;
 						});
@@ -307,10 +308,9 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public String updateCaseTypeAndSubType(CaseDetails casedetail) {
 		try {
-			String sql = "UPDATE case_lists SET caseType=? ,caseSubStatus =? where caseId = ?";
-			template.update(sql,casedetail.getCaseType(),
+			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseSubStatus =? where caseId = ?";
+			template.update(sql,casedetail.getNotCleanCategory(),
 					casedetail.getCaseSubStatus(),casedetail.getCaseId());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			CustomMethods.logError(e);
@@ -691,5 +691,29 @@ public class CaseDaoImpl implements CaseDao {
 			return null;
 		}
 	}
+
+	@Override
+	public List<CaseSubStatus> getCaseDetailByLevel(String user_role) {
+		try {
+			String sql = "SELECT * FROM case_substatus where user_role = ?";
+			List<CaseSubStatus> caseDetail = this.template.query(sql, new Object[] { user_role },
+					(ResultSet rs, int rowCount) -> {
+						CaseSubStatus detail = new CaseSubStatus();
+						detail.setId(rs.getLong("id"));
+						detail.setUser_role(rs.getString("user_role"));
+						detail.setCase_status(rs.getString("Case_status"));
+						detail.setCaseSubStatus(rs.getString("caseSubStatus"));
+						detail.setLevel(rs.getInt("level"));
+						return detail;
+					});
+			return  caseDetail;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return null;
+		}
+	}
+	
 
 }

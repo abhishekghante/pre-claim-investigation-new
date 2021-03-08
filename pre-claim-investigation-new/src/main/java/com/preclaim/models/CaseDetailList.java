@@ -14,8 +14,8 @@ public class CaseDetailList {
 	private String assigneeName;
 	private String caseStatus;
 	private double fees;
-	private String caseType;
 	private String caseSubStatus;
+	private String notCleanCategory;
 
 	public CaseDetailList() {
 		srNo = 0;
@@ -30,7 +30,7 @@ public class CaseDetailList {
 		assigneeName = "";
 		caseStatus = "";
 		fees = 0;
-		caseType = "";
+		notCleanCategory = "";
 		caseSubStatus = "";
 
 	}
@@ -131,12 +131,12 @@ public class CaseDetailList {
 		this.fees = fees;
 	}
 
-	public String getCaseType() {
-		return caseType;
+	public String getNotCleanCategory() {
+		return notCleanCategory;
 	}
 
-	public void setCaseType(String caseType) {
-		this.caseType = caseType;
+	public void setNotCleanCategory(String notCleanCategory) {
+		this.notCleanCategory = notCleanCategory;
 	}
 
 	public String getCaseSubStatus() {
