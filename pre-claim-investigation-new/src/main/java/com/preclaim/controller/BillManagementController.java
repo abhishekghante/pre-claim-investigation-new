@@ -51,7 +51,6 @@ public class BillManagementController {
 	    		session.removeAttribute("success_message");
 	    	}
 	    	session.setAttribute("ScreenDetails", details);
-	    	session.setAttribute("billingPendingList",billingDao.billingEnquiryPendingList());
 	    	return "common/templatecontent"; 
 	    }
 	
@@ -72,6 +71,7 @@ public class BillManagementController {
 	    		session.removeAttribute("success_message");
 	    	}
 			session.setAttribute("ScreenDetails", details);
+			session.setAttribute("billingPendingList",billingDao.billingEnquiryPendingList());
 			return "common/templatecontent";
 		} 
 	  
@@ -107,23 +107,19 @@ public class BillManagementController {
 		  empinfo.put( 0, new Object[] {"SR NO", "CASE ID", "POLICY NUMBER", "INVESTIGATION ID", "INTIMATION TYPE", "SUPERVISOR ID", "SUPERVISOR NAME", "CHARGES"});
 		  int i=1;
 		  for(BillManagementList listAllValues :billingList) 
-		    {
-			 
+		    { 
 		        empinfo.put( i, new Object[] {i,listAllValues.getCaseID(), listAllValues.getPolicyNumber(), listAllValues.getInvestigationId(), listAllValues.getInitimationType()
 		        		                        ,listAllValues.getSupervisorID(),listAllValues.getSupervisorName(),listAllValues.getCharges()});
 		        i++;
-		    }
-             
+		    }   
              //Iterate over data and write to sheet
              Set<Integer> keyid = empinfo.keySet();
              int rowid = 0;
-              
-		
 		  for (Integer key : keyid) 
 		  { 
 			  row = spreadsheet.createRow(rowid++); Object []
 		      objectArr = empinfo.get(key); int cellid = 0;
-		  
+		      
 		    for (Object obj : objectArr)
 		    { 
 			  Cell cell = row.createCell(cellid++);

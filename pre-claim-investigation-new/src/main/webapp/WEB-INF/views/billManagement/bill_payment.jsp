@@ -1,19 +1,16 @@
+<%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import = "java.util.List" %>
 <%@page import = "java.util.ArrayList" %>
-<%@page import = "com.preclaim.models.CaseDetailList"%>
+<%@page import = "com.preclaim.models.BillManagementList"%>
 <%@page import = "com.preclaim.models.IntimationType" %>
 <%@page import = "com.preclaim.models.InvestigationType" %>
-<%-- <%
+ <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 boolean allow_delete = user_permission.contains("messages/delete");
 boolean allow_add = user_permission.contains("messages/add");
-List<CaseDetailList> pendingCaseDetailList = (List<CaseDetailList>)session.getAttribute("pendingCaseList");
-session.removeAttribute("pendingCaseList");
-List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
-session.removeAttribute("investigation_list");
-List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
-session.removeAttribute("intimation_list");
-%> --%>
+List<BillManagementList> billManagementList = (List<BillManagementList>)session.getAttribute("billingPendingList");
+session.removeAttribute("billingPendingList");
+%> 
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
@@ -24,7 +21,7 @@ session.removeAttribute("intimation_list");
       <div class="portlet-title">
         <div class="caption">
             <i class="icon-users font-green-sharp"></i>
-            <span class="caption-subject font-green-sharp sbold">Bill Payment Lists</span>
+            <span class="caption-subject font-green-sharp sbold">Bill Enquiry Lists</span>
         </div>
        <%--  <%if(allow_add){ %> --%>
         <div class="actions">
@@ -46,7 +43,8 @@ session.removeAttribute("intimation_list");
                   <div class="table-responsive">
                     <table id="pending_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
-                      <tr class="tbl_head_bg">
+                        <tr class="tbl_head_bg">
+                         <th class="head1 no-sort"><input type="checkbox" id="checkall" /></th>
                           <th class="head1 no-sort">Sr No.</th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
@@ -69,29 +67,31 @@ session.removeAttribute("intimation_list");
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
+                          <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
-                    <%--   <tbody>
-                        <%if(pendingCaseDetailList!=null){
-                        	for(CaseDetailList list_case :pendingCaseDetailList){%>                       
+                       <tbody>
+                        <%if(billManagementList!=null){
+                        	for(BillManagementList list_case :billManagementList){%>                       
                           
                           <tr>
-                  				<td><%= list_case.getSrNo()%></td>
-                  				<td><%=list_case.getCaseId()%></td>
+                                <td><input type="checkbox" id="selectedCategory" value="<%=list_case.getCaseID()%>" /></td>
+                  				<td><%=list_case.getSrNo()%></td>
+                  				<td><%=list_case.getCaseID()%></td>
                   			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
-                  				<td><%=list_case.getSumAssured()%></td>
-                                <td><%=list_case.getIntimationType()%></td>
-                               <td ><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
+                  				<td><%=list_case.getInvestigationId()%></td>
+                  				<td><%=list_case.getInitimationType()%></td>
+                                <td><%=list_case.getSupervisorID()%></td>
+                                <td><%=list_case.getSupervisorName()%></td>
+                                <td><%=list_case.getCharges()%></td>
                                 <td>
-	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" 
+	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseID()%>" 
 	                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 	                             	<i class="glyphicon glyphicon-edit"></i>
 	                         	 </a>
                          	   
 	                             <a href="#" data-toggle="tooltip" title="Delete" 
-	                             	onClick="return deleteMessage('<%=list_case.getCaseId() %>',
+	                             	onClick="return deleteMessage('<%=list_case.getCaseID() %>',
 	                             	<%=allow_delete%>);" class="btn btn-danger btn-xs"> 
 	                             	<i class="glyphicon glyphicon-remove"></i>
 	                           	 </a>
@@ -104,12 +104,14 @@ session.removeAttribute("intimation_list");
                        <% 		
                        	}
                         } 
-                        %>
-                      
-                      
-                      
-                      </tbody> --%>
+                        %>  
+                      </tbody> 
                     </table>
+                     <div class="row">
+                      <div class="col-md-offset-4 col-md-8">
+                        <input type="button"  class="btn btn-info" id="createExcelData" onClick="createExcelData()" value="Add Intimation"/>
+                      </div>
+                    </div>
                   </div>                 
                 </div>
               <div class="clearfix"></div>
@@ -127,7 +129,7 @@ $(document).ready(function() {
   var table = $('#pending_case_list').DataTable();
 
    $('#pending_case_list tfoot th').each( function () {
-	    if( i == 1 || i == 2 || i == 5 || i == 6 ){
+    if( i == 1 || i == 2 || i == 5 || i == 6 ){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
     else if(i == 3)
@@ -179,4 +181,67 @@ $(document).ready(function() {
   });
 });
 
+</script>
+<script type="text/javascript">
+    $("#pending_case_list #checkall").click(function () {
+        if ($("#pending_case_list #checkall").is(':checked')) {
+            $("#pending_case_list input[type=checkbox]").each(function () {
+                $(this).prop("checked", true);
+            });
+
+        } else {
+            $("#pending_case_list input[type=checkbox]").each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>
+
+
+<script>
+function createExcelData() { 
+	
+        //Create an Array.
+        var selected = new Array();
+ 
+        //Reference the Table.
+        var pending_case_list =$("#pending_case_list");
+ 
+        //Reference all the CheckBoxes in Table.
+        var chks = $("#pending_case_list").find("INPUT")
+ 
+        
+        // Loop and push the checked CheckBox value in Array.
+        for (var i = 0; i < chks.length; i++) {
+            if (chks[i].checked) {
+                selected.push(chks[i].value);
+            }
+        }
+       //Display the selected CheckBox values.
+        console.log("chks"+selected);
+       
+        $.ajax({
+	        type    : 'POST',
+	        url     : 'getCheckboxValue',
+	        dataType: 'json',
+	        data    : {'selected':selected},
+	        success : function( msg ) {
+	            if( msg != "****" ) 
+	                toastr.error(msg,'Error');
+	            else
+	            	toastr.error(msg,'Sucess');
+	            
+	        }
+	    });
+
+
+
+
+};
+
+
+    
+    
+    
+    
 </script>
