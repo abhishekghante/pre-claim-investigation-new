@@ -234,7 +234,6 @@ public class CaseController {
 		caseDetail.setNomineeContactNumber(request.getParameter("nomineeMob"));
 		caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
-		caseDetail.setFees(Double.parseDouble(request.getParameter("fees")));
 		caseDetail.setCreatedBy(user.getUsername());
 		long caseId = caseDao.addcase(caseDetail);
 		String zone = request.getParameter("claimantZone");
@@ -358,7 +357,6 @@ public class CaseController {
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setUpdatedBy(user.getUsername());
 		caseDetail.setCaseId(Long.parseLong(request.getParameter("caseId")));
-		caseDetail.setFees(Double.parseDouble(request.getParameter("fees")));
 		System.out.println(caseDetail.toString());
 		String update = caseDao.updateCaseDetails(caseDetail);
 		if (!update.equals("****"))

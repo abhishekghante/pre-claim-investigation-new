@@ -41,9 +41,9 @@ public class CaseDetails {
 	private String createdDate;
 	private String updatedDate;
 	private String updatedBy;
-	private double fees;
 	private String caseSubStatus;
 	private String notCleanCategory;
+	private String paymentApproved;;
 
 	public CaseDetails() {
 		caseId = 0;
@@ -81,9 +81,10 @@ public class CaseDetails {
 		createdDate = "";
 		updatedDate = "";
 		updatedBy = "";
-		fees = 0;
 		notCleanCategory = "";
 		caseSubStatus = "";
+		paymentApproved = "";
+
 	}
 
 	public long getCaseId() {
@@ -382,14 +383,6 @@ public class CaseDetails {
 		this.updatedBy = updatedBy;
 	}
 
-	public double getFees() {
-		return fees;
-	}
-
-	public void setFees(double fees) {
-		this.fees = fees;
-	}
-
 	public String getNotCleanCategory() {
 		return notCleanCategory;
 	}
@@ -404,6 +397,14 @@ public class CaseDetails {
 
 	public void setCaseSubStatus(String caseSubStatus) {
 		this.caseSubStatus = caseSubStatus;
+	}
+
+	public String getPaymentApproved() {
+		return paymentApproved;
+	}
+
+	public void setPaymentApproved(String paymentApproved) {
+		this.paymentApproved = paymentApproved;
 	}
 
 	@Override
@@ -422,8 +423,8 @@ public class CaseDetails {
 				+ ", assignerRole=" + assignerRole + ", assignerName=" + assignerName + ", assignerStatus="
 				+ assignerStatus + ", assignerRemarks=" + assignerRemarks + ", createdBy=" + createdBy
 				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
-				+ ", fees=" + fees + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory=" + notCleanCategory
-				+ "]";
+				+ ", caseSubStatus=" + caseSubStatus + ", notCleanCategory=" + notCleanCategory + ", paymentApproved="
+				+ paymentApproved + "]";
 	}
 
 }

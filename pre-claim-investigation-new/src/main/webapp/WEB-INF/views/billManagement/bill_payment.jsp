@@ -53,12 +53,10 @@ session.removeAttribute("billingPendingList");
                           <th class="head1 no-sort">Supervisor ID</th>
                           <th class="head1 no-sort">Supervisor Name</th>
                           <th class="head1 no-sort">Charges</th>
-                          <th class="head1 no-sort">Action</th>
                         </tr>
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
-                          <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
@@ -83,24 +81,8 @@ session.removeAttribute("billingPendingList");
                   				<td><%=list_case.getInitimationType()%></td>
                                 <td><%=list_case.getSupervisorID()%></td>
                                 <td><%=list_case.getSupervisorName()%></td>
-                                <td><%=list_case.getCharges()%></td>
-                                <td>
-	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseID()%>" 
-	                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
-	                             	<i class="glyphicon glyphicon-edit"></i>
-	                         	 </a>
-                         	   
-	                             <a href="#" data-toggle="tooltip" title="Delete" 
-	                             	onClick="return deleteMessage('<%=list_case.getCaseID() %>',
-	                             	<%=allow_delete%>);" class="btn btn-danger btn-xs"> 
-	                             	<i class="glyphicon glyphicon-remove"></i>
-	                           	 </a>
-                         
-                         		</td>
-                                
-                          
-                          </tr>                      
-                       
+                                <td><%=list_case.getCharges()%></td>                                                       
+                          </tr>                                          
                        <% 		
                        	}
                         } 
@@ -109,7 +91,7 @@ session.removeAttribute("billingPendingList");
                     </table>
                      <div class="row">
                       <div class="col-md-offset-4 col-md-8">
-                        <input type="button"  class="btn btn-info" id="createExcelData" onClick="createExcelData()" value="Add Intimation"/>
+                        <input type="button"  class="btn btn-info" id="createExcelData" onClick="createExcelData()" value="Create Excel"/>
                       </div>
                     </div>
                   </div>                 
@@ -225,12 +207,15 @@ function createExcelData() {
 	        url     : 'getCheckboxValue',
 	        dataType: 'json',
 	        data    : {'selected':selected},
+	        beforeSend: function() { 
+	            $("#createExcelData").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	            $("#createExcelData").prop('disabled', true);
+	        },
 	        success : function( msg ) {
 	            if( msg != "****" ) 
 	                toastr.error(msg,'Error');
 	            else
-	            	toastr.error(msg,'Sucess');
-	            
+	            	toastr.success("File uploaded successfully","Success");   
 	        }
 	    });
 

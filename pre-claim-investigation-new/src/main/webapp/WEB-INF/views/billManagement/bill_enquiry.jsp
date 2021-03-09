@@ -3,17 +3,14 @@
 <%@page import = "com.preclaim.models.CaseDetailList"%>
 <%@page import = "com.preclaim.models.IntimationType" %>
 <%@page import = "com.preclaim.models.InvestigationType" %>
-<%-- <%
+<%@page import = "com.preclaim.models.BillManagementList"%>
+ <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 boolean allow_delete = user_permission.contains("messages/delete");
 boolean allow_add = user_permission.contains("messages/add");
-List<CaseDetailList> pendingCaseDetailList = (List<CaseDetailList>)session.getAttribute("pendingCaseList");
-session.removeAttribute("pendingCaseList");
-List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
-session.removeAttribute("investigation_list");
-List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
-session.removeAttribute("intimation_list");
-%> --%>
+List<BillManagementList> billManagementList = (List<BillManagementList>)session.getAttribute("billingEnquiryList");
+session.removeAttribute("billingEnquiryList");
+%>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
@@ -55,7 +52,6 @@ session.removeAttribute("intimation_list");
                           <th class="head1 no-sort">Supervisor ID</th>
                           <th class="head1 no-sort">Supervisor Name</th>
                           <th class="head1 no-sort">Charges</th>
-                          <th class="head1 no-sort">Action</th>
                         </tr>
                       </thead>
                       <tfoot>
@@ -68,47 +64,28 @@ session.removeAttribute("intimation_list");
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
-                          <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
-                    <%--   <tbody>
-                        <%if(pendingCaseDetailList!=null){
-                        	for(CaseDetailList list_case :pendingCaseDetailList){%>                       
+                     <tbody>
+                        <%if(billManagementList!=null){
+                        	for(BillManagementList list_case :billManagementList){%>                       
                           
                           <tr>
-                  				<td><%= list_case.getSrNo()%></td>
-                  				<td><%=list_case.getCaseId()%></td>
+                  				<td><%=list_case.getSrNo()%></td>
+                  				<td><%=list_case.getCaseID()%></td>
                   			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
-                  				<td><%=list_case.getSumAssured()%></td>
-                                <td><%=list_case.getIntimationType()%></td>
-                               <td ><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
-                                <td>
-	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" 
-	                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
-	                             	<i class="glyphicon glyphicon-edit"></i>
-	                         	 </a>
-                         	   
-	                             <a href="#" data-toggle="tooltip" title="Delete" 
-	                             	onClick="return deleteMessage('<%=list_case.getCaseId() %>',
-	                             	<%=allow_delete%>);" class="btn btn-danger btn-xs"> 
-	                             	<i class="glyphicon glyphicon-remove"></i>
-	                           	 </a>
-                         
-                         		</td>
-                                
-                          
+                  				<td><%=list_case.getInvestigationId()%></td>
+                  				<td><%=list_case.getInitimationType()%></td>
+                                <td><%=list_case.getSupervisorID()%></td>
+                                <td><%=list_case.getSupervisorName()%></td>
+                                <td><%=list_case.getCharges()%></td>
                           </tr>                      
                        
                        <% 		
                        	}
                         } 
-                        %>
-                      
-                      
-                      
-                      </tbody> --%>
+                        %>  
+                      </tbody>
                     </table>
                   </div>                 
                 </div>

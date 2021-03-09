@@ -136,15 +136,6 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	<%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="fees">Fees
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="number" value="<%=case_detail.getFees()%>" placeholder="fees" name="fees" id="fees" 
-                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
-                </div>
-              </div>
               <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="msgIntimationType">Select Intimation Type 
                 	<span class="text-danger">*</span></label>
@@ -648,7 +639,6 @@ $("#assignmessagesubmit").click(function()
     var toRole         = $( '#edit_message_form #toRole' ).val();
     var toStatus       = $( '#edit_message_form #toStatus' ).val();
     var toRemarks      = $( '#edit_message_form #toRemarks' ).val();
-    var fees           = $( '#edit_message_form #fees' ).val();
     var caseType       = $( '#edit_message_form #caseType' ).val();
     var caseSubstatus  = $( '#edit_message_form #caseSubstatus').val();
     
@@ -671,7 +661,6 @@ $("#assignmessagesubmit").click(function()
     $("#insuredAdd").removeClass('has-error-2');
     $("#toRole").removeClass('has-error-2');
     $("#toId").removeClass('has-error-2');
-    $("#fees").removeClass('has-error-2');
     $("#caseType").removeClass('has-error-2');
     $("#caseSubstatus").removeClass('has-error-2');
     
@@ -775,13 +764,6 @@ $("#assignmessagesubmit").click(function()
         $("#sumAssured").focus();
         errorFlag = 1;
     }
-    if(fees == '')
-    {
-        toastr.error('fees cannot be empty','Error');
-        $("#fees").addClass('has-error-2');
-        $("#fees").focus();
-        errorFlag = 1;
-    }
     if(insuredDOB == '')
     {
       	toastr.error('Insured Date of Birth cannot be empty','Error');
@@ -863,7 +845,7 @@ $("#assignmessagesubmit").click(function()
 	    		'insuredDOD':insuredDOB,'insuredDOB':insuredDOD, 'sumAssured':sumAssured,   
 	    		'msgIntimationType':msgIntimationType,'locationId':locationId,
 	    		'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,
-	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"caseType":caseType,"fees":fees,"caseSubstatus":caseSubstatus, 
+	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"caseType":caseType, "caseSubstatus":caseSubstatus, 
 	    		"caseId": caseId},
 	    success: function( data )
 	    {

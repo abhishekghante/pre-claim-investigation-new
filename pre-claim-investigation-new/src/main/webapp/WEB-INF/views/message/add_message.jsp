@@ -108,16 +108,6 @@ session.removeAttribute("userRole");
                   	class="form-control">
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="fees">Fees
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="number" placeholder="fees" name="fees" id="fees" 
-                  	class="form-control" value="%{getText('{0,number,#,###.##}',{fees})}">
-                </div>
-              </div>
-              
               
               <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="msgIntimationType">Select Intimation Type 
@@ -288,7 +278,6 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     var nomineeAdd     = $( '#add_message_form #nomineeAdd').val();
     var insuredAdd     = $( '#add_message_form #insuredAdd').val();
     var roleName       = $( '#add_message_form #roleName').val();
-    var fees       = $( '#add_message_form #fees').val();
   /*   var assigneeId       = $( '#add_message_form #assigneeId').val(); */
     
     var currentDate = new Date();
@@ -309,7 +298,6 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     $("#nomineeAdd").removeClass('has-error-2');
     $("#insuredAdd").removeClass('has-error-2');
     $("#roleName").removeClass('has-error-2');
-    $("#fees").removeClass('has-error-2');
   /*   $("#assigneeId").removeClass('has-error-2'); */
     
     var errorFlag = 0;
@@ -411,13 +399,6 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
         $("#sumAssured").focus();
         errorFlag = 1;
     }
-    if(fees == '')
-    {
-        toastr.error('fees cannot be empty','Error');
-        $("#fees").addClass('has-error-2');
-        $("#fees").focus();
-        errorFlag = 1;
-    }
     if(insuredDOB == '')
     {
       	toastr.error('Insured Date of Birth cannot be empty','Error');
@@ -479,7 +460,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
 	    url: 'addMessage',
 	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,'insuredDOD':insuredDOB,'insuredDOB':insuredDOD,
 	    	       'sumAssured':sumAssured,'msgIntimationType':msgIntimationType,'claimantCity':claimantCity,'claimantState':claimantState, 'claimantZone': claimantZone,
-	    	       'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,'insuredAdd':insuredAdd, 'roleName':roleName,'fees':fees},
+	    	       'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,'insuredAdd':insuredAdd, 'roleName':roleName},
 	    beforeSend: function() {
 	    	$("#addmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 	        $("#addmessagesubmit").prop('disabled', true);

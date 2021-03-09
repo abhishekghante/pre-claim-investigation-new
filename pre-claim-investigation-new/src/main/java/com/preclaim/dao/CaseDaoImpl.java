@@ -86,18 +86,18 @@ public class CaseDaoImpl implements CaseDao {
 		try {
 			String current_date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 			String query = "INSERT INTO case_lists (policyNumber, investigationId, insuredName, "
-					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, "
+					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, paymentApproved, "
 					+ "nominee_name, nominee_ContactNumber, nominee_address, insured_address,"
-					+ "case_description,fees, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
+					+ "case_description, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
 					+ "audioFilePath, videoFilePath, signatureFilePath , capturedDate, createdBy, "
 					+ "createdDate, updatedDate, updatedBy) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned', ?, ?, ?, ?, '', ?, '', '', '', '', '', "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned','Not-paid', ?, ?, ?, ?, '', '', '', '', '', '', "
 					+ "'', '', '', '', ?, ?, getdate(), '')";
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getFees(), casedetail.getCreatedBy(), current_date);
+					casedetail.getInsured_address(), casedetail.getCreatedBy(), current_date);
 
 			query = "SELECT caseId FROM case_lists where policyNumber = ? and createdBy = ? and "
 					+ "createdDate = ? and updatedBy = ''";
@@ -129,7 +129,6 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setInsuredName(rs.getString("insuredName"));
 							casedetail.setInvestigationCategoryId(rs.getInt("investigationId"));
 							casedetail.setSumAssured(rs.getDouble("sumAssured"));
-							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
@@ -153,7 +152,6 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setInsuredName(rs.getString("insuredName"));
 							casedetail.setInvestigationCategoryId(rs.getInt("investigationId"));
 							casedetail.setSumAssured(rs.getDouble("sumAssured"));
-							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
@@ -177,7 +175,6 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setInsuredName(rs.getString("insuredName"));
 							casedetail.setInvestigationCategoryId(rs.getInt("investigationId"));
 							casedetail.setSumAssured(rs.getDouble("sumAssured"));
-							casedetail.setFees(rs.getDouble("fees"));
 							casedetail.setCaseStatus(rs.getString("caseStatus"));
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
@@ -246,7 +243,6 @@ public class CaseDaoImpl implements CaseDao {
 						detail.setInsuredDOD(rs.getString("insuredDOD"));
 						detail.setInsuredDOB(rs.getString("insuredDOB"));
 						detail.setSumAssured(rs.getInt("sumAssured"));
-						detail.setFees(rs.getDouble("fees"));
 						detail.setIntimationType(rs.getString("intimationType"));
 						detail.setLocationId(rs.getInt("locationId"));
 						detail.setNominee_name(rs.getString("nominee_name"));
@@ -290,12 +286,12 @@ public class CaseDaoImpl implements CaseDao {
 		try {
 			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, insuredDOD = ?, insuredDOB = ?, sumAssured = ?, "
 					+ "intimationType = ?, locationId = ?, nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
-					+ "insured_address = ?, updatedDate = getdate(), updatedBy = ?,fees = ? where caseId = ?";
+					+ "insured_address = ?, updatedDate = getdate(), updatedBy = ? where caseId = ?";
 			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getUpdatedBy(), casedetail.getFees(),casedetail.getCaseId());
+					casedetail.getInsured_address(), casedetail.getUpdatedBy(), casedetail.getCaseId());
 
 		} catch (Exception e) {
 			e.printStackTrace();

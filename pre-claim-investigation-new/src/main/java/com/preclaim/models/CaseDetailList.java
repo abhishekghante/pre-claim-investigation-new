@@ -13,9 +13,9 @@ public class CaseDetailList {
 	private int assigneeId;
 	private String assigneeName;
 	private String caseStatus;
-	private double fees;
 	private String caseSubStatus;
 	private String notCleanCategory;
+	private String paymentApproved;
 
 	public CaseDetailList() {
 		srNo = 0;
@@ -29,9 +29,9 @@ public class CaseDetailList {
 		assigneeId = 0;
 		assigneeName = "";
 		caseStatus = "";
-		fees = 0;
 		notCleanCategory = "";
 		caseSubStatus = "";
+		paymentApproved ="";
 
 	}
 
@@ -123,14 +123,6 @@ public class CaseDetailList {
 		this.caseStatus = caseStatus;
 	}
 
-	public double getFees() {
-		return fees;
-	}
-
-	public void setFees(double fees) {
-		this.fees = fees;
-	}
-
 	public String getNotCleanCategory() {
 		return notCleanCategory;
 	}
@@ -146,5 +138,25 @@ public class CaseDetailList {
 	public void setCaseSubStatus(String caseSubStatus) {
 		this.caseSubStatus = caseSubStatus;
 	}
+
+	public String getPaymentApproved() {
+		return paymentApproved;
+	}
+
+	public void setPaymentApproved(String paymentApproved) {
+		this.paymentApproved = paymentApproved;
+	}
+
+	@Override
+	public String toString() {
+		return "CaseDetailList [srNo=" + srNo + ", caseId=" + caseId + ", policyNumber=" + policyNumber
+				+ ", insuredName=" + insuredName + ", investigationCategoryId=" + investigationCategoryId
+				+ ", investigationCategory=" + investigationCategory + ", intimationType=" + intimationType
+				+ ", sumAssured=" + sumAssured + ", assigneeId=" + assigneeId + ", assigneeName=" + assigneeName
+				+ ", caseStatus=" + caseStatus + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory="
+				+ notCleanCategory + ", paymentApproved=" + paymentApproved + "]";
+	}
+	
+	
 
 }

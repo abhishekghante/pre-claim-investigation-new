@@ -148,6 +148,16 @@ session.removeAttribute("location_list");
                   </select>
                 </div>
               </div>
+               <div class="form-group">
+                <label class="col-md-4 control-label" for="fees">Fees
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="number" value="<%=user_details.getFees()%>" placeholder="fees" name="fees" id="fees" 
+                  	class="form-control">
+                </div>
+              </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="city">City <span class="text-danger">*</span></label>
                 <div class="col-md-8">

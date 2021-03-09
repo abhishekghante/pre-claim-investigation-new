@@ -34,6 +34,7 @@ public class UserDetails {
 	private String createdon;
 	private String updatedDate;
 	private String updatedBy;
+	private double fees;
 
 	public UserDetails() {
 		this.full_name = "";
@@ -212,6 +213,14 @@ public class UserDetails {
 		return userImageb64;
 	}
 
+	public double getFees() {
+		return fees;
+	}
+
+	public void setFees(double fees) {
+		this.fees = fees;
+	}
+
 	public void setUserImageb64(String userImageb64) {
 		try {
 			this.userImageb64 = "";
@@ -243,7 +252,7 @@ public class UserDetails {
 				+ userImageb64 + ", contactNumber=" + contactNumber + ", state=" + state + ", city=" + city
 				+ ", address1=" + address1 + ", address2=" + address2 + ", address3=" + address3 + ", createdBy="
 				+ createdBy + ", createdon=" + createdon + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", fees=" + fees + "]";
 	}
 
 	public void decodePassword(String encodedPassword) {
