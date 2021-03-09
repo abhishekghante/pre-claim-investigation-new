@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.preclaim.config.Config;
 import com.preclaim.config.CustomMethods;
 import com.preclaim.dao.ReportDao;
+import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.TopInvestigatorList;
 
@@ -49,6 +50,32 @@ public class ReportController {
     	return "common/templatecontent";
     }
     
+	@RequestMapping(value = "/vendorWiseScreen", method = RequestMethod.GET)
+    public String vendorWiseScreen(HttpSession session) {
+    	session.removeAttribute("ScreenDetails");
+    	ScreenDetails details = new ScreenDetails();
+    	details.setScreen_name("../report/vendorWiseScreen.jsp");
+    	details.setScreen_title("Vendor wise screen Lists");
+    	details.setMain_menu("Report");
+    	details.setSub_menu1("Vendor wise screen");
+    	session.setAttribute("ScreenDetails", details);
+    	session.setAttribute("VendorList", reportDao.getVendor());
+    	return "common/templatecontent";
+    }
+	
+	@RequestMapping(value = "/regionWiseScreen", method = RequestMethod.GET)
+    public String regionWiseScreen(HttpSession session) {
+    	session.removeAttribute("ScreenDetails");
+    	ScreenDetails details = new ScreenDetails();
+    	details.setScreen_name("../report/regionWiseScreen.jsp");
+    	details.setScreen_title("Region wise screen Lists");
+    	details.setMain_menu("Report");
+    	details.setSub_menu1("Region wise screen");
+    	session.setAttribute("ScreenDetails", details);
+    	session.setAttribute("StateList", reportDao.getRegion());
+    	return "common/templatecontent";
+    }
+	
 	@RequestMapping(value = "/downloadInvestigatorReport", method = RequestMethod.POST)
     public @ResponseBody String downloadInvestigatorReport(HttpServletRequest request) {
 		String startDate = request.getParameter("startDate");
@@ -58,10 +85,10 @@ public class ReportController {
 		List<TopInvestigatorList> investigator = reportDao.getTopInvestigatorList(startDate, endDate); 
 		
 		if(investigator == null)
-			return "No case investigated";
+			return "No cases investigated";
 		
 		if(investigator.size() <= 1)
-			return "No case investigated";
+			return "No cases investigated";
 		
 		float threshold = investigator.get(investigator.size() - 1).getNotCleanRate();
 		
@@ -78,7 +105,7 @@ public class ReportController {
 			
 			//Print Header
 			cell.setCellValue("Top 15 Investigators in terms of volume");
-			style.setFillBackgroundColor(IndexedColors.BLUE.getIndex());
+			style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
 			cell.setCellStyle(style);
 			colNum++;
 			
@@ -109,13 +136,13 @@ public class ReportController {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
 				if(item.getNotCleanRate() <= threshold - 2)
-					style.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
+					style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
 				else if(item.getNotCleanRate() <= threshold)
-					style.setFillBackgroundColor(IndexedColors.RED.getIndex());
+					style.setFillForegroundColor(IndexedColors.RED.getIndex());
 				else if(item.getNotCleanRate() >= threshold) 
-					style.setFillBackgroundColor(IndexedColors.GREEN.getIndex());
+					style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
 				else
-					style.setFillBackgroundColor(IndexedColors.BLUE.getIndex());
+					style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(item.getInvestigator());
 				cell.setCellStyle(style);
@@ -144,6 +171,10 @@ public class ReportController {
 				rowNum++;
 				newRow = investigator_sheet.createRow(rowNum);
 			}
+			
+			//Legends
+			//newRow = investigator_sheet.getRow(2);
+		
 			String filename = "Top Investigator_" + LocalDate.now() + ".xlsx";
 			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
 			investigator_wb.write(outputStream);
@@ -158,35 +189,237 @@ public class ReportController {
 		}
     }
 	
-	@RequestMapping(value = "/vendorWiseScreen", method = RequestMethod.GET)
-    public String vendorWiseScreen(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
-    	ScreenDetails details = new ScreenDetails();
-    	details.setScreen_name("../report/vendorWiseScreen.jsp");
-    	details.setScreen_title("Vendor wise screen Lists");
-    	details.setMain_menu("Report");
-    	details.setSub_menu1("Vendor wise screen");
-    	session.setAttribute("ScreenDetails", details);
-    	session.setAttribute("VendorList", reportDao.getVendor());
-    	return "common/templatecontent";
-    }
 	
-	@RequestMapping(value = "/downloadVendorwiseReport", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/downloadVendorwiseReport", method = RequestMethod.POST)
     public @ResponseBody String downloadVendorwiseReport(HttpServletRequest request) {
-    	return "";
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		
+		//Print Body
+		List<TopInvestigatorList> investigator = reportDao.getTopInvestigatorList(startDate, endDate); 
+		
+		if(investigator == null)
+			return "No cases investigated";
+		
+		if(investigator.size() <= 1)
+			return "No cases investigated";
+		
+		float threshold = investigator.get(investigator.size() - 1).getNotCleanRate();
+		
+		//Generate Excel
+		try 
+		{
+			XSSFWorkbook investigator_wb = new XSSFWorkbook();
+			XSSFSheet investigator_sheet = investigator_wb.createSheet("Top 15 Investigator");
+			int rowNum = 1;
+			Row newRow = investigator_sheet.createRow(rowNum);
+			int colNum = 1;
+			Cell cell = newRow.createCell(colNum);
+			CellStyle style = investigator_wb.createCellStyle();
+			
+			//Print Header
+			cell.setCellValue("Top 15 Investigators in terms of volume");
+			style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Clean");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Grand Total");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean Rate");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			//Print Body
+			rowNum++;
+			newRow = investigator_sheet.createRow(rowNum);
+			for (TopInvestigatorList item : investigator) {
+				colNum = 1;
+				style = investigator_wb.createCellStyle();
+				if(item.getNotCleanRate() <= threshold - 2)
+					style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+				else if(item.getNotCleanRate() <= threshold)
+					style.setFillForegroundColor(IndexedColors.RED.getIndex());
+				else if(item.getNotCleanRate() >= threshold) 
+					style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+				else
+					style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getInvestigator());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getClean());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotClean());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getTotal());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotCleanRate());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				rowNum++;
+				newRow = investigator_sheet.createRow(rowNum);
+			}
+			
+			//Legends
+			//newRow = investigator_sheet.getRow(2);
+		
+			//Cell Asthetic Settings
+			investigator_sheet.autoSizeColumn(1);
+			investigator_sheet.autoSizeColumn(2);
+			investigator_sheet.autoSizeColumn(3);
+			investigator_sheet.autoSizeColumn(4);
+			investigator_sheet.autoSizeColumn(5);
+			
+			String filename = "Top Investigator_" + LocalDate.now() + ".xlsx";
+			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
+			investigator_wb.write(outputStream);
+			investigator_wb.close();
+			return filename;
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return e.getMessage();
+		}
     }
 	
-	@RequestMapping(value = "/regionWiseScreen", method = RequestMethod.GET)
-    public String regionWiseScreen(HttpSession session) {
-    	session.removeAttribute("ScreenDetails");
-    	ScreenDetails details = new ScreenDetails();
-    	details.setScreen_name("../report/regionWiseScreen.jsp");
-    	details.setScreen_title("Region wise screen Lists");
-    	details.setMain_menu("Report");
-    	details.setSub_menu1("Region wise screen");
-    	session.setAttribute("ScreenDetails", details);
-    	session.setAttribute("StateList", reportDao.getRegion());
-    	return "common/templatecontent";
+	@RequestMapping(value = "/downloadRegionwiseReport", method = RequestMethod.POST)
+    public @ResponseBody String downloadRegionwiseReport(HttpServletRequest request) {
+		
+		String region = request.getParameter("region");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		
+		//Print Body
+		List<RegionwiseList> regionwise = reportDao.getRegionwiseList(region, startDate, endDate); 
+		
+		if(regionwise == null)
+			return "No cases investigated";
+		
+		if(regionwise.size() <= 1)
+			return "No cases investigated";
+		
+		//Generate Excel
+		try 
+		{
+			XSSFWorkbook regionwise_wb = new XSSFWorkbook();
+			XSSFSheet regionwise_sheet = regionwise_wb.createSheet(region);
+			int rowNum = 1;
+			Row newRow = regionwise_sheet.createRow(rowNum);
+			int colNum = 1;
+			Cell cell = newRow.createCell(colNum);
+			CellStyle style = regionwise_wb.createCellStyle();
+			
+			//Print Header
+			cell.setCellValue("Investigator");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Clean");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("PIV Stopped");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("WIP");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Grand Total");
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean Rate");
+			colNum++;
+			
+			//Print Body
+			rowNum++;
+			newRow = regionwise_sheet.createRow(rowNum);
+			for (RegionwiseList item : regionwise) {
+				colNum = 1;
+				style = regionwise_wb.createCellStyle();
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getInvestigator());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getClean());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotClean());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getPiv());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getWip());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getTotal());
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotCleanRate());
+				colNum++;
+				
+				rowNum++;
+				newRow = regionwise_sheet.createRow(rowNum);
+			}
+			
+			//Legends
+			//newRow = investigator_sheet.getRow(2);
+		
+			String filename = "Regionwise_" + LocalDate.now() + ".xlsx";
+			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
+			regionwise_wb.write(outputStream);
+			regionwise_wb.close();
+			return filename;
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return e.getMessage();
+		}
     }
 	
 	@RequestMapping(value = "/uploadedDocument", method = RequestMethod.GET)

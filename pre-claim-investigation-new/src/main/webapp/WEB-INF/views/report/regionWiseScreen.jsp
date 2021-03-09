@@ -28,7 +28,7 @@ List<String> state_list = (List<String>)session.getAttribute("StateList");
         <div class="row">
            <div class="form-group">
            
-            <label class="col-md-1 control-label" for="Vendor">Select Region 
+            <label class="col-md-1 control-label" for="RegionName">Select Region 
                 	<span class="text-danger">*</span></label>
                 <div class="col-md-2">
                   <select name="RegionName" id="RegionName" class="form-control" tabindex="-1" required>
@@ -63,3 +63,64 @@ List<String> state_list = (List<String>)session.getAttribute("StateList");
     </div>
   </div>
 </div>
+<script type="text/javascript">
+$("#downloadRegionWiseReport").click(function(){
+	/*
+	<%if(!user_permission.contains("report/regionwise")){%>
+		toastr.error("Access Denied","Error");
+		return false;
+	<%}%>
+	*/
+	var region    = $('#RegionName').val();
+	var startDate = $('#startDate').val(); 
+	var endDate   = $('#endDate').val(); 
+	
+	var errorFlag = 0;
+	
+	if(endDate == '')
+	{
+		toastr.error("End Date cannot be blank","Error");
+		errorFlag = 1;
+	}
+	if(startDate == '')
+	{
+		toastr.error("Start Date cannot be blank","Error");
+		errorFlag = 1;
+	}
+	if(region == '')
+	{
+		toastr.error("Region not selected","Error");
+		errorFlag = 1;
+	}
+	if(errorFlag == 1)
+		return;
+		
+	var formdata = {'region' : region , 'startDate': startDate, 'endDate': endDate};
+	console.log(formdata);
+	$.ajax({
+	  type: "POST",
+	  url: 'downloadRegionwiseReport',
+	  data: formdata,
+	  beforeSend: function() { 
+	      $("#downloadRegionWiseReport").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	      $("#downloadRegionWiseReport").prop('disabled', true);
+	  },
+	  success: function( data ) {
+		  $("#downloadRegionWiseReport").html('<i class="fa fa-download pr-1"></i> Download');
+	      $("#downloadRegionWiseReport").prop('disabled', false);
+	    if(data.includes(".xlsx"))
+	    {
+	      toastr.success("Report downloaded successfully","Success");
+	      window.location.href = "${pageContext.request.contextPath}/report/downloadSysFile?filename=" + 
+			encodeURIComponent(data);
+	      $("#clear").trigger("click");
+	    }
+	    else
+	    {
+	      toastr.error( data,'Error' );
+	    }
+	  }
+	});
+     
+});
+</script>

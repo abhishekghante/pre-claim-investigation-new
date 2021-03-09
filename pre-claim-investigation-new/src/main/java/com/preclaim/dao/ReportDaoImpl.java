@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.preclaim.config.CustomMethods;
+import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.TopInvestigatorList;
 
 public class ReportDaoImpl implements ReportDao {
@@ -87,6 +88,25 @@ public class ReportDaoImpl implements ReportDao {
 		return investigator;
 	}
 	
-		
+	@Override
+	public List<RegionwiseList> getRegionwiseList(String region, String startDate, String endDate) {
+		List<RegionwiseList> regionwise = new ArrayList<RegionwiseList>();
+		regionwise.add(new RegionwiseList("Fourth Force Survelliance Indo Pvt. Ltd",344,67,17,104));
+		regionwise.add(new RegionwiseList("N.S Advisory Services",264,71,6,45));
+		regionwise.add(new RegionwiseList("NSA",143,10,14,104));
+		regionwise.add(new RegionwiseList("OURS",104,1,8,54));
+		regionwise.add(new RegionwiseList("Shilpi",83,13,6,62));
+		regionwise.add(new RegionwiseList("Findcentric cornerstone",37,2,3,14));
+		regionwise.add(new RegionwiseList("Shakti Services",15,8,2,4));
+		regionwise.add(new RegionwiseList("SMA E Expert",2,2,0,1));
+		regionwise.add(new RegionwiseList("Internal",0,0,4,0));
+		regionwise.add(new RegionwiseList("Ajoy Ghosh",2,1,0,0));
+		regionwise.add(new RegionwiseList("Iservze",0,0,0,2));
+		regionwise.add(new RegionwiseList("Deo Investigators",1,0,0,0));
+		regionwise.add(new RegionwiseList("Jp Case",0,0,0,1));
+		regionwise.add(new RegionwiseList("SMA EXPERTS",0,1,0,0));
+		regionwise.add(new RegionwiseList("Pranab Kumar Nath",0,1,0,0));
+		return regionwise;
+	}	
 
 }
