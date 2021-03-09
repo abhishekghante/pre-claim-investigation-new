@@ -122,6 +122,16 @@ session.removeAttribute("location_list");
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-md-4 control-label" for="fees">Fees
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="number" placeholder="fees" name="fees" id="fees" 
+                  	class="form-control" value="%{getText('{0,number,#,###.##}',{fees})}">
+                </div>
+              </div>
+              
+              <div class="form-group">
                 <label class="col-md-4 control-label" for="city">City <span class="text-danger">*</span></label>
                 <div class="col-md-8">
                   <select id="city" class="form-control" name="city">
@@ -197,6 +207,7 @@ function accountValidate() {
     var address1     = $.trim($('#add_account_form #address1').val());
     var address2     = $.trim($('#add_account_form #address2').val());
     var address3     = $.trim($('#add_account_form #address3').val());
+    var fees         = $.trim($('#add_account_form #fees').val());
    	
     $('#full_name').removeClass('has-error-2');
     $('#username').removeClass('has-error-2');
@@ -208,6 +219,7 @@ function accountValidate() {
     $('#state').removeClass('has-error-2');
     $('#city').removeClass('has-error-2');
     $('#address1').removeClass('has-error-2');
+    $('#fees').removeClass('has-error-2');
     let validflag = 1;
     
     if( contactNumber == "" ){
@@ -215,6 +227,12 @@ function accountValidate() {
         $('#contactNumber').focus();
         validflag = 0;
         toastr.error("Kindly enter Contact Number","Error");
+    }
+    if( fees == "" ){
+        $('#fees').addClass('has-error-2');
+        $('#fees').focus();
+        validflag = 0;
+        toastr.error("Kindly enter fees","Error");
     }
     else if(contactNumber.length != 10)
    	{

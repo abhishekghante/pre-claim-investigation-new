@@ -2,6 +2,7 @@ package com.preclaim.controller;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Date;  
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -51,6 +53,7 @@ public class BillManagementController {
 	    		session.removeAttribute("success_message");
 	    	}
 	    	session.setAttribute("ScreenDetails", details);
+	    	session.setAttribute("billingEnquiryList",billingDao.billingEnquiryPendingList());
 	    	return "common/templatecontent"; 
 	    }
 	
@@ -71,25 +74,26 @@ public class BillManagementController {
 	    		session.removeAttribute("success_message");
 	    	}
 			session.setAttribute("ScreenDetails", details);
-			session.setAttribute("billingPendingList",billingDao.billingEnquiryPendingList());
+			session.setAttribute("billingPendingList",billingDao.billingPaymentPendingList());
 			return "common/templatecontent";
 		} 
 	  
 	  
 	  
 	  @RequestMapping(value = "/getCheckboxValue",method = RequestMethod.POST)
-		public @ResponseBody void getCheckboxValue(HttpSession session, HttpServletRequest request) throws IOException {
+		public @ResponseBody String getCheckboxValue(HttpSession session, HttpServletRequest request) throws IOException {
 			UserDetails user = (UserDetails) session.getAttribute("User_Login");
-             System.out.println("hii");
              List<Integer> list=new ArrayList<>();
              String tempStr[] = request.getParameterValues("selected[]");
              List<BillManagementList> billingList = new ArrayList<BillManagementList>();
+             
              for(String values: tempStr) {
             	 if(!values.equals("on")) {
-            	 billingList.addAll( billingDao.billingEnquiryPendingList(Integer.parseInt(values)));  
+            	 	 
+            	 billingList.addAll( billingDao.billingPaymentPendingList(Integer.parseInt(values)));
+            	 billingDao.UpdateFees(Integer.parseInt(values));
             	 }
              }
-             System.out.println("billingList"+billingList);
              
              //Create blank workbook
              XSSFWorkbook workbook = new XSSFWorkbook();
@@ -125,13 +129,16 @@ public class BillManagementController {
 			  Cell cell = row.createCell(cellid++);
 		      cell.setCellValue(obj.toString()); 
 	        } 
-		  } //Write the workbook in file system
+		  }
+		  SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh-mm-ss"); 
+		  Date date = new Date();  
+		  String a=formatter.format(date);
+		  //Write the workbook in file system
 		  FileOutputStream out = new FileOutputStream( new
-		  File("C:/Pre-Claim Investigation/uploads/"+user.getFull_name()+".xlsx"));
+		  File("C:/Pre-Claim Investigation/uploads/"+user.getFull_name()+a+".xlsx"));
 		  
 		  workbook.write(out); out.close();
-		  System.out.println("Writesheet.xlsx written successfully");
-		 		 
+		  return "****";		 		 
            }
                     
 		} 
