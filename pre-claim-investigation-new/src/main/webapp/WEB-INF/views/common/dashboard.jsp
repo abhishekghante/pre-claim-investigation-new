@@ -1,10 +1,15 @@
 <%@page import="java.time.LocalDate" %>
 <%@page import="java.time.format.DateTimeFormatter" %>
 <%@page import="java.util.HashMap" %>
+<%@page import="java.util.ArrayList" %>
 <%@page import="com.preclaim.config.Config" %>
 <%
 HashMap<String, Integer> dashboard = (HashMap<String, Integer>) session.getAttribute("Dashboard Count");
 String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+ArrayList<String> keys = new ArrayList<String>();
+for(String item: dashboard.keySet())
+	keys.add(item);
+System.out.println(keys);
 %>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -13,40 +18,44 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         </h3>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 1) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat blue">
             <div class="visual">
                 <i class="fa fa-comments"></i>
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="1349">
-                    	<%= dashboard.get("Claim Investigation")%>
+                    <span data-counter="counterup" data-value="">
+                    	<% if(dashboard.size() >= 1) {%><%= dashboard.get(keys.get(0))%><%} %>
                    	</span>
                 </div>
-                <div class="desc"> Claim Investigation </div>
+                <div class="desc"> <% if(dashboard.size() >= 1) {%><%= keys.get(0)%><%} %></div>
             </div>
             <a class="more" href="javascript:;"> 
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2">View more</button>
                 <div id="demo2" class="collapse">
-                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;<%= dashboard.get("Claim Investigation")%>&nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    	<% if(dashboard.size() >= 1) {%><%= keys.get(0)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
                 </div>
             </a>
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+		<%if(dashboard.size() < 2) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat red">
             <div class="visual">
                 <i class="fa fa-comments"></i>
             </div>
             <div class="details">
                 <div class="number">
-                    <span data-counter="counterup" data-value="12,5">
-                    	<%= dashboard.get("New Cases")%>
+                    <span data-counter="counterup" data-value="">
+                    	<% if(dashboard.size() >= 2) {%><%= dashboard.get(keys.get(1))%><%} %>
                     </span>
                 </div>
-                <div class="desc"> New Cases </div>
+                <div class="desc"> <% if(dashboard.size() >= 2) {%><%= keys.get(1)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <a href="${pageContext.request.contextPath}/message/pending_message" 
@@ -55,7 +64,8 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 3) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat green">
             <div class="visual">
                 <i class="fa fa-users"></i>
@@ -63,10 +73,10 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             <div class="details">
                 <div class="number">
                     <span data-counter="counterup" data-value="549">
-                    	<%= dashboard.get("Assigned Cases")%>
+                    	<% if(dashboard.size() >= 3) {%><%= dashboard.get(keys.get(2))%><%} %>
                     </span>
                 </div>
-                <div class="desc"> Assigned Cases </div>
+                <div class="desc"> <% if(dashboard.size() >= 3) {%><%= keys.get(2)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <a href="${pageContext.request.contextPath}/message/active_message" 
@@ -75,7 +85,8 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 4) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat purple">
             <div class="visual">
                 <i class="fa fa-globe"></i>
@@ -83,21 +94,24 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             <div class="details">
                 <div class="number">
                     <span data-counter="counterup" data-value="89">
-                    	<%= dashboard.get("Assigned Investigation")%>
+                    	<% if(dashboard.size() >= 4) {%><%= dashboard.get(keys.get(3))%><%} %>
                     </span>
                 </div>
-                <div class="desc"> Assigned Investigation </div>
+                <div class="desc"> <% if(dashboard.size() >= 4) {%><%= keys.get(3)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <button onClick="return showAssignGraph();" type="button" class="btn btn-info">View more</button>
                 <div id="demo5" class="collapse">
-                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;<%= dashboard.get("Assigned Investigation")%>&nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% if(dashboard.size() >= 4) {%><%= keys.get(3)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
                 </div>
             </a>
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 5) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat red">
             <div class="visual">
                 <i class="fa fa-comments"></i>
@@ -105,20 +119,23 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             <div class="details">
                 <div class="number">
                     <span data-counter="counterup" data-value="12,5">
-                    	<%= dashboard.get("PIV/PIRV/LIVE Pending")%>
+                    	<% if(dashboard.size() >= 5) {%><%= dashboard.get(keys.get(4))%><%} %>
                    	</span>
                 </div>
-                <div class="desc"> PIV/PIRV/LIVE Pending </div>
+                <div class="desc"> <% if(dashboard.size() >= 5) {%><%= keys.get(4)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo6">View more</button>
                 <div id="demo6" class="collapse">
-                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;<%= dashboard.get("PIV/PIRV/LIVE Pending")%>&nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% if(dashboard.size() >= 5) {%><%= keys.get(4)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
                 </div>
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 6) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat red">
             <div class="visual">
                 <i class="fa fa-comments"></i>
@@ -126,20 +143,23 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             <div class="details">
                 <div class="number">
                     <span data-counter="counterup" data-value="12,5">
-                    	<%= dashboard.get("CDP")%>
+                    	<% if(dashboard.size() >= 6) {%><%= dashboard.get(keys.get(5))%><%} %>
                     </span>
                 </div>
-                <div class="desc"> Claim Document Pickup Cases </div>
+                <div class="desc"> <% if(dashboard.size() >= 6) {%><%= keys.get(5)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo7">View more</button>
                 <div id="demo7" class="collapse">
-                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;<%= dashboard.get("CDP")%>&nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% if(dashboard.size() >= 6) {%><%= keys.get(5)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
                 </div>
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 7) {%> style = "display:none" <%} %>>
         <div class="dashboard-stat purple">
             <div class="visual">
                 <i class="fa fa-comments"></i>
@@ -147,15 +167,41 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             <div class="details">
                 <div class="number">
                     <span data-counter="counterup" data-value="12,5">
-                    	0
+                    	<% if(dashboard.size() >= 7) {%><%= dashboard.get(keys.get(6))%><%} %>
                     </span>
                 </div>
-                <div class="desc"> Investigation Billing Cases </div>
+                <div class="desc"> <% if(dashboard.size() >= 7) {%><%= keys.get(6)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo8">View more</button>
                 <div id="demo8" class="collapse">
-                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;43&nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% if(dashboard.size() >= 7) {%><%= keys.get(6)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+    	<%if(dashboard.size() < 8) {%> style = "display:none" <%} %>>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-counter="counterup" data-value="12,5">
+                    	<% if(dashboard.size() >= 8) {%><%= dashboard.get(keys.get(7))%><%} %>
+                    </span>
+                </div>
+                <div class="desc"> <% if(dashboard.size() >= 8) {%><%= keys.get(7)%><%} %> </div>
+            </div>
+            <a class="more" href="javascript:;"> 
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo9">View more</button>
+                <div id="demo9" class="collapse">
+                    <p><%=date %>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <% if(dashboard.size() >= 8) {%><%= keys.get(7)%><%} %>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Active</p>
                 </div>
             </a>
         </div>

@@ -96,6 +96,21 @@ session.removeAttribute("role_list");
 			                    </tr>
 			                    <tr>
 			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard")) {%>checked <%} %> name="dashboard[]" id="dashboard" class="allPLCheckDashboard" value="dashboard"> <label for="dashboard">Dashboard</label>
+			                    	</td>
+			                    	<td>
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/new")) {%>checked <%} %> name="dashboard[]" id="dashboard_new" class="indPLCheckDashboard" value="dashboard/new"> <label for="dashboard_new">New Cases</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/assigned")) {%>checked <%} %> name="dashboard[]" id="dashboard_assigned" class="indPLCheckDashboard" value="dashboard/assigned"> <label for="dashboard_assigned">Assigned Cases</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/piv")) {%>checked <%} %> name="dashboard[]" id="dashboard_piv" class="indPLCheckDashboard" value="dashboard/piv"> <label for="dashboard_piv">PIV/PIRV/LIVE Pending</label>                    		
+	                    				<input type="checkbox" <%if(role_permission.contains("dashboard/cdp")) {%>checked <%} %> name="dashboard[]" id="dashboard_cdp" class="indPLCheckDashboard" value="dashboard/cdp"> <label for="dashboard_cdp">Claim Document Pickup Cases</label>         		
+	                    				<input type="checkbox" <%if(role_permission.contains("dashboard/review")) {%>checked <%} %> name="dashboard[]" id="dashboard_review" class="indPLCheckDashboard" value="dashboard/review"> <label for="dashboard_review">Review Report</label>         		
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/active")) {%>checked <%} %> name="dashboard[]" id="dashboard_active" class="indPLCheckDashboard" value="dashboard/active"> <label for="dashboard_active">Active Case</label>         		
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/wip")) {%>checked <%} %> name="dashboard[]" id="dashboard_wip" class="indPLCheckDashboard" value="dashboard/wip"> <label for="dashboard_wip">WIP</label>         		
+			                    		<input type="checkbox" <%if(role_permission.contains("dashboard/billing")) {%>checked <%} %> name="dashboard[]" id="dashboard_billing" class="indPLCheckDashboard" value="dashboard/billing"> <label for="dashboard_billing">Investigation Billing</label>
+			                    	</td>
+			                    </tr>
+			                    <tr>
+			                    	<td>
 			                    		<input type="checkbox" <%if(role_permission.contains("mailConfig")) {%>checked <%} %> name="mailConfig[]" id="mailConfig" class="allPLCheckMConfig" value="mailConfig"> <label for="mailConfig">Mail Config</label>
 			                    	</td>
 			                    	<td>
@@ -332,6 +347,13 @@ session.removeAttribute("role_list");
 			$( '.indPLCheckloc' ).prop( "checked", true );
 		} else {
 			$( '.indPLCheckloc' ).prop( 'checked', false );
+		}
+	});
+	$( '.allPLCheckDashboard' ).on( 'click', function() {
+		if( $( this ).is( ':checked' ) ) {
+			$( '.indPLCheckDashboard' ).prop( "checked", true );
+		} else {
+			$( '.indPLCheckDashboard' ).prop( 'checked', false );
 		}
 	});
    function addPermission() {

@@ -29,7 +29,7 @@ public class DashboardController {
     	details.setMain_menu("Dashboard");
     	session.setAttribute("ScreenDetails", details);
     	
-    	session.setAttribute("Dashboard Count", dashboardDao.getCaseCount(user.getUsername()));
+    	session.setAttribute("Dashboard Count", dashboardDao.getCaseCount(user));
     	return "common/templatecontent";
     }
 }
