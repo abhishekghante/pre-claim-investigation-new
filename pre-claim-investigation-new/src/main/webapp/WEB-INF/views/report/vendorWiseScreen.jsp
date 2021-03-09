@@ -64,3 +64,58 @@ HashMap<String, String> vendorlist = (HashMap<String, String>) session.getAttrib
     </div>
   </div>
 </div>
+<script type="text/javascript">
+$("#downloadVendorwiseReport").click(function(){
+	
+	var startDate  = $('#startDate').val(); 
+	var endDate    = $('#endDate').val(); 
+	var VendorName = $('#VendorName').val(); 
+	
+	var errorFlag = 0;
+	if(startDate == '')
+	{
+		toastr.error("Start Date cannot be blank","Error");
+		errorFlag = 1;
+	}
+	
+	if(endDate == '')
+	{
+		toastr.error("End Date cannot be blank","Error");
+		errorFlag = 1;
+	}
+	if(VendorName == '')
+	{
+		toastr.error("Vendor Name cannot be blank","Error");
+		errorFlag = 1;
+	}
+	if(errorFlag == 1)
+		return;
+		
+	var formdata = {'startDate':startDate, 'endDate':endDate, "VendorName":VendorName};
+	$.ajax({
+	  type: "POST",
+	  url: 'downloadVendorwiseReport',
+	  data: formdata,
+	  beforeSend: function() { 
+	      $("#downloadVendorwiseReport").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	      $("#downloadVendorwiseReport").prop('disabled', true);
+	  },
+	  success: function( data ) {
+		  $("#downloadVendorwiseReport").html('<i class="fa fa-download pr-1"></i> Download');
+	      $("#downloadVendorwiseReport").prop('disabled', false);
+	    if(data.includes(".xlsx"))
+	    {
+	      toastr.success("Report downloaded successfully","Success");
+	      window.location.href = "${pageContext.request.contextPath}/report/downloadSysFile?filename=" + 
+			encodeURIComponent(data);
+	      $("#clear").trigger("click");
+	    }
+	    else
+	    {
+	      toastr.error( data,'Error' );
+	    }
+	  }
+	});
+     
+});
+</script>

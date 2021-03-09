@@ -12,8 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,6 +33,7 @@ import com.preclaim.dao.ReportDao;
 import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.TopInvestigatorList;
+import com.preclaim.models.UserDetails;
 
 @Controller
 @RequestMapping(value = "/report")
@@ -40,6 +44,10 @@ public class ReportController {
 	
 	@RequestMapping(value = "/top15investigator", method = RequestMethod.GET)
     public String top15investigator(HttpSession session) {
+		
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
     	session.removeAttribute("ScreenDetails");
     	ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../report/top15investigator.jsp");
@@ -51,7 +59,10 @@ public class ReportController {
     }
     
 	@RequestMapping(value = "/vendorWiseScreen", method = RequestMethod.GET)
-    public String vendorWiseScreen(HttpSession session) {
+    public String vendorWiseScreen(HttpSession session) {	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
     	session.removeAttribute("ScreenDetails");
     	ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../report/vendorWiseScreen.jsp");
@@ -65,6 +76,9 @@ public class ReportController {
 	
 	@RequestMapping(value = "/regionWiseScreen", method = RequestMethod.GET)
     public String regionWiseScreen(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
     	session.removeAttribute("ScreenDetails");
     	ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../report/regionWiseScreen.jsp");
@@ -77,7 +91,11 @@ public class ReportController {
     }
 	
 	@RequestMapping(value = "/downloadInvestigatorReport", method = RequestMethod.POST)
-    public @ResponseBody String downloadInvestigatorReport(HttpServletRequest request) {
+    public @ResponseBody String downloadInvestigatorReport(HttpServletRequest request,HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		
@@ -102,10 +120,14 @@ public class ReportController {
 			int colNum = 1;
 			Cell cell = newRow.createCell(colNum);
 			CellStyle style = investigator_wb.createCellStyle();
+			Font font = investigator_wb.createFont();
 			
 			//Print Header
 			cell.setCellValue("Top 15 Investigators in terms of volume");
 			style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		    style.setFont(font);
 			cell.setCellStyle(style);
 			colNum++;
 			
@@ -135,14 +157,29 @@ public class ReportController {
 			for (TopInvestigatorList item : investigator) {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
-				if(item.getNotCleanRate() <= threshold - 2)
+				if(item.getNotCleanRate() <= threshold - 2) {
 					style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-				else if(item.getNotCleanRate() <= threshold)
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					font.setColor(HSSFColor.HSSFColorPredefined.BLACK.getIndex());
+				    style.setFont(font);
+				}
+				else if(item.getNotCleanRate() <= threshold) {
 					style.setFillForegroundColor(IndexedColors.RED.getIndex());
-				else if(item.getNotCleanRate() >= threshold) 
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+					style.setFont(font);
+				}
+				else if(item.getNotCleanRate() >= threshold) {
 					style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+					style.setFont(font);
+				}
 				else
 					style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+					style.setFont(font);
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(item.getInvestigator());
 				cell.setCellStyle(style);
@@ -192,7 +229,10 @@ public class ReportController {
 	
 	
 	@RequestMapping(value = "/downloadVendorwiseReport", method = RequestMethod.POST)
-    public @ResponseBody String downloadVendorwiseReport(HttpServletRequest request) {
+    public @ResponseBody String downloadVendorwiseReport(HttpServletRequest request, HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		
@@ -217,10 +257,13 @@ public class ReportController {
 			int colNum = 1;
 			Cell cell = newRow.createCell(colNum);
 			CellStyle style = investigator_wb.createCellStyle();
+			Font font = investigator_wb.createFont();
 			
 			//Print Header
 			cell.setCellValue("Top 15 Investigators in terms of volume");
 			style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		    style.setFont(font);
 			cell.setCellStyle(style);
 			colNum++;
 			
@@ -250,14 +293,25 @@ public class ReportController {
 			for (TopInvestigatorList item : investigator) {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
-				if(item.getNotCleanRate() <= threshold - 2)
+				if(item.getNotCleanRate() <= threshold - 2) {
 					style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-				else if(item.getNotCleanRate() <= threshold)
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					style.setFont(font);
+				}
+				else if(item.getNotCleanRate() <= threshold) {
 					style.setFillForegroundColor(IndexedColors.RED.getIndex());
-				else if(item.getNotCleanRate() >= threshold) 
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					style.setFont(font);
+				}
+				else if(item.getNotCleanRate() >= threshold) {
 					style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					style.setFont(font);
+				}
 				else
 					style.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					style.setFont(font);
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(item.getInvestigator());
 				cell.setCellStyle(style);
@@ -312,7 +366,11 @@ public class ReportController {
     }
 	
 	@RequestMapping(value = "/downloadRegionwiseReport", method = RequestMethod.POST)
-    public @ResponseBody String downloadRegionwiseReport(HttpServletRequest request) {
+    public @ResponseBody String downloadRegionwiseReport(HttpServletRequest request,HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		
 		
 		String region = request.getParameter("region");
 		String startDate = request.getParameter("startDate");
@@ -424,6 +482,9 @@ public class ReportController {
 	
 	@RequestMapping(value = "/uploadedDocument", method = RequestMethod.GET)
     public String uploadedDocument(HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
     	session.removeAttribute("ScreenDetails");
     	ScreenDetails details = new ScreenDetails();
     	details.setScreen_name("../report/uploadedDocument.jsp");

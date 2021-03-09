@@ -91,7 +91,7 @@ public class CaseDaoImpl implements CaseDao {
 					+ "case_description, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
 					+ "audioFilePath, videoFilePath, signatureFilePath , capturedDate, createdBy, "
 					+ "createdDate, updatedDate, updatedBy) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned','Not-paid', ?, ?, ?, ?, '', '', '', '', '', '', "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned',' ', ?, ?, ?, ?, '', '', '', '', '', '', "
 					+ "'', '', '', '', ?, ?, getdate(), '')";
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
