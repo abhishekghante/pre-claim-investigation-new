@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%
 List<String> user_permission=(List<String>)session.getAttribute("user_permission");
+List<String> state_list = (List<String>)session.getAttribute("StateList");
 %>
 <div class="row">
   <div class="col-md-12 col-sm-12">
@@ -32,7 +33,9 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                 <div class="col-md-2">
                   <select name="RegionName" id="RegionName" class="form-control" tabindex="-1" required>
                     <option value="-1" selected disabled>Select</option>
-
+					<%for(String state: state_list) {%>
+						<option value = "<%=state%>"><%=state%></option>
+					<%} %>
                   </select>
                 </div>
                 <label class="col-md-1 control-label" for="startDate">Start date <span class="text-danger">*</span></label>
@@ -52,7 +55,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
         <!-- /.box-body -->
         <div class="box-footer">
           <div class="col-md-offset-4 col-md-10">
-            <button class="btn btn-info" id="addIntimationTypesubmit" onClick="return addIntimationType();" type="button">Download</button>
+            <button class="btn btn-info" id="downloadRegionWiseReport" type="button"><i class="fa fa-download pr-1"></i> Download</button>
             <button class="btn btn-danger" type="reset">Clear</button>
           </div>
         </div>
@@ -60,40 +63,3 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
     </div>
   </div>
 </div>
-<script type="text/javascript">
-function addIntimationType() {
-	<%if(!user_permission.contains("intimationType/add")){%>
-		toastr.error("Access Denied","Error");
-		return false;
-	<%}%>
-
-	var IntimationtypeName = $( '#add_intimation_type #intimationtypeName' ).val(); 
-	if(IntimationtypeName == ''){
-	  toastr.error('Intimation Type Cannot be empty','Error');
-	  return false;
-	}
-	var formdata ={'intimationtypeName':IntimationtypeName};
-	$.ajax({
-	  type: "POST",
-	  url: 'addIntimationType',
-	  data: formdata,
-	  beforeSend: function() { 
-	      $("#addIntimationTypesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-	      $("#addIntimationTypesubmit").prop('disabled', true);
-	  },
-	  success: function( data ) {
-		  $("#addIntimationTypesubmit").html('Add Intimation');
-	      $("#addIntimationTypesubmit").prop('disabled', false);
-	    if(data == "****")
-	    {
-	      location.reload();
-	    }
-	    else
-	    {
-	      toastr.error( data,'Error' );
-	    }
-	  }
-	});
-     
-}
-</script>

@@ -1,6 +1,8 @@
 <%@page import="java.util.List"%>
+<%@page import="java.util.HashMap"%>
 <%
 List<String> user_permission=(List<String>)session.getAttribute("user_permission");
+HashMap<String, String> vendorlist = (HashMap<String, String>) session.getAttribute("VendorList"); 
 %>
 <div class="row">
   <div class="col-md-12 col-sm-12">
@@ -32,18 +34,20 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
                 <div class="col-md-2">
                   <select name="VendorName" id="VendorName" class="form-control" tabindex="-1" required>
                     <option value="-1" selected disabled>Select</option>
-
+					<%for(String vendor: vendorlist.keySet()) {%>
+						<option value = "<%=vendor%>"><%=vendorlist.get(vendor)%></option>
+					<%} %>
                   </select>
                 </div>
                 <label class="col-md-1 control-label" for="startDate">Start date <span class="text-danger">*</span></label>
                 <div class="col-md-2">
-                  <input type="date" required="" id="startDate" class="form-control" name="startDate">
+                  <input type="date" id="startDate" class="form-control" name="startDate">
                 </div>
                  
                 <label class="col-md-1 control-label" for="endDate">End date
                 	<span class="text-danger">*</span></label>
                 <div class="col-md-2">
-                  <input type="date" required="" id="endDate" class="form-control" name="endDate">
+                  <input type="date" id="endDate" class="form-control" name="endDate">
                 </div>
                 
               </div>
@@ -52,7 +56,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
         <!-- /.box-body -->
         <div class="box-footer">
           <div class="col-md-offset-4 col-md-10">
-            <button class="btn btn-info" id="addIntimationTypesubmit" onClick="return addIntimationType();" type="button">Download</button>
+            <button class="btn btn-info" id="downloadVendorwiseReport" type="button"><i class="fa fa-download pr-1"></i> Download</button>
             <button class="btn btn-danger" type="reset">Clear</button>
           </div>
         </div>
@@ -60,40 +64,3 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
     </div>
   </div>
 </div>
-<script type="text/javascript">
-function addIntimationType() {
-	<%if(!user_permission.contains("intimationType/add")){%>
-		toastr.error("Access Denied","Error");
-		return false;
-	<%}%>
-
-	var IntimationtypeName = $( '#add_intimation_type #intimationtypeName' ).val(); 
-	if(IntimationtypeName == ''){
-	  toastr.error('Intimation Type Cannot be empty','Error');
-	  return false;
-	}
-	var formdata ={'intimationtypeName':IntimationtypeName};
-	$.ajax({
-	  type: "POST",
-	  url: 'addIntimationType',
-	  data: formdata,
-	  beforeSend: function() { 
-	      $("#addIntimationTypesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-	      $("#addIntimationTypesubmit").prop('disabled', true);
-	  },
-	  success: function( data ) {
-		  $("#addIntimationTypesubmit").html('Add Intimation');
-	      $("#addIntimationTypesubmit").prop('disabled', false);
-	    if(data == "****")
-	    {
-	      location.reload();
-	    }
-	    else
-	    {
-	      toastr.error( data,'Error' );
-	    }
-	  }
-	});
-     
-}
-</script>
