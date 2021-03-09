@@ -90,9 +90,9 @@ public class CaseDaoImpl implements CaseDao {
 					+ "nominee_name, nominee_ContactNumber, nominee_address, insured_address,"
 					+ "case_description, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
 					+ "audioFilePath, videoFilePath, signatureFilePath , capturedDate, createdBy, "
-					+ "createdDate, updatedDate, updatedBy) "
+					+ "createdDate, updatedDate, updatedBy, caseSubStatus, image, notCleanCategory) "
 					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned',' ', ?, ?, ?, ?, '', '', '', '', '', '', "
-					+ "'', '', '', '', ?, ?, getdate(), '')";
+					+ "'', '', '', '', ?, ?, getdate(), '', '', '', '')";
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
