@@ -542,32 +542,19 @@ $("#assignmessagesubmit").click(function()
    		
    		toId = $( '#edit_message_form #toId' ).val();
 	    toRole = $( '#edit_message_form #toRole' ).val();
-   	
-	    if(toId == null)
-	   	{
-	   		toastr.error("Kindly select user", "Error");
-	   		validFlag = 0;
-	   	}
-	    
-	    if(toRole == null)
-	   	{
-	   		toastr.error("Kindly select User Role", "Error");
-	   		validFlag = 0;
-	   	}
 	    
 	    if(caseSubStatus == null)
 	   	{
 	   		toastr.error("Kindly select Case Sub-status", "Error");
 	   		validFlag = 0;
-	   	}
-	    
-	    if(NotCleanCategory == null)
-	   	{
+	   		   		
+	   	}else if(caseSubStatus == 'Not-Clean')
+		{
 	   		toastr.error("Kindly select Not-clean category", "Error");
 	   		validFlag = 0;
+	   		   		
 	   	}
-   		
-   		
+		    
    	}
     
     if(toStatus == "Rejected" && toRemarks == "")
