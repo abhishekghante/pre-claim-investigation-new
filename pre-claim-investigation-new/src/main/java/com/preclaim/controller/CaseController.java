@@ -162,25 +162,27 @@ public class CaseController {
 	public @ResponseBody String importData(@RequestParam("userfile") ArrayList<MultipartFile> userfile,
 			HttpSession session, HttpServletRequest request) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		String role = request.getParameter("roleName");
 		String message = "";
 		// File Uploading Routine
 		if (userfile != null) {
 			try {
 				byte[] temp = userfile.get(0).getBytes();
 				String filename = userfile.get(0).getOriginalFilename();
-				 String toId = ""; 
 				filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-SS")) + "_"
 						+ filename;
 				Path path = Paths.get(Config.upload_directory + filename);
 				Files.write(path, temp);
 
-				message = caseDao.addBulkUpload(filename, user.getUsername(), toId);
+				message = caseDao.addBulkUpload(filename, user.getUsername(), role);
 				if (message.equals("****")) {
 					userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());
 					session.setAttribute("success_message", "File Uploaded successfully");
-					try {
+					try 
+					{
 						MailConfig mail = mailConfigDao.getActiveConfig();
-						if (mail != null) {
+						if (mail != null) 
+						{
 							// From ID
 							mail.setSubject("Case Assigned - Claims");
 							String message_body = "Dear <User>, \n Case has been assigned successfully\n\n";
@@ -189,29 +191,23 @@ public class CaseController {
 							mail.setMessageBody(message_body);
 							mail.setReceipent(user.getUser_email());
 							mailConfigDao.sendMail(mail);
-
-							// To ID
-							/*
-							 * UserDetails toUser = userDao.getUserDetails(toId);
-							 * mail.setSubject("New Case Assigned - Claims"); message_body =
-							 * "Dear <User>, \n Your are required to take action on new cases\n\n";
-							 * message_body = message_body.replace("<User>", toUser.getFull_name());
-							 * message_body += "Thanks & Regards,\n Claims";
-							 * mail.setMessageBody(message_body); mail.setReceipent(toUser.getUser_email());
-							 * mailConfigDao.sendMail(mail);
-							 */
 						}
-					} catch (Exception e) {
+					} 
+					catch (Exception e) 
+					{
 						CustomMethods.logError(e);
 					}
-				} else
+				} 
+				else
 					return message;
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
 				e.printStackTrace();
+				CustomMethods.logError(e);
 				return e.getMessage();
 			}
 		}
-
 		return message;
 	}
 
@@ -235,8 +231,13 @@ public class CaseController {
 		caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setCreatedBy(user.getUsername());
+		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(), 1);
+		caseDetail.setCaseStatus(status.getCase_status());
+		caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		
 		long caseId = caseDao.addcase(caseDetail);
 		String zone = request.getParameter("claimantZone");
+		
 		if (caseId == 0)
 			return "Error adding case";
 
@@ -246,12 +247,13 @@ public class CaseController {
 		caseMovement.setFromId(caseDetail.getCreatedBy());
 		caseMovement.setZone(zone);
 		caseMovement.setUser_role(request.getParameter("roleName"));
-		/* caseMovement.setToId(request.getParameter("assigneeId")); */
 		String message = caseMovementDao.CreatecaseMovement(caseMovement);
 		System.out.println("message"+message);
-		if (message.equals("****")) {
+		if (message.equals("****")) 
+		{
 			userDao.activity_log("CASE HISTORY", caseDetail.getPolicyNumber(), "ADD CASE", user.getUsername());
-			try {
+			try 
+			{
 				MailConfig mail = mailConfigDao.getActiveConfig();
 				if (mail != null) {
 					// From ID
@@ -301,23 +303,6 @@ public class CaseController {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if (user == null)
 			return "common/login";
-		 CaseDetails case_detail = caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId")));
-		 List<CaseSubStatus> caseSubStatus = caseDao.getCaseDetailByLevel(user.getAccount_type());
-		 CaseSubStatus caseSubStatus1=new CaseSubStatus();
-		 int i=0;
-		 
-		 for(CaseSubStatus iterate : caseSubStatus) {
-			
-			 if(i==1)
-			 
-			 i++;
-		 }
-		 
-		 
-		 if(!case_detail.getLongitude().equals("") && !case_detail.getLatitude().equals(""))
-		 {
-			 
-		 }
 		session.removeAttribute("ScreenDetails");
 		ScreenDetails details = new ScreenDetails();
 		details.setScreen_name("../message/edit_message.jsp");
@@ -331,8 +316,7 @@ public class CaseController {
 		session.setAttribute("location_list", locationDao.getActiveLocationList());
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
-		session.setAttribute("case_detail", case_detail);
-		//session.setAttribute("level", iterate);
+		session.setAttribute("case_detail", caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId"))));
 		return "common/templatecontent";
 	}
 
@@ -379,12 +363,12 @@ public class CaseController {
 	public @ResponseBody String assignToRM(HttpServletRequest request, HttpSession session) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		CaseDetails caseDetail = new CaseDetails();
-		long caseId = Integer.parseInt(request.getParameter("caseId"));
-		String toId = request.getParameter("toId");
-		String fromId = user.getUsername();
-		String toStatus = request.getParameter("toStatus");
-		String caseSubStatus = request.getParameter("caseSubStatus");
-		String NotCleanCategory= request.getParameter("NotCleanCategory");
+		long caseId             = Integer.parseInt(request.getParameter("caseId"));
+		String toId             = request.getParameter("toId");
+		String fromId           = user.getUsername();
+		String toStatus         = request.getParameter("toStatus");
+		String caseSubStatus    = request.getParameter("caseSubStatus");
+		String NotCleanCategory = request.getParameter("NotCleanCategory");
 		caseDetail.setCaseId(caseId);
 		caseDetail.setNotCleanCategory(NotCleanCategory);
 		caseDetail.setCaseSubStatus(caseSubStatus);
@@ -395,7 +379,8 @@ public class CaseController {
 		if (message.equals("****")) {
 			session.setAttribute("success_message", "Case assigned successfully");
 			userDao.activity_log("CASE HISTORY", "", "ASSIGN CASE", user.getUsername());
-			try {
+			try 
+			{
 				MailConfig mail = mailConfigDao.getActiveConfig();
 				if (mail != null) {
 					// From ID
@@ -419,7 +404,10 @@ public class CaseController {
 					mailConfigDao.sendMail(mail);
 					}
 				}
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
 				CustomMethods.logError(e);
 			}
 		}

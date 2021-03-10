@@ -9,7 +9,7 @@ import com.preclaim.models.UserDetails;
 
 public interface CaseDao {
 	
-	String addBulkUpload(String filename, String fromId, String toId);
+	String addBulkUpload(String filename, String fromId, String user_role);
 	long addcase(CaseDetails casedetail);
 	String deleteCase(int caseId);
 	CaseDetails getCaseDetail(long caseID);
@@ -21,8 +21,5 @@ public interface CaseDao {
 	List<CaseDetails> getLiveCaseList(String username);
     void getExcelMail(String zone);
     String updateCaseTypeAndSubType(CaseDetails casedetail);
-    List<CaseSubStatus> getCaseDetailByLevel(String user_role);
-    
-    
-    
+    CaseSubStatus getCaseStatus(String user_role, int level);    
 }

@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -130,7 +129,8 @@ public class ReportController {
 			cell.setCellValue("Top 15 Investigators in terms of volume");
 			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+			font.setColor(IndexedColors.WHITE.getIndex());
+			font.setBold(true);
 			
 			//for border colour
             style.setBorderLeft(BorderStyle.THIN);  
@@ -173,59 +173,30 @@ public class ReportController {
 			for (TopInvestigatorList item : investigator) {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
-				if(item.getNotCleanRate() <= threshold - 2) {
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
-					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-					
-					//for border style
-		            style.setBorderLeft(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderRight(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderTop(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderBottom(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+				if(item.getInvestigator().equals("Total"))
+				{
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));
+					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+				}
+				else if(item.getNotCleanRate() >= threshold - 2 && item.getNotCleanRate() <= threshold) {
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow					
 				}
 				else if(item.getNotCleanRate() <= threshold) {
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(248, 203, 173), new DefaultIndexedColorMap()));    //pink
-					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-					//for border colour
-		            style.setBorderLeft(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderRight(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderTop(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderBottom(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 0, 0), new DefaultIndexedColorMap()));    //pink
 				}
 				else if(item.getNotCleanRate() >= threshold) {
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
-					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-					//for border colour
-		            style.setBorderLeft(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderRight(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderTop(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderBottom(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 				}
-				else
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));
-					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
-					//for border colour
-		            style.setBorderLeft(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderRight(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderTop(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		            style.setBorderBottom(BorderStyle.THIN);  
-		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+				style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				style.setBorderLeft(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderRight(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderTop(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderBottom(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(item.getInvestigator());
 				cell.setCellStyle(style);
@@ -256,7 +227,28 @@ public class ReportController {
 			}
 			
 			//Legends
-			//newRow = investigator_sheet.getRow(2);
+			newRow = investigator_sheet.getRow(2) == null ? investigator_sheet.createRow(2) : investigator_sheet.getRow(2);
+			cell = newRow.createCell(8);
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
+			cell.setCellStyle(style);
+			cell = newRow.createCell(9);
+			cell.setCellValue("Above Average");
+			
+			newRow = investigator_sheet.getRow(3) == null ? investigator_sheet.createRow(3) : investigator_sheet.getRow(3);
+			cell = newRow.createCell(8);
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
+			cell.setCellStyle(style);
+			cell = newRow.createCell(9);  
+			cell.setCellStyle(style);
+			cell.setCellValue("Near Average");
+			
+			newRow = investigator_sheet.getRow(4) == null ? investigator_sheet.createRow(4) : investigator_sheet.getRow(4);
+			cell = newRow.createCell(8);
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 0, 0), new DefaultIndexedColorMap()));  //Red
+			cell.setCellStyle(style);
+			cell = newRow.createCell(9);
+			cell.setCellStyle(style);
+			cell.setCellValue("Below Average");
 		
 			//Cell Asthetic Settings
 			investigator_sheet.autoSizeColumn(1);
@@ -313,20 +305,20 @@ public class ReportController {
 			Font font = investigator_wb.createFont();
 			
 			//Print Header
-			    cell.setCellValue("Top 15 Investigators in terms of volume");
-				style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
-				style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-				font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
-			
-				//for border colour
-				style.setBorderLeft(BorderStyle.THIN);  
-				style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-				style.setBorderRight(BorderStyle.THIN);  
-				style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-				style.setBorderTop(BorderStyle.THIN);  
-				style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-				style.setBorderBottom(BorderStyle.THIN);  
-				style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		    cell.setCellValue("Top 15 Investigators in terms of volume");
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+		
+			//for border colour
+			style.setBorderLeft(BorderStyle.THIN);  
+			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			style.setBorderRight(BorderStyle.THIN);  
+			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			style.setBorderTop(BorderStyle.THIN);  
+			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			style.setBorderBottom(BorderStyle.THIN);  
+			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 			colNum++;
 			
 			cell = newRow.createCell(colNum);

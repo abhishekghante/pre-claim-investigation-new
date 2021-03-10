@@ -1,7 +1,5 @@
 package com.preclaim.models;
 
-import java.math.BigDecimal;
-
 public class CaseDetails {
 
 	private long caseId;

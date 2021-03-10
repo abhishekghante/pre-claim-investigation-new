@@ -71,14 +71,6 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
                   </select>
                 </div>
                 
-              <!--   <label class="col-md-2 control-label" for="assigneeId">Select User 
-                	<span class="text-danger">*</span></label>
-                <div class="col-md-2">
-                  <select name="assigneeId" id="assigneeId" class="form-control" required>
-                  	<option value = '-1' selected disabled>Select</option>
-                  </select>
-                </div> -->
-                
               </div>
             </form>
           </div>
@@ -96,37 +88,31 @@ $(document).ready(function(){
 function importData()
 {
 	var roleName = $("#import_user_form #roleName").val();
-/* 	var userId = $("#import_user_form #assigneeId").val(); */
 	var importfile = $('input[type="file"]').val();
 	
 	var userfile = $('#userfile').val().toLowerCase();
 	var userfileFileExtension = userfile.substring(userfile.lastIndexOf('.') + 1);
 	
+	var errorFlag = 0;
+	
 	if(roleName == null)
-	{
-		
+	{	
 		toastr.error("Kindly select Assignee Role","Error");	
-		return false;
+		errorFlag = 1;
 	}
-/* 	if(userId == null)
-	{
-		
-		toastr.error("Kindly select Assignee","Error");
-		return false;
-	} */
 	if(userfile == "" )
 	{
-		
 		toastr.error("Please select Excel file","Error");
-		return false;
+		errorFlag = 1;
 	}
 	if(userfile != "" && userfileFileExtension!="xlsx")
-	{
-		
+	{	
 		toastr.error("Please upload excel file in xlsx format.","Error");
-		return false;
+		errorFlag = 1;
 	}
 	
+	if(errorFlag == 1)
+		return false;
 	
 	var formData = new FormData();
 	var files = $('[type="file"]');
@@ -137,7 +123,7 @@ function importData()
             count++;
             formData.append('userfile', value.files[0]);
         });
-       /*  formData.append("userId", userId); */
+        formData.append("roleName", roleName); 
     }
     $("#importfile").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
     $("#importfile").prop('disabled', true);
@@ -157,7 +143,6 @@ function importData()
 	  		if(data == "****")
   			{
 	  		  location.reload();
-	  		//	return true;
   			}
 	  		else
   			{

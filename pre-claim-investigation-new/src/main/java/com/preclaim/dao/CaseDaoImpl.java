@@ -47,6 +47,9 @@ public class CaseDaoImpl implements CaseDao {
 	JdbcTemplate template;
 
 	@Autowired
+	CaseDao caseDao;
+
+	@Autowired
 	InvestigationTypeDao investigationDao;
 
 	@Autowired
@@ -70,12 +73,12 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public String addBulkUpload(String filename, String fromId, String toId) {
+	public String addBulkUpload(String filename, String fromId, String user_role) {
 
 		String extension = StringUtils.getFilenameExtension(filename).toLowerCase();
 		String error = "";
 		if (extension.equals("xlsx"))
-			error = readCaseXlsx(filename, fromId, toId);
+			error = readCaseXlsx(filename, fromId, user_role);
 		else
 			error = "Invalid File extension";
 		return error;
@@ -118,7 +121,8 @@ public class CaseDaoImpl implements CaseDao {
 	public List<CaseDetailList> getPendingCaseList(String user_role, String zone, String username) {
 		try {
 			String sql = "";
-			if (user_role.equalsIgnoreCase("RCU")) {
+			if (user_role.equalsIgnoreCase("RCU")) 
+			{
 				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.fromId = ? and b.user_role ='REGMAN' and b.zone = ? and b.toId ='')";
 				List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username,zone },
 						(ResultSet rs, int rowCount) -> {
@@ -141,7 +145,9 @@ public class CaseDaoImpl implements CaseDao {
 							investigationList.get(Integer.valueOf(caseDetail.getInvestigationCategoryId())));
 				return casedetailList;
 
-			} else if(user_role.equalsIgnoreCase("REGMAN")) {
+			} 
+			else if(user_role.equalsIgnoreCase("REGMAN")) 
+			{
 				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.user_role = ? and b.zone = ? and b.toId ='')";
 				List<CaseDetailList> casedetailList = template.query(sql, new Object[] {user_role,zone },
 						(ResultSet rs, int rowCount) -> {
@@ -163,8 +169,9 @@ public class CaseDaoImpl implements CaseDao {
 					caseDetail.setInvestigationCategory(
 							investigationList.get(Integer.valueOf(caseDetail.getInvestigationCategoryId())));
 				return casedetailList;
-			}else {
-				
+			}
+			else 
+			{	
 				sql = " SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and b.toId =?";
 				List<CaseDetailList> casedetailList = template.query(sql, new Object[] {username},
 						(ResultSet rs, int rowCount) -> {
@@ -185,12 +192,12 @@ public class CaseDaoImpl implements CaseDao {
 				for (CaseDetailList caseDetail : casedetailList)
 					caseDetail.setInvestigationCategory(
 							investigationList.get(Integer.valueOf(caseDetail.getInvestigationCategoryId())));
-				return casedetailList;
-				
-				
+				return casedetailList;	
 			}
 
-		} catch (Exception ex) {
+		} 
+		catch (Exception ex) 
+		{
 			ex.printStackTrace();
 			CustomMethods.logError(ex);
 			return null;
@@ -245,6 +252,8 @@ public class CaseDaoImpl implements CaseDao {
 						detail.setSumAssured(rs.getInt("sumAssured"));
 						detail.setIntimationType(rs.getString("intimationType"));
 						detail.setLocationId(rs.getInt("locationId"));
+						detail.setCaseStatus(rs.getString("caseStatus"));
+						detail.setCaseSubStatus(rs.getString("caseSubStatus"));
 						detail.setNominee_name(rs.getString("nominee_name"));
 						detail.setNomineeContactNumber(rs.getString("nominee_ContactNumber"));
 						detail.setNominee_address(rs.getString("nominee_address"));
@@ -316,9 +325,9 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Transactional
-	public String readCaseXlsx(String filename, String fromId, String toId) {
+	public String readCaseXlsx(String filename, String fromId, String user_role) {
 		try {
-			Set<String> value= new TreeSet<String>();
+			Set<String> value = new TreeSet<String>();
 			File error_file = new File(Config.upload_directory + "error_log.xlsx");
 			if (error_file.exists())
 				error_file.delete();
@@ -334,6 +343,7 @@ public class CaseDaoImpl implements CaseDao {
 				wb.close();
 				return error_message;
 			}
+			CaseSubStatus status = caseDao.getCaseStatus(user_role, 1);
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
 			List<Location> location_list = locationDao.getActiveLocationList();
@@ -462,25 +472,30 @@ public class CaseDaoImpl implements CaseDao {
 							error_message += "Insured Address is mandatory, ";
 					}
 				}
-				if (error_message.equals("")) {
-					caseDetails.setCaseStatus("Assigned");
+				if (error_message.equals("")) 
+				{
+					caseDetails.setCaseStatus(status.getCase_status());
+					caseDetails.setCaseSubStatus(status.getCaseSubStatus());
 					value.add(caseDetails.getClaimantZone());
 					long caseId = addcase(caseDetails);
 					CaseMovement caseMovement = new CaseMovement();
 					caseMovement.setCaseId(caseId);
 					caseMovement.setFromId(fromId);
-					caseMovement.setToId(toId);
+					caseMovement.setUser_role(user_role);
+					caseMovement.setZone(caseDetails.getClaimantZone());
 					case_movementDao.CreatecaseMovement(caseMovement);
-
 					userDao.activity_log("CASE HISTORY", caseDetails.getPolicyNumber(), "ADD CASE", fromId);
-				} else {
+				} 
+				else 
+				{
 					error_message = error_message.trim();
 					error_message = error_message.substring(0, error_message.length());
 					error_case.put(caseDetails, error_message);
 				}
 			}
 			wb.close();
-			for(String val :value) {
+			for(String val :value) 
+			{
 				System.out.println(val);	
 				getExcelMail(val);
 			}
@@ -496,9 +511,10 @@ public class CaseDaoImpl implements CaseDao {
 		}
 	}
 
-	  public void getExcelMail(String zone) {
-		
-			try {
+	  public void getExcelMail(String zone) 
+	  {
+			try 
+			{
 				MailConfig mail = mailConfigDao.getActiveConfig();
 				if (mail != null) {
 					List<UserDetails> toUser = userDao.getUserRoleList(zone);
@@ -513,7 +529,9 @@ public class CaseDaoImpl implements CaseDao {
 						/* System.out.println("mail sent"); */
 					}
 				}
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
 				CustomMethods.logError(e);
 			}
 	  }
@@ -689,10 +707,11 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public List<CaseSubStatus> getCaseDetailByLevel(String user_role) {
-		try {
-			String sql = "SELECT * FROM case_substatus where user_role = ?";
-			List<CaseSubStatus> caseDetail = this.template.query(sql, new Object[] { user_role },
+	public CaseSubStatus getCaseStatus(String user_role, int level) {
+		try
+		{
+			String sql = "SELECT * FROM case_substatus where user_role = ? and level = ?";
+			return this.template.query(sql, new Object[] {user_role, level},
 					(ResultSet rs, int rowCount) -> {
 						CaseSubStatus detail = new CaseSubStatus();
 						detail.setId(rs.getLong("id"));
@@ -701,10 +720,11 @@ public class CaseDaoImpl implements CaseDao {
 						detail.setCaseSubStatus(rs.getString("caseSubStatus"));
 						detail.setLevel(rs.getInt("level"));
 						return detail;
-					});
-			return  caseDetail;
+					}).get(0);
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 			CustomMethods.logError(e);
 			return null;
