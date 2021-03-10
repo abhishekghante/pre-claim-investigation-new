@@ -508,6 +508,7 @@ $("#assignmessagesubmit").click(function()
     var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
     var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
     
+    console.log("toStatus"+toStatus)
     console.log("caseSubStatus"+caseSubStatus)
     console.log("NotCleanCategory"+NotCleanCategory)
     var toId = "";

@@ -388,7 +388,7 @@ public class CaseController {
 		
 		long caseId = caseDetail.getCaseId();
 		
-		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks);
+		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,user.getAccount_type());
 		String message = caseMovementDao.updateCaseMovement(case_movement);
 		if (message.equals("****")) 
 		{
@@ -417,7 +417,7 @@ public class CaseController {
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("AGNSUP") || toRole.equals("INV"))
+			if(user.getAccount_type().equals("AGNSUP") || toRole.equals("INV") || toRole.equals("UW") || toRole.equals("TALICMAN")) 
 				status = caseDao.getCaseStatus(toRole, 1);
 			else
 				status = caseDao.getCaseStatus(toRole, 2);
@@ -440,7 +440,7 @@ public class CaseController {
 		}
 		caseDao.updateCaseTypeAndSubType(caseDetail);
 		String toRemarks = request.getParameter("toRemarks");
-		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks);
+		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,user.getAccount_type());
 		String message = caseMovementDao.updateCaseMovement(case_movement);
 		if (message.equals("****")) {
 			session.setAttribute("success_message", "Case assigned successfully");

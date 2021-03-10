@@ -42,7 +42,7 @@ public class Case_movementDaoImpl implements Case_movementDao {
 		   this.template.update(query,caseMovement.getCaseId(), caseMovement.getFromId(), 
 				   caseMovement.getToId(),caseMovement.getCaseStatus(), caseMovement.getRemarks() , caseMovement.getUser_role(), caseMovement.getZone());
 			*/
-		   query = "INSERT INTO audit_case_movement (SELECT * FROM case_movement where caseId = ?)";
+		   query = "INSERT INTO audit_case_movement SELECT * FROM case_movement where caseId = ?";
 		   this.template.update(query,caseMovement.getCaseId());
 	    }
 		catch(Exception e) 
@@ -79,7 +79,7 @@ public class Case_movementDaoImpl implements Case_movementDao {
 				   caseMovement.getCaseStatus(),caseMovement.getRemarks(), 
 				   caseMovement.getUser_role(), caseMovement.getCaseId());
 		 
-		   query = "INSERT INTO audit_case_movement (SELECT * FROM case_movement where caseId = ?)";
+		   query = "INSERT INTO audit_case_movement SELECT * FROM case_movement where caseId = ?";
 			   this.template.update(query,caseMovement.getCaseId());
 	    }
 		catch(Exception e) 

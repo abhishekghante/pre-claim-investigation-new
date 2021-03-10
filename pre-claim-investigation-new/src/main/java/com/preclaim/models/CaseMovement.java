@@ -24,13 +24,15 @@ public class CaseMovement {
 		this.zone = "";
 	}
 
-	public CaseMovement(long caseId, String fromId, String toId, String caseStatus, String remarks) {
+	public CaseMovement(long caseId, String fromId, String toId, String caseStatus, String remarks, String user_role) {
 		super();
 		this.caseId = caseId;
 		this.fromId = fromId;
 		this.toId = toId;
 		this.caseStatus = caseStatus;
 		this.remarks = remarks;
+		this.user_role =user_role;
+		
 	}
 
 	public CaseMovement(long caseId, String fromId, String toId, String caseStatus, String remarks, String createdDate,
