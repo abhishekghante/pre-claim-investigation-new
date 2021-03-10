@@ -1,4 +1,3 @@
-<%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import = "java.util.List" %>
 <%@page import = "java.util.ArrayList" %>
 <%@page import = "com.preclaim.models.BillManagementList"%>
@@ -10,6 +9,10 @@ boolean allow_delete = user_permission.contains("messages/delete");
 boolean allow_add = user_permission.contains("messages/add");
 List<BillManagementList> billManagementList = (List<BillManagementList>)session.getAttribute("billingPendingList");
 session.removeAttribute("billingPendingList");
+List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
+session.removeAttribute("investigation_list");
+List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
+session.removeAttribute("intimation_list");
 %> 
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -77,7 +80,7 @@ session.removeAttribute("billingPendingList");
                   				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getCaseID()%></td>
                   			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInvestigationId()%></td>
+                  				<td><%=list_case.getInvestigationType()%></td>
                   				<td><%=list_case.getInitimationType()%></td>
                                 <td><%=list_case.getSupervisorID()%></td>
                                 <td><%=list_case.getSupervisorName()%></td>
@@ -91,7 +94,10 @@ session.removeAttribute("billingPendingList");
                     </table>
                      <div class="row">
                       <div class="col-md-offset-4 col-md-8">
-                        <input type="button"  class="btn btn-info" id="createExcelData" onClick="createExcelData()" value="Create Excel"/>
+                        <button type="button"  class="btn btn-info" id="createExcelData" 
+                        	onClick="createExcelData()"> 
+                        	<i class="fa fa-download"></i> Generate Payment
+                       	</button>
                       </div>
                     </div>
                   </div>                 
@@ -111,32 +117,32 @@ $(document).ready(function() {
   var table = $('#pending_case_list').DataTable();
 
    $('#pending_case_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 5 || i == 6 ){
+	   if( i == 2 || i == 3 || i == 6 || i == 7 || i == 8){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
-    else if(i == 3)
+    else if(i == 4)
     {
       var cat_selectbox = '<select name="category" id="category" class="form-control">'
                               +'<option value="">All</option>';
-		<%-- <%if(investigationList != null){
+		<%if(investigationList != null){
 			for(InvestigationType investigation : investigationList)
 			{
 		%>
 		cat_selectbox += "<option value = <%= investigation.getInvestigationType()%>><%= investigation.getInvestigationType()%></option>";	
-        <%}}%> --%>
+        <%}}%>
 		cat_selectbox += '</select>';
         $(this).html( cat_selectbox );
     }
-    else if(i == 4)
+    else if(i == 5)
     {
       var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
                               +'<option value="">All</option>';
-	<%-- 	<%if(intimationTypeList != null){
+		<%if(intimationTypeList != null){
 			for(IntimationType intimation : intimationTypeList)
 			{
 		%>
 		cat_selectbox += "<option value = <%= intimation.getIntimationType()%>><%= intimation.getIntimationType()%></option>";	
-		<%}}%> --%>
+		<%}}%>
       cat_selectbox += '</select>';
       $(this).html( cat_selectbox );
     }

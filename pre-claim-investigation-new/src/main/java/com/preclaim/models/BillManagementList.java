@@ -5,7 +5,7 @@ public class BillManagementList {
 	private int srNo;
 	private long caseID;
 	private String policyNumber;
-	private int investigationId;
+	private String investigationType;
 	private String initimationType;
 	private String supervisorID;
 	private String SupervisorName;
@@ -16,7 +16,7 @@ public class BillManagementList {
 		this.srNo = 0;
 		this.caseID = 0;
 		this.policyNumber = "";
-		this.investigationId = 0;
+		this.investigationType = "";
 		this.initimationType = "";
 		this.supervisorID = "";
 		this.SupervisorName = "";
@@ -47,12 +47,12 @@ public class BillManagementList {
 		this.policyNumber = policyNumber;
 	}
 
-	public int getInvestigationId() {
-		return investigationId;
+	public String getInvestigationType() {
+		return investigationType;
 	}
 
-	public void setInvestigationId(int investigationId) {
-		this.investigationId = investigationId;
+	public void setInvestigationType(String investigationType) {
+		this.investigationType = investigationType;
 	}
 
 	public String getInitimationType() {
@@ -90,7 +90,7 @@ public class BillManagementList {
 	@Override
 	public String toString() {
 		return "BillManagementList [srNo=" + srNo + ", caseID=" + caseID + ", policyNumber=" + policyNumber
-				+ ", investigationId=" + investigationId + ", initimationType=" + initimationType + ", supervisorID="
+				+ ", investigationId=" + investigationType + ", initimationType=" + initimationType + ", supervisorID="
 				+ supervisorID + ", SupervisorName=" + SupervisorName + ", Charges=" + Charges + "]";
 	}
 
