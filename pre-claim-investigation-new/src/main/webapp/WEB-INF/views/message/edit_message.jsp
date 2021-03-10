@@ -538,8 +538,9 @@ $("#assignmessagesubmit").click(function()
 	   		toastr.error("Kindly select User Role", "Error");
 	   		validFlag = 0;
 	   	}
-   	}else if(toStatus == "Closed"){
-   		
+   	}
+    else if(toStatus == "Closed")
+    {	
    		toId = $( '#edit_message_form #toId' ).val();
 	    toRole = $( '#edit_message_form #toRole' ).val();
 	    
@@ -548,13 +549,12 @@ $("#assignmessagesubmit").click(function()
 	   		toastr.error("Kindly select Case Sub-status", "Error");
 	   		validFlag = 0;
 	   		   		
-	   	}else if(caseSubStatus == 'Not-Clean')
+	   	}
+	    else if(caseSubStatus == 'Not-Clean')
 		{
 	   		toastr.error("Kindly select Not-clean category", "Error");
-	   		validFlag = 0;
-	   		   		
-	   	}
-		    
+	   		validFlag = 0;	   		
+		}
    	}
     
     if(toStatus == "Rejected" && toRemarks == "")
@@ -577,7 +577,14 @@ $("#assignmessagesubmit").click(function()
     $.ajax({
 	    type: "POST",
 	    url: 'assignCase',
-	    data:{"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks, "caseId": caseId,"caseSubStatus":caseSubStatus,"NotCleanCategory":NotCleanCategory},
+	    data:{
+	    	"toId"            : toId, 
+	    	"toRole"          : toRole, 
+	    	"toStatus"        : toStatus, 
+	    	"toRemarks"       : toRemarks, 
+	    	"caseId"          : caseId,
+	    	"caseSubStatus"   : caseSubStatus,
+	    	"NotCleanCategory": NotCleanCategory},
 	    success:function(message)
 	    {
 	    	$("#editmessagesubmit").html('Assign Case');
@@ -628,6 +635,7 @@ $("#assignmessagesubmit").click(function()
     var toRemarks      = $( '#edit_message_form #toRemarks' ).val();
     var caseType       = $( '#edit_message_form #caseType' ).val();
     var caseSubstatus  = $( '#edit_message_form #caseSubstatus').val();
+    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
     
     var currentDate = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
@@ -670,10 +678,21 @@ $("#assignmessagesubmit").click(function()
 	        errorFlag = 1;
 	    }
     }
-    else
+    else if(toStatus == "Closed")
    	{
     	toRole = "";
-   		toId = "";
+   		toId   = "";
+   		if(caseSubStatus == null)
+	   	{
+	   		toastr.error("Kindly select Case Sub-status", "Error");
+	   		validFlag = 0;
+	   		   		
+	   	}
+	    else if(caseSubStatus == 'Not-Clean')
+		{
+	   		toastr.error("Kindly select Not-clean category", "Error");
+	   		validFlag = 0;	   		
+		}
    	}
     if(insuredAdd == '')
     {
@@ -832,7 +851,13 @@ $("#assignmessagesubmit").click(function()
 	    		'insuredDOD':insuredDOB,'insuredDOB':insuredDOD, 'sumAssured':sumAssured,   
 	    		'msgIntimationType':msgIntimationType,'locationId':locationId,
 	    		'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,
-	    		'insuredAdd':insuredAdd,"toId" : toId, "toStatus" : toStatus, "toRemarks" : toRemarks,"caseType":caseType, "caseSubstatus":caseSubstatus, 
+	    		'insuredAdd':insuredAdd,	    		
+	    		"toRole"          : toRole, 
+		    	"toStatus"        : toStatus, 
+		    	"toRemarks"       : toRemarks, 
+		    	"caseId"          : caseId,
+		    	"caseSubStatus"   : caseSubStatus,
+		    	"NotCleanCategory": NotCleanCategory, 
 	    		"caseId": caseId},
 	    success: function( data )
 	    {

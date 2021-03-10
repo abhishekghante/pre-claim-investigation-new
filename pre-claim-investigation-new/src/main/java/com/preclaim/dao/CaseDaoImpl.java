@@ -303,14 +303,17 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public String updateCaseDetails(CaseDetails casedetail) {
 		try {
-			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, insuredDOD = ?, insuredDOB = ?, sumAssured = ?, "
-					+ "intimationType = ?, locationId = ?, nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
-					+ "insured_address = ?, updatedDate = getdate(), updatedBy = ? where caseId = ?";
+			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, "
+					+ "insuredDOD = ?, insuredDOB = ?, sumAssured = ?, intimationType = ?, locationId = ?, "
+					+ "nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
+					+ "insured_address = ?, caseStatus = ?, caseSubstatus = ?, notCleanCategory = ?, "
+					+ "updatedDate = getdate(), updatedBy = ? where caseId = ?";
 			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getUpdatedBy(), casedetail.getCaseId());
+					casedetail.getInsured_address(), casedetail.getCaseStatus(), casedetail.getCaseSubStatus(),
+					casedetail.getNotCleanCategory(), casedetail.getUpdatedBy(), casedetail.getCaseId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
