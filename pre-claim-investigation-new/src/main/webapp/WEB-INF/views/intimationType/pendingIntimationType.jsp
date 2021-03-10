@@ -254,16 +254,13 @@ function updateIntimationType() {
 				$("#editIntimationTypesubmit").prop('disabled', true);
 			},
 			success : function(data) {
-				if (data == "****") {
-					$("#editIntimationTypesubmit").html('Update');
-					$("#editIntimationTypesubmit").prop('disabled', false);
-					toastr.success('Intimation Type Updated successfully.','Success');
+				$("#editIntimationTypesubmit").html('Update');
+				$("#editIntimationTypesubmit").prop('disabled', false);
+				
+				if (data == "****") 
 					location.href ="${pageContext.request.contextPath}/intimationType/pending";
-				} else {
+				else 
 					toastr.error(data, 'Error');
-					$("#editIntimationTypesubmit").html('Update');
-					$("#editIntimationTypesubmit").prop('disabled', false);
-				}
 			}
 		});
 }

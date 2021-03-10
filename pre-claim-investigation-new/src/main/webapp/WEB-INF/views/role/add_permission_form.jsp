@@ -12,6 +12,9 @@ session.removeAttribute("user role");
 ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_permission");
 List<UserRole> user_role=(List<UserRole>)session.getAttribute("role_list");
 session.removeAttribute("role_list");
+
+if(role_permission == null)
+	role_permission = new ArrayList<String>();
 %>
 <div class="row add-permission-form">
     <div class="col-xs-12 col-sm-12">
