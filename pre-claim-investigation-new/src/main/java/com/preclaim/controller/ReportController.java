@@ -485,7 +485,6 @@ public class ReportController {
 			Row newRow = regionwise_sheet.createRow(rowNum);
 			int colNum = 1;
 			Cell cell = newRow.createCell(colNum);
-			XSSFCellStyle style = regionwise_wb.createCellStyle();
 			
 			//Print Header
 			cell.setCellValue("Investigator");
@@ -520,7 +519,6 @@ public class ReportController {
 			newRow = regionwise_sheet.createRow(rowNum);
 			for (RegionwiseList item : regionwise) {
 				colNum = 1;
-				style = regionwise_wb.createCellStyle();
 				
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(item.getInvestigator());

@@ -1,6 +1,5 @@
 package com.preclaim.controller;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.preclaim.config.Config;
 import com.preclaim.dao.BillingManagementDao;
 import com.preclaim.models.BillManagementList;
 import com.preclaim.models.ScreenDetails;
@@ -82,30 +83,31 @@ public class BillManagementController {
 	  
 	  @RequestMapping(value = "/getCheckboxValue",method = RequestMethod.POST)
 		public @ResponseBody String getCheckboxValue(HttpSession session, HttpServletRequest request) throws IOException {
-			UserDetails user = (UserDetails) session.getAttribute("User_Login");
-             List<Integer> list=new ArrayList<>();
-             String tempStr[] = request.getParameterValues("selected[]");
-             List<BillManagementList> billingList = new ArrayList<BillManagementList>();
+			
+		  UserDetails user = (UserDetails) session.getAttribute("User_Login");   
+		  String tempStr[] = request.getParameterValues("selected[]");
+		  List<BillManagementList> billingList = new ArrayList<BillManagementList>();
+		  for(String values: tempStr) 
+		  {	 
+			  if(!values.equals("on")) 
+			  { 
+				  billingList.addAll( billingDao.billingPaymentPendingList(Integer.parseInt(values))); 
+				  billingDao.UpdateFees(Integer.parseInt(values)); 
+			  } 
+		  }
              
-             for(String values: tempStr) {
-            	 if(!values.equals("on")) {
-            	 	 
-            	 billingList.addAll( billingDao.billingPaymentPendingList(Integer.parseInt(values)));
-            	 billingDao.UpdateFees(Integer.parseInt(values));
-            	 }
-             }
-             
-             //Create blank workbook
-             XSSFWorkbook workbook = new XSSFWorkbook();
-             
-             //Create a blank sheet
-             XSSFSheet spreadsheet = workbook.createSheet( " Employee Info ");
+         
+		  //Create blank workbook
+		  XSSFWorkbook workbook = new XSSFWorkbook();
+         
+         //Create a blank sheet
+         XSSFSheet spreadsheet = workbook.createSheet( " Employee Info ");
 
-             //Create row object
-             XSSFRow row;
+         //Create row object
+         XSSFRow row;
 
-             //This data needs to be written (Object[])
-             Map<Integer, Object[]> empinfo = new TreeMap < Integer, Object[] >();
+         //This data needs to be written (Object[])
+         Map<Integer, Object[]> empinfo = new TreeMap < Integer, Object[] >();
              
 		
 		  empinfo.put( 0, new Object[] {"SR NO", "CASE ID", "POLICY NUMBER", "INVESTIGATION ID", "INTIMATION TYPE", "SUPERVISOR ID", "SUPERVISOR NAME", "CHARGES"});
@@ -135,12 +137,14 @@ public class BillManagementController {
 		  String a=formatter.format(date);
 		  //Write the workbook in file system
 		  FileOutputStream out = new FileOutputStream( new
-		  File("C:/Pre-Claim Investigation/uploads/"+user.getFull_name()+a+".xlsx"));
+		  File(Config.upload_directory + user.getFull_name() + a +".xlsx"));
 		  
-		  workbook.write(out); out.close();
+		  workbook.write(out); 
+		  out.close();
+		  workbook.close();
 		  return "****";		 		 
-           }
-                    
-		} 
+           
+	  }		
+} 
 	  
 

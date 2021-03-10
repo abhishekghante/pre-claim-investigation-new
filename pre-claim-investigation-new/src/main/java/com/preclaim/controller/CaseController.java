@@ -218,6 +218,7 @@ public class CaseController {
 			return "common/login";
 
 		CaseDetails caseDetail = new CaseDetails();
+		//Add Details
 		caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
 		caseDetail.setInvestigationId(Integer.parseInt(request.getParameter("msgCategory")));
 		caseDetail.setInsuredName(request.getParameter("insuredName"));
@@ -231,6 +232,7 @@ public class CaseController {
 		caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setCreatedBy(user.getUsername());
+		//Get Case Status
 		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(), 1);
 		caseDetail.setCaseStatus(status.getCase_status());
 		caseDetail.setCaseSubStatus(status.getCaseSubStatus());
@@ -241,7 +243,7 @@ public class CaseController {
 		if (caseId == 0)
 			return "Error adding case";
 
-		/* System.out.println("caseDetail=============" + caseDetail); */
+		//Case Movement & Audit Case Movement
 		CaseMovement caseMovement = new CaseMovement();
 		caseMovement.setCaseId(caseId);
 		caseMovement.setFromId(caseDetail.getCreatedBy());
@@ -279,7 +281,10 @@ public class CaseController {
 
 					}
 				}
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
 				CustomMethods.logError(e);
 			}
 		}
@@ -341,7 +346,12 @@ public class CaseController {
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setUpdatedBy(user.getUsername());
 		caseDetail.setCaseId(Long.parseLong(request.getParameter("caseId")));
-		System.out.println(caseDetail.toString());
+		
+		//Get Case Status
+		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(), 1);
+		caseDetail.setCaseStatus(status.getCase_status());
+		caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		
 		String update = caseDao.updateCaseDetails(caseDetail);
 		if (!update.equals("****"))
 			return update;
@@ -363,11 +373,11 @@ public class CaseController {
 	public @ResponseBody String assignToRM(HttpServletRequest request, HttpSession session) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		CaseDetails caseDetail = new CaseDetails();
-		long caseId             = Integer.parseInt(request.getParameter("caseId"));
-		String toId             = request.getParameter("toId");
-		String fromId           = user.getUsername();
-		String toStatus         = request.getParameter("toStatus");
-		String caseSubStatus    = request.getParameter("caseSubStatus");
+		long caseId = Integer.parseInt(request.getParameter("caseId"));
+		String toId = request.getParameter("toId");
+		String fromId = user.getUsername();
+		String toStatus = request.getParameter("toStatus");
+		String caseSubStatus  = request.getParameter("caseSubStatus");
 		String NotCleanCategory = request.getParameter("NotCleanCategory");
 		caseDetail.setCaseId(caseId);
 		caseDetail.setNotCleanCategory(NotCleanCategory);

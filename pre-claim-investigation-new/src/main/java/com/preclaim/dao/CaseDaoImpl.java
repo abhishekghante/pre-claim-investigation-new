@@ -86,21 +86,29 @@ public class CaseDaoImpl implements CaseDao {
 
 	@Override
 	public long addcase(CaseDetails casedetail) {
-		try {
+		try 
+		{
 			String current_date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 			String query = "INSERT INTO case_lists (policyNumber, investigationId, insuredName, "
-					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, paymentApproved, "
-					+ "nominee_name, nominee_ContactNumber, nominee_address, insured_address,"
-					+ "case_description, longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, "
-					+ "audioFilePath, videoFilePath, signatureFilePath , capturedDate, createdBy, "
-					+ "createdDate, updatedDate, updatedBy, caseSubStatus, image, notCleanCategory) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, 'Assigned',' ', ?, ?, ?, ?, '', '', '', '', '', '', "
-					+ "'', '', '', '', ?, ?, getdate(), '', '', '', '')";
+					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, "
+					+ "caseSubstatus, notCleanCategory, paymentApproved, nominee_name, "
+					+ "nominee_ContactNumber, nominee_address, insured_address, case_description, "
+					+ "longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, audioFilePath, "
+					+ "videoFilePath, signatureFilePath , image, capturedDate, createdDate, createdBy, "
+					+ "updatedDate, updatedBy)"
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+					//pdf1FilePath onwards
+					+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')";
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
-					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getCreatedBy(), current_date);
+					casedetail.getCaseStatus(), casedetail.getCaseSubStatus(), casedetail.getNotCleanCategory(),
+					casedetail.getPaymentApproved(), casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), 
+					casedetail.getNominee_address(), casedetail.getInsured_address(), casedetail.getCase_description(), 
+					casedetail.getLongitude(), casedetail.getLatitude(), casedetail.getPdf1FilePath(),
+					casedetail.getPdf2FilePath(), casedetail.getPdf3FilePath(), casedetail.getAudioFilePath(),
+					casedetail.getVideoFilePath(), casedetail.getSignatureFilePath(),"",casedetail.getCapturedDate(),
+					current_date, casedetail.getCreatedBy(), current_date);
 
 			query = "SELECT caseId FROM case_lists where policyNumber = ? and createdBy = ? and "
 					+ "createdDate = ? and updatedBy = ''";
@@ -110,7 +118,9 @@ public class CaseDaoImpl implements CaseDao {
 						return rs.getLong("caseId");
 					}).get(0);
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 			CustomMethods.logError(e);
 			return 0;
