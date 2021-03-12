@@ -458,7 +458,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     $.ajax({
 	    type: "POST",
 	    url: 'addMessage',
-	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,'insuredDOD':insuredDOB,'insuredDOB':insuredDOD,
+	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,'insuredDOD':insuredDOD,'insuredDOB':insuredDOB,
 	    	       'sumAssured':sumAssured,'msgIntimationType':msgIntimationType,'claimantCity':claimantCity,'claimantState':claimantState, 'claimantZone': claimantZone,
 	    	       'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,'insuredAdd':insuredAdd, 'roleName':roleName},
 	    beforeSend: function() {

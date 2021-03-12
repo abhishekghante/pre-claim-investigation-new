@@ -32,11 +32,8 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public List<BillManagementList> billPaymentList() 
 		{
 			HashMap<Integer, String> investigationType = investigationDao.getActiveInvestigationMapping();
-			String sql = "SELECT * FROM case_lists a ,"
-					+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-					+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
-					+ "order by a.updatedDate desc) b "
-					+ "where a.caseId = b.caseId  and a.paymentApproved = '' and a.caseStatus = 'Closed'";
+			String sql = "SELECT * FROM case_lists a ,(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b where a.user_role = 'AGNSUP' and a.toId = b.username \r\n"
+					+ "order by a.updatedDate desc) b where a.caseId = b.caseId and a.paymentApproved = '' and a.caseStatus = 'Closed'";
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
 				billManagementList.setSrNo(rowNum + 1);

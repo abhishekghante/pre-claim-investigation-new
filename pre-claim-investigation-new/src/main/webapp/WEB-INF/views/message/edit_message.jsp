@@ -190,12 +190,21 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="msgTitleEn">Status</label>
+                <label class="col-md-4 control-label" for="msgTitleEn">Case Status</label>
                 <div class="col-md-8">
                   <input type="text" placeholder="Status" name="status" id="status" class="form-control"
                   	value = "<%= case_detail.getCaseStatus() %>"  disabled>
                 </div>
               </div>
+              
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="subStatus">Case Sub-Status</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="Case Sub-Status" name="subStatus" id="subStatus" class="form-control"
+                  	value = "<%= case_detail.getCaseSubStatus() %>"  disabled>
+                </div>
+              </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nomineeName">Nominee Name
                 	<span class="text-danger">*</span>
@@ -267,7 +276,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
                           <span data-imgID="imgMsgEnLbl_3" data-ID="imgMsgEn_3" id="enLblDelBtn_3" class="delete_btn" data-linkID="link_msgImgEn_3" data-toggle="tooltip" data-toggle="tooltip" title="Remove">
-                            <i class="fa fa-remove"></i>d
+                            <i class="fa fa-remove"></i>
                           </span>
                           <img src="${pageContext.request.contextPath}/resources/uploads/default_img.png" class="imgMsgEnLbl" id="imgMsgEnLbl_3" style="height:height:120px;width: 100%;" data-src="#" data-toggle="tooltip" data-toggle="tooltip" title="Click to upload Image 3" />
                         </div>
@@ -397,6 +406,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 		                  	<option value = '-1' selected disabled>Select</option>             	
 		                  	<option value = "Clean">Clean</option>
 		                  	<option value = "Not-Clean">Not-Clean</option>
+		                  	<option value = "PIV Stoppped">PIV Stoppped</option>
 		                  </select>
 		            	</div>
 		            	</div>
@@ -425,7 +435,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
               	</div>
               </div>
               <!--  Footer -->
-              <%if(allow_assign && !allow_edit) {%>
+              <%if((allow_assign && !allow_edit )|| allow_closure) {%>
               <div class="box-footer">
                 <div class="row">
                   <div class="col-md-offset-4 col-md-8">
@@ -551,7 +561,7 @@ $("#assignmessagesubmit").click(function()
 	   		validFlag = 0;
 	   		   		
 	   	}
-	    else if(caseSubStatus == 'Not-Clean')
+	    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
 		{
 	   		toastr.error("Kindly select Not-clean category", "Error");
 	   		validFlag = 0;	   		
@@ -634,9 +644,8 @@ $("#assignmessagesubmit").click(function()
     var toRole         = $( '#edit_message_form #toRole' ).val();
     var toStatus       = $( '#edit_message_form #toStatus' ).val();
     var toRemarks      = $( '#edit_message_form #toRemarks' ).val();
-    var caseType       = $( '#edit_message_form #caseType' ).val();
-    var caseSubstatus  = $( '#edit_message_form #caseSubstatus').val();
-    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+    var caseSubstatus  = "";
+    var NotCleanCategory = ""; 
     
     var currentDate = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
@@ -657,13 +666,14 @@ $("#assignmessagesubmit").click(function()
     $("#insuredAdd").removeClass('has-error-2');
     $("#toRole").removeClass('has-error-2');
     $("#toId").removeClass('has-error-2');
-    $("#caseType").removeClass('has-error-2');
     $("#caseSubstatus").removeClass('has-error-2');
     
     var errorFlag = 0;
    
     if(toStatus != "Closed")
-    {    		
+    {   
+    	caseSubstatus = "";
+    	NotCleanCategory = "";
 	    if(toId == null)
 	    {
 	        toastr.error('Please select User','Error');
@@ -678,18 +688,22 @@ $("#assignmessagesubmit").click(function()
 	        $("#toRole").focus();
 	        errorFlag = 1;
 	    }
+	    
     }
     else if(toStatus == "Closed")
    	{
     	toRole = "";
    		toId   = "";
+   		caseSubstatus  = $( '#edit_message_form #caseSubstatus').val();
+   	    NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+   	    
    		if(caseSubStatus == null)
 	   	{
 	   		toastr.error("Kindly select Case Sub-status", "Error");
 	   		validFlag = 0;
 	   		   		
 	   	}
-	    else if(caseSubStatus == 'Not-Clean')
+	    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
 		{
 	   		toastr.error("Kindly select Not-clean category", "Error");
 	   		validFlag = 0;	   		
@@ -823,20 +837,6 @@ $("#assignmessagesubmit").click(function()
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-    if(caseType == '')
-    {
-    	toastr.error('Case type cannot be empty','Error');
-    	$('#caseType').addClass('has-error-2');
-    	$('#caseType').focus();
-    	errorFlag = 1;
-    }
-    if(caseSubstatus == '')
-    {
-    	toastr.error('Case type cannot be empty','Error');
-    	$('#caseSubstatus').addClass('has-error-2');
-    	$('#caseSubstatus').focus();
-    	errorFlag = 1;
-    }
     
     if(errorFlag == 1)
     	return false;
@@ -844,22 +844,34 @@ $("#assignmessagesubmit").click(function()
     $("#editmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
     $("#editmessagesubmit").prop('disabled', true);
     $('#editmessagesubmit').css("opacity",".5");
+
+    
+    var formdata = {'policyNumber':policyNumber,
+   	    'msgCategory':msgCategory,
+   	       'insuredDOD':insuredDOD,
+   	      'insuredDOB':insuredDOB,
+   	      'insuredName':insuredName,
+          'sumAssured':sumAssured,
+          'msgIntimationType':msgIntimationType,
+          'locationId':locationId,
+       'nomineeName':nomineeName,
+       'nomineeMob':nomineeMob,
+       'nomineeAdd':nomineeAdd,
+       'insuredAdd':insuredAdd,
+       'toRole':toRole,
+       'toStatus':toStatus,
+        'toRemarks':toRemarks,
+        'caseId':caseId,
+        'caseSubStatus':caseSubstatus,
+        'NotCleanCategory':NotCleanCategory,
+        "toId":toId };
+    console.log(formdata);
     
     $.ajax({
 	    type: "POST",
-	    url: '${pageContext.request.contextPath}/message/updateMessageDetails',
-	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,
-	    		'insuredDOD':insuredDOB,'insuredDOB':insuredDOD, 'sumAssured':sumAssured,   
-	    		'msgIntimationType':msgIntimationType,'locationId':locationId,
-	    		'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,
-	    		'insuredAdd':insuredAdd,	    		
-	    		"toRole"          : toRole, 
-		    	"toStatus"        : toStatus, 
-		    	"toRemarks"       : toRemarks, 
-		    	"caseId"          : caseId,
-		    	"caseSubStatus"   : caseSubStatus,
-		    	"NotCleanCategory": NotCleanCategory, 
-	    		"caseId": caseId},
+	    url: 'updateMessageDetails',
+	    data: formdata,
+
 	    success: function( data )
 	    {
 	        $("#editmessagesubmit").html('Update Case');
@@ -871,7 +883,8 @@ $("#assignmessagesubmit").click(function()
 	  	  }
 	  	  else
 	         toastr.error( data,'Error' );
-	    }
+	    } 
+	    
 	  });
   });
 

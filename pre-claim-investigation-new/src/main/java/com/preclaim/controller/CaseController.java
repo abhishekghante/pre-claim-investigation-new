@@ -331,6 +331,7 @@ public class CaseController {
 		if (user == null)
 			return "common/login";
 
+		System.out.println("calling ");
 		CaseDetails caseDetail = new CaseDetails();
 		caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
 		caseDetail.setInvestigationId(Integer.parseInt(request.getParameter("msgCategory")));
@@ -360,10 +361,10 @@ public class CaseController {
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("AGNSUP") || toRole.equals("INV"))
-				status = caseDao.getCaseStatus(toRole, 1);
-			else
+			if(user.getAccount_type().equals("AGNSUP") && !toRole.equals("INV"))
 				status = caseDao.getCaseStatus(toRole, 2);
+			else
+				status = caseDao.getCaseStatus(toRole, 1);
 			caseDetail.setCaseStatus(status.getCase_status());
 			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
 		}
@@ -407,6 +408,7 @@ public class CaseController {
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
+		System.out.println("user"+user);
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
@@ -417,10 +419,10 @@ public class CaseController {
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("AGNSUP") || toRole.equals("INV") || toRole.equals("UW") || toRole.equals("TALICMAN")) 
-				status = caseDao.getCaseStatus(toRole, 1);
-			else
+			if(user.getAccount_type().equals("INV") && toRole.equals("AGNSUP"))
 				status = caseDao.getCaseStatus(toRole, 2);
+			else
+				status = caseDao.getCaseStatus(toRole, 1);
 			caseDetail.setCaseStatus(status.getCase_status());
 			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
 		}

@@ -158,8 +158,9 @@ public class CaseDaoImpl implements CaseDao {
 			} 
 			else if(user_role.equalsIgnoreCase("REGMAN")) 
 			{
-				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.user_role = ? and b.zone = ? and b.toId ='')";
-				List<CaseDetailList> casedetailList = template.query(sql, new Object[] {user_role,zone },
+				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and "
+						+ "(toId = ? or (b.user_role = ? and b.zone = ? and b.toId =''))";
+				List<CaseDetailList> casedetailList = template.query(sql, new Object[] {username, user_role,zone },
 						(ResultSet rs, int rowCount) -> {
 							CaseDetailList casedetail = new CaseDetailList();
 							casedetail.setSrNo(rowCount + 1);
@@ -326,8 +327,8 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public String updateCaseTypeAndSubType(CaseDetails casedetail) {
 		try {
-			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseSubStatus =? where caseId = ?";
-			template.update(sql,casedetail.getNotCleanCategory(),
+			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseStatus = ?, caseSubStatus =? where caseId = ?";
+			template.update(sql,casedetail.getNotCleanCategory(), casedetail.getCaseStatus(),
 					casedetail.getCaseSubStatus(),casedetail.getCaseId());
 		} catch (Exception e) {
 			e.printStackTrace();
