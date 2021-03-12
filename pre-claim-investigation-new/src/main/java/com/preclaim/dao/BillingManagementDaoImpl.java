@@ -37,12 +37,12 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
 				billManagementList.setSrNo(rowNum + 1);
-				billManagementList.setCaseID(rs.getInt("a.caseId"));
-				billManagementList.setPolicyNumber(rs.getString("a.policyNumber"));
-				billManagementList.setInitimationType(rs.getString("a.intimationType"));
-				billManagementList.setInvestigationType(investigationType.get(rs.getInt("a.investigationId")));
-				billManagementList.setSupervisorID(rs.getString("b.username"));
-				billManagementList.setSupervisorName(rs.getString("b.full_name"));
+				billManagementList.setCaseID(rs.getInt("caseId"));
+				billManagementList.setPolicyNumber(rs.getString("policyNumber"));
+				billManagementList.setInitimationType(rs.getString("intimationType"));
+				billManagementList.setInvestigationType(investigationType.get(rs.getInt("investigationId")));
+				billManagementList.setSupervisorID(rs.getString("username"));
+				billManagementList.setSupervisorName(rs.getString("full_name"));
 				return billManagementList;
 			});
 		}
@@ -55,7 +55,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 					+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
 					+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
 					+ "order by a.updatedDate desc) b "
-					+ "where a.caseId = b.caseId  and a.paymentApproved = '' and a.caseStatus = 'Closed'"
+					+ "where a.caseId = b.caseId and a.caseStatus = 'Closed'"
 					+ " and a.caseId in('" + list + "')";
 		 
 			Map<Integer, Object[]> paidcases = new HashMap<Integer, Object[]>();
@@ -70,7 +70,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 					{
 						int i = 1;
 						paidcases.put(i, new Object[] {
-								i,rs.getLong("a.caseId"), rs.getString("a.policyNumber"),
+								i,rs.getLong("a.caseId"), rs.getString("policyNumber"),
 								investigationType.containsKey(rs.getInt("investigationId")), 
 								rs.getString("intimationType"), rs.getString("insuredName"), 
 								rs.getString("insuredDOB"), rs.getString("insuredDOD"), 
@@ -84,7 +84,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 						while(rs.next())
 						{
 							paidcases.put(i, new Object[] {
-									i,rs.getLong("a.caseId"), rs.getString("a.policyNumber"),
+									i,rs.getLong("a.caseId"), rs.getString("policyNumber"),
 									investigationType.containsKey(rs.getInt("investigationId")), 
 									rs.getString("intimationType"), rs.getString("insuredName"), 
 									rs.getString("insuredDOB"), rs.getString("insuredDOD"), 
@@ -105,9 +105,10 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public String UpdateFees(String list, String userId) {
 			try
 			{
+				System.out.println("output"+list);
 				String sql = "UPDATE case_lists  SET paymentApproved = 'Fees Paid', "
-						+ "updatedDate = getDate(), updatedBy = ?  WHERE caseId in(?)";
-				this.template.update(sql, userId, list);
+						+ "updatedDate = getDate(), updatedBy = ?  WHERE caseId in ("+ list +")";
+				this.template.update(sql, userId);
 			}
 			catch(Exception e)
 			{
@@ -131,12 +132,12 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
 				billManagementList.setSrNo(rowNum + 1);
-				billManagementList.setCaseID(rs.getInt("a.caseId"));
-				billManagementList.setPolicyNumber(rs.getString("a.policyNumber"));
-				billManagementList.setInitimationType(rs.getString("a.intimationType"));
-				billManagementList.setInvestigationType(investigationType.get(rs.getInt("a.investigationId")));
-				billManagementList.setSupervisorID(rs.getString("b.username"));
-				billManagementList.setSupervisorName(rs.getString("b.full_name"));
+				billManagementList.setCaseID(rs.getInt("caseId"));
+				billManagementList.setPolicyNumber(rs.getString("policyNumber"));
+				billManagementList.setInitimationType(rs.getString("intimationType"));
+				billManagementList.setInvestigationType(investigationType.get(rs.getInt("investigationId")));
+				billManagementList.setSupervisorID(rs.getString("username"));
+				billManagementList.setSupervisorName(rs.getString("full_name"));
 				return billManagementList;
 			});
 		}

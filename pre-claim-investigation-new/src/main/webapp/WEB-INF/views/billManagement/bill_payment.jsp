@@ -218,6 +218,7 @@ function createExcelData() {
 	            $("#createExcelData").prop('disabled', true);
 	        },
 	        success : function( msg ) {
+	        	console.log("msg"+msg)
 	            if( msg != "****" ) 
 	                toastr.error(msg,'Error');
 	            else

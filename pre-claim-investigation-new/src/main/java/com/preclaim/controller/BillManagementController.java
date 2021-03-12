@@ -106,10 +106,13 @@ public class BillManagementController {
 			  if(!values.equals("on")) 
 			  { 
 				  selectedValues += values + ",";
+				  billingDao.UpdateFees(values, user.getUsername()); 
+				  
 			  } 
 		  }
-		  selectedValues.substring(0, selectedValues.length()); 
-		  billingDao.UpdateFees(selectedValues, user.getUsername()); 
+		  selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
+		  selectedValues =  selectedValues;
+		  System.out.println(selectedValues);
 		  //Create blank workbook
 		  XSSFWorkbook workbook = new XSSFWorkbook();       
 		  //Create a blank sheet        
