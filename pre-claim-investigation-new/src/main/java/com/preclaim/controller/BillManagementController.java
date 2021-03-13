@@ -102,17 +102,8 @@ public class BillManagementController {
 		  String tempStr[] = request.getParameterValues("selected[]");
 		  String selectedValues = "";
 		  for(String values: tempStr) 
-		  {	 
-			  if(!values.equals("on")) 
-			  { 
-				  selectedValues += values + ",";
-				  billingDao.UpdateFees(values, user.getUsername()); 
-				  
-			  } 
-		  }
+		  	  selectedValues += values + ",";
 		  selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
-		  selectedValues =  selectedValues;
-		  System.out.println(selectedValues);
 		  //Create blank workbook
 		  XSSFWorkbook workbook = new XSSFWorkbook();       
 		  //Create a blank sheet        
@@ -122,6 +113,7 @@ public class BillManagementController {
 
 		  //This data needs to be written (Object[])         
 		  Map<Integer, Object[]> empinfo = billingDao.billPaymentList(selectedValues);   
+		  billingDao.UpdateFees(selectedValues, user.getUsername()); 
 		  //Iterate over data and write to sheet
 	        
 		  Set<Integer> keyid = empinfo.keySet();
@@ -140,13 +132,14 @@ public class BillManagementController {
 		  String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
 		  
 		  //Write the workbook in file system
+		  String filename = "Bill Payment_" + currentDate + ".xlsx";
 		  FileOutputStream out = new FileOutputStream( new
-		  File(Config.upload_directory + "Bill Payment_" + currentDate + ".xlsx"));
+		  File(Config.upload_directory + filename));
 		  
 		  workbook.write(out); 
 		  out.close();
 		  workbook.close();
-		  return "****"; 
+		  return filename; 
 	  }		
 } 
 	  

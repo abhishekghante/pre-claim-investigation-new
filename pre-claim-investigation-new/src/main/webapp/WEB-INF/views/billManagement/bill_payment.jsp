@@ -76,7 +76,7 @@ session.removeAttribute("intimation_list");
                         	for(BillManagementList list_case :billManagementList){%>                       
                           
                           <tr>
-                                <td><input type="checkbox" id="selectedCategory" value="<%=list_case.getCaseID()%>" /></td>
+                                <td><input type="checkbox" class ="selectedCategory" value="<%=list_case.getCaseID()%>"></td>
                   				<td><%=list_case.getSrNo()%></td>
                   				<td><%=list_case.getCaseID()%></td>
                   			   	<td><%=list_case.getPolicyNumber()%></td>
@@ -92,14 +92,6 @@ session.removeAttribute("intimation_list");
                         %>  
                       </tbody> 
                     </table>
-                     <div class="row">
-                      <div class="col-md-offset-4 col-md-8">
-                        <button type="button"  class="btn btn-info" id="createExcelData" 
-                        	onClick="createExcelData()"> 
-                        	<i class="fa fa-download"></i> Generate Payment
-                       	</button>
-                      </div>
-                    </div>
                   </div>                 
                 </div>
               <div class="clearfix"></div>
@@ -108,10 +100,19 @@ session.removeAttribute("intimation_list");
         <div class="clearfix"></div>
       </div><!-- panel body -->
     </div>
+    <div class="row" style = "margin-top:10px">
+      <div class="col-md-offset-4 col-md-8">
+        <button type="button"  class="btn btn-info" id="createExcelData" 
+        	onClick="createExcelData()"> 
+        	<i class="fa fa-download"></i> Generate Payment
+       	</button>
+      </div>
+    </div>
   </div><!-- content -->
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
+	
   var i = 0;
   //DataTable  
   var table = $('#pending_case_list').DataTable();
@@ -190,50 +191,46 @@ $(document).ready(function() {
 function createExcelData() { 
 	
         //Create an Array.
-        var selected = new Array();
- 
-        //Reference the Table.
-        var pending_case_list =$("#pending_case_list");
+        var selected = [];
  
         //Reference all the CheckBoxes in Table.
-        var chks = $("#pending_case_list").find("INPUT")
+        var chks = $("#pending_case_list tbody").find("INPUT")
  
-        
         // Loop and push the checked CheckBox value in Array.
         for (var i = 0; i < chks.length; i++) {
             if (chks[i].checked) {
                 selected.push(chks[i].value);
             }
         }
-       //Display the selected CheckBox values.
-        console.log("chks"+selected);
+       
+       if(selected.length == 0)
+   	   {
+	  	   	toastr.error("Kindly select atleast one case","Error");
+	  	   	return;
+   	   }
        
         $.ajax({
-	        type    : 'POST',
-	        url     : 'getCheckboxValue',
-	        dataType: 'json',
-	        data    : {'selected':selected},
+	        type : 'POST',
+	        url  : 'getCheckboxValue',
+	        data : {'selected':selected},
 	        beforeSend: function() { 
 	            $("#createExcelData").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 	            $("#createExcelData").prop('disabled', true);
 	        },
 	        success : function( msg ) {
-	        	console.log("msg"+msg)
-	            if( msg != "****" ) 
-	                toastr.error(msg,'Error');
+	        	$("#createExcelData").html('<i class="fa fa-download"></i> Generate Payment');
+	            $("#createExcelData").prop('disabled', false);
+	            console.log(msg);
+	        	if( msg.includes(".xlsx"))
+        		{
+	        		toastr.success("Payment generated successfully","Success");
+	                location.href = "${pageContext.request.contextPath}/report/downloadSysFile?filename=" + 
+	        		encodeURIComponent(msg);
+        		}
 	            else
-	            	toastr.success("File uploaded successfully","Success");   
+	            	toastr.error(msg,'Error');   
 	        }
 	    });
 
-
-
-
-};
-
-
-    
-    
-    
-    
+}  
 </script>

@@ -43,6 +43,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 				billManagementList.setInvestigationType(investigationType.get(rs.getInt("investigationId")));
 				billManagementList.setSupervisorID(rs.getString("username"));
 				billManagementList.setSupervisorName(rs.getString("full_name"));
+				billManagementList.setCharges(rs.getDouble("fees"));
 				return billManagementList;
 			});
 		}
@@ -65,13 +66,13 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 				"Longitude", "Latitude", "Case Description", "Captured Date",
 				"Agency Supervisor", "Fees"});
 			
-			return template.query(sql, new Object[] {list}, 
+			return template.query(sql,  
 					(ResultSet rs, int rowNum) ->
 					{
 						int i = 1;
 						paidcases.put(i, new Object[] {
-								i,rs.getLong("a.caseId"), rs.getString("policyNumber"),
-								investigationType.containsKey(rs.getInt("investigationId")), 
+								i,rs.getLong("caseId"), rs.getString("policyNumber"),
+								investigationType.get(rs.getInt("investigationId")), 
 								rs.getString("intimationType"), rs.getString("insuredName"), 
 								rs.getString("insuredDOB"), rs.getString("insuredDOD"), 
 								rs.getString("insured_address"), rs.getString("nominee_Name"), 
@@ -84,8 +85,8 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 						while(rs.next())
 						{
 							paidcases.put(i, new Object[] {
-									i,rs.getLong("a.caseId"), rs.getString("policyNumber"),
-									investigationType.containsKey(rs.getInt("investigationId")), 
+									i,rs.getLong("caseId"), rs.getString("policyNumber"),
+									investigationType.get(rs.getInt("investigationId")), 
 									rs.getString("intimationType"), rs.getString("insuredName"), 
 									rs.getString("insuredDOB"), rs.getString("insuredDOD"), 
 									rs.getString("insured_address"), rs.getString("nominee_Name"), 
@@ -105,7 +106,6 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public String UpdateFees(String list, String userId) {
 			try
 			{
-				System.out.println("output"+list);
 				String sql = "UPDATE case_lists  SET paymentApproved = 'Fees Paid', "
 						+ "updatedDate = getDate(), updatedBy = ?  WHERE caseId in ("+ list +")";
 				this.template.update(sql, userId);
@@ -123,11 +123,8 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public List<BillManagementList> billEnquiryList() 
 		{
 			HashMap<Integer, String> investigationType = investigationDao.getActiveInvestigationMapping();
-			String sql = "SELECT * FROM case_lists a ,"
-					+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-					+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
-					+ "order by a.updatedDate desc) b "
-					+ "where a.caseId = b.caseId  and a.paymentApproved <> '' and a.caseStatus = 'Closed'";
+			String sql = "SELECT * FROM case_lists a ,(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b where a.user_role = 'AGNSUP' and a.toId = b.username \r\n"
+					+ "order by a.updatedDate desc) b where a.caseId = b.caseId and a.paymentApproved <> '' and a.caseStatus = 'Closed'";
 		 
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
@@ -138,6 +135,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 				billManagementList.setInvestigationType(investigationType.get(rs.getInt("investigationId")));
 				billManagementList.setSupervisorID(rs.getString("username"));
 				billManagementList.setSupervisorName(rs.getString("full_name"));
+				billManagementList.setCharges(rs.getDouble("fees"));
 				return billManagementList;
 			});
 		}
