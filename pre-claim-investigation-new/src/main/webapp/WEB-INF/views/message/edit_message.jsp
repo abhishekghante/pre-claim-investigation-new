@@ -1,12 +1,12 @@
-<%@page import="com.preclaim.models.CaseSubStatus"%>
-<%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import="java.util.List" %>
 <%@page import="java.util.ArrayList" %>
-<%@page import="com.preclaim.models.CaseDetails"%>
+<%@page import="com.preclaim.config.Config"%>
 <%@page import="com.preclaim.models.UserRole"%>
 <%@page import="com.preclaim.models.Location"%>
 <%@page import="com.preclaim.models.InvestigationType"%>
 <%@page import="com.preclaim.models.IntimationType"%>
+<%@page import="com.preclaim.models.CaseDetails"%>
+<%@page import="com.preclaim.models.CaseSubStatus"%>
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
@@ -26,7 +26,6 @@ boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reassign = user_permission.contains("messages/reassign");
 boolean allow_closure = user_permission.contains("messages/close");
-boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus");
 %>
 <style type="text/css">
 .placeImg { display:none !important;}
@@ -53,6 +52,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
         </div>
       </div>
     </div>
+    
     <div class="box box-primary">
       <!-- /.box-header -->
       <!-- form start -->
@@ -70,6 +70,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	name="caseId" id="caseId" class="form-control" disabled>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="msgTitleEn">Policy Number 
                 	<span class="text-danger" >*</span>
@@ -80,6 +81,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
+              
               <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="msgCategory">Select Investigation Category 
                 	<span class="text-danger">*</span></label>
@@ -96,6 +98,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   </select>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredName">Insured Name 
                 	<span class="text-danger">*</span>
@@ -106,6 +109,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	<%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredDOD"> Date of Death
                 	<span class="text-danger">*</span>
@@ -116,6 +120,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	class="form-control">
                 </div>  
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredDOB"> Insured Date of Birth 
                 	<span class="text-danger">*</span>
@@ -126,6 +131,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	<%if(!allow_edit) {%>disabled<%} %>>
                 </div>  
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="sumAssured">Sum Assured 
                 	<span class="text-danger">*</span>
@@ -136,6 +142,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	<%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
+              
               <div class="form-group selectDiv">
                 <label class="col-md-4 control-label" for="msgIntimationType">Select Intimation Type 
                 	<span class="text-danger">*</span></label>
@@ -153,6 +160,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   </select>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="claimantCity">Claimant City 
                 	<span class="text-danger">*</span>
@@ -171,6 +179,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	</select>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="claimantState">Claimant State 
                 	<span class="text-danger">*</span>
@@ -180,6 +189,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	id="claimantState" class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="claimaintZone">Claimant Zone 
                 	<span class="text-danger">*</span>
@@ -189,6 +199,86 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
+              
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeName">Nominee Name
+                	<span class="text-danger">*</span>
+                </label>
+                <div class="col-md-8">
+                  <input type="text" value="<%=case_detail.getNominee_name()%>" placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
+                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number</label>
+                <div class="col-md-8">
+                  <input type="number" value="<%=case_detail.getNomineeContactNumber()%>" 
+                  	placeholder="Nominee Contact Number" name="nomineeMob" id="nomineeMob" 
+                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address</label>
+                <div class="col-md-8">
+                  <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"
+                  	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getNominee_address()%>
+               	  </textarea>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
+                <div class="col-md-8">
+                  <textarea name="insuredAdd" id="insuredAdd" class="form-control" rows="6"
+                  	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getInsured_address()%>
+                  </textarea>
+                </div>
+              </div>
+              
+              <%if(!case_detail.getLongitude().equals("")) {%>
+              <div class="mt-2 form-group selectDiv">
+                <label class="col-md-4 control-label" for="longitude">Longitude 
+                	<span class="text-danger">*</span></label>
+                <div class="col-md-3">
+                  <input name="longitude" id="longitude" class="form-control"
+                  	readonly disabled value = "<%= case_detail.getLongitude()%>">
+                </div>
+               
+                <label class="col-md-2 control-label" for="latitude">Latitude 
+                	<span class="text-danger">*</span></label>
+                <div class="col-md-3">
+                  <input name="latitude" id="latitude" class="form-control"
+                  	readonly disabled value = "<%= case_detail.getLatitude()%>">           	
+            	</div>
+              </div>
+              <%} %>
+              
+              <%if(!case_detail.getCase_description().equals("")) {%>  
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="case_description">Case Description</label>
+                <div class="col-md-8">
+                  <textarea name="case_description" id="case_description" class="form-control" rows="6">
+                  	<%=case_detail.getCase_description()%>
+                  </textarea>
+                </div>
+              </div>
+              <%} %>
+              
+              <%if(!case_detail.getCapturedDate().equals("")) {%>
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="capturedDate"> Captured Date
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="date" value="<%=case_detail.getCapturedDate()%>" 
+                  	name="capturedDate" id="capturedDate" readonly disabled
+                  	class="form-control">
+                </div>  
+              </div>
+              <%} %>
+              
               <div class="form-group">
                 <label class="col-md-4 control-label" for="msgTitleEn">Case Status</label>
                 <div class="col-md-8">
@@ -205,47 +295,6 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                 </div>
               </div>
               
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeName">Nominee Name
-                	<span class="text-danger">*</span>
-                </label>
-                <div class="col-md-8">
-                  <input type="text" value="<%=case_detail.getNominee_name()%>" placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
-                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number</label>
-                <div class="col-md-8">
-                  <input type="number" value="<%=case_detail.getNomineeContactNumber()%>" 
-                  	placeholder="Nominee Contact Number" name="nomineeMob" id="nomineeMob" 
-                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address</label>
-                <div class="col-md-8">
-                  <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"
-                  	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getNominee_address()%>
-               	  </textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
-                <div class="col-md-8">
-                  <textarea name="insuredAdd" id="insuredAdd" class="form-control" rows="6"
-                  	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getInsured_address()%>
-                  </textarea>
-                </div>
-              </div>
-              <!-- 
-              <div class="form-group">
-       		  	<label class="col-md-4 control-label">Upload PDF</label>
-           		<div class="col-md-8">
-                	<input type="file" name="casePDF" id="casePDF" accept="application/pdf" />
-              	</div>
-              </div>
-               -->       
               <div id="uploadImageDiv">
                 <div class="form-group">
                   <label class="col-md-4 control-label">Case Docs</label>
@@ -272,6 +321,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                         <input type="file" onchange="displayUploadImg(this, 'imgMsgEnLbl_2', 'enLblDelBtn_2', 'link_msgImgEn_2');" name="imgMsgEn_2" id="imgMsgEn_2" class="placeImg" accept="image/*" />
                       </a>
                     </div>
+                    
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
@@ -283,6 +333,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                         <input type="file" onchange="displayUploadImg(this, 'imgMsgEnLbl_3', 'enLblDelBtn_3', 'link_msgImgEn_3');" name="imgMsgEn_3" id="imgMsgEn_3" class="placeImg" accept="image/*" />
                        </a>
                     </div>
+                    
                     <div class="col-md-3">
                       <a href="javascript:void(0);">
                         <div class="uploadFileDiv">
@@ -296,26 +347,37 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                     </div>  
               	</div>
               </div>
+              
+              <%if(!case_detail.getImageFilePath().equals("")) {%>
+	              <div class="form-group">
+	       		  	<label class="col-md-4 control-label">Image</label>
+	           		<div class="col-md-8">
+	                	<img src = "<%= Config.upload_url + case_detail.getImageFilePath() %>">
+	              	</div>
+	              </div>                    
+              <%} %>
+	              
               <%if(!case_detail.getAudioFilePath().equals("")) {%>
 	              <div class="form-group">
 	       		  	<label class="col-md-4 control-label">Audio</label>
 	           		<div class="col-md-8">
 	                	<audio controls id="caseAudio">
-							<source src="<%= case_detail.getAudioFilePath() %>">	
+							<source src="<%= Config.upload_url + case_detail.getAudioFilePath() %>">	
                 		</audio>
 	              	</div>
 	              </div>                    
-	              <%} %>
-	              <%if(!case_detail.getVideoFilePath().equals("")) {%>
+              <%} %>
+              
+              <%if(!case_detail.getVideoFilePath().equals("")) {%>
 	              <div class="form-group">
 	       		  	<label class="col-md-4 control-label">Video</label>
 	           		<div class="col-md-8">
 	                	<video controls id="caseVideo" width="320" height="240">
-	                		<source src="<%= case_detail.getVideoFilePath() %>">
+	                		<source src="<%= Config.upload_url + case_detail.getVideoFilePath() %>">
 	                	</video>
 	              	</div>
 	              </div>                    
-	              <%} %>
+              <%} %>
 	              <div class="mt-2 form-group selectDiv">
 		                <label class="col-md-4 control-label" for="fromRole">From Role Name 
 		                	<span class="text-danger">*</span></label>
@@ -333,6 +395,7 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 		            	</div>
 	                
 	              </div>
+	              
 	              <div class="form-group">
 	                <label class="col-md-4 control-label" for="fromStatus">Assigner Status
 	                	<span class="text-danger">*</span>
@@ -342,15 +405,6 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 	                  	name="fromStatus" id="fromStatus" class="form-control" readonly disabled>
 	                </div>
 	              </div>	              
-	              <div class="form-group">
-	                <label class="col-md-4 control-label" for="caseLevel">Case Level
-	                	<span class="text-danger">*</span>
-	                </label>
-	                <div class="col-md-8">
-	                  <input type="text" value="" 
-	                  	name="caseLevel" id="caseLevel" class="form-control" readonly disabled>
-	                </div>
-	              </div>
 	                           
 	              <div class="form-group">
 	                <label class="col-md-4 control-label" for="fromRemarks">Remarks</label>
@@ -359,29 +413,31 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 	                  	disabled readonly><%=case_detail.getAssignerRemarks() %></textarea>
 	                </div>
               	 </div>
+              	 
 		         <div class="form-group selectDiv" id = "case-closure">
-		                <label class="col-sm-4 control-label" for="toRole">Select Role Name 
-		                	<span class="text-danger">*</span></label>
-		                <div class="col-sm-3">
-		                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
-		                  	>
-		                    <option value="-1" selected disabled>Select</option>
-		                     <%if(userRole != null){
-		                    	for(UserRole userRoleLists: userRole){%>
-		                    	<option value = "<%=userRoleLists.getRole_code()%>">
-		                    		<%=userRoleLists.getRole() %></option>
-		                    <%}} %> 
-		                  </select>
-		                </div>
-	                
-		                <label class="col-md-2 control-label" for="toId">Select User 
-		                	<span class="text-danger">*</span></label>
-		                <div class="col-md-3">
-		                  <select name="toId" id="toId" class="form-control">
-		                  	<option value = '-1' selected disabled>Select</option>
-		                  </select>
-		            	</div >
-	              </div>
+	                <label class="col-sm-4 control-label" for="toRole">Select Role Name 
+	                	<span class="text-danger">*</span></label>
+	                <div class="col-sm-3">
+	                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
+	                  	>
+	                    <option value="-1" selected disabled>Select</option>
+	                     <%if(userRole != null){
+	                    	for(UserRole userRoleLists: userRole){%>
+	                    	<option value = "<%=userRoleLists.getRole_code()%>">
+	                    		<%=userRoleLists.getRole() %></option>
+	                    <%}} %> 
+	                  </select>
+	                </div>
+                
+	                <label class="col-md-2 control-label" for="toId">Select User 
+	                	<span class="text-danger">*</span></label>
+	                <div class="col-md-3">
+	                  <select name="toId" id="toId" class="form-control">
+	                  	<option value = '-1' selected disabled>Select</option>
+	                  </select>
+	            	</div>
+              	 </div>
+              	 
 	             <div class="form-group selectDiv">
 	                <label class="col-md-4 control-label" for="toStatus">Case Status 
 	                	<span class="text-danger">*</span></label>
@@ -397,7 +453,8 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 	                    <option value = "Closed">Closure</option>
 	                    <%} %> 
 	                  </select>
-	                </div>            
+	                </div>
+	                            
 	                <div class="form-group selectDiv" id ="case-SubStatus">
 	                 <label class="col-md-1 control-label" for="caseSubStatus">Case Sub-status 
 		                	<span class="text-danger">*</span></label>
@@ -409,9 +466,10 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 		                  	<option value = "PIV Stoppped">PIV Stoppped</option>
 		                  </select>
 		            	</div>
-		            	</div>
-		            	 <div class="form-group selectDiv" id ="Not-CleanCategory">
-	                 <label class="col-md-4 control-label" for="NotCleanCategory">Not Clean Category 
+	            	</div>
+	            	
+            	 	<div class="form-group selectDiv" id ="Not-CleanCategory">
+	                 	<label class="col-md-4 control-label" for="NotCleanCategory">Not Clean Category 
 		                	<span class="text-danger">*</span></label>
 		                <div class="col-md-2">
 		                  <select name="NotCleanCategory" id="NotCleanCategory" class="form-control">
@@ -425,15 +483,18 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
 		                  	<option value = 'Others'>Others</option> 
 		                  </select>
 		            	</div>
-		            	</div>	  
-	   	             </div>	              
-	              <div class="form-group">
+	            	</div>
+	            		  
+   	             </div>
+   	             	              
+              	<div class="form-group">
 	                <label class="col-md-4 control-label" for="toRemarks">Remarks</label>
 	                <div class="col-md-8">
 	                  <textarea name="toRemarks" id="toRemarks" class="form-control" rows="6"></textarea>
 	                </div>
               	</div>
               </div>
+              
               <!--  Footer -->
               <%if((allow_assign && !allow_edit )|| allow_closure) {%>
               <div class="box-footer">
@@ -457,7 +518,8 @@ boolean allow_caseSubStatus = user_permission.contains("messages/caseSubStatus")
                   </div>
                 </div>
               </div> 
-              <%} %>          
+              <%} %>
+                        
             </div>
           </div>
         </div>
@@ -518,14 +580,10 @@ $("#assignmessagesubmit").click(function()
     var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
     var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
     
-    console.log("toStatus"+toStatus)
-    console.log("caseSubStatus"+caseSubStatus)
-    console.log("NotCleanCategory"+NotCleanCategory)
     var toId = "";
     var toRole = "";
     var validFlag = 1;
     
-   
     if(toStatus == null)
    	{
    		toastr.error("Kindly select status", "Error");
@@ -647,7 +705,7 @@ $("#assignmessagesubmit").click(function()
     var caseSubstatus  = "";
     var NotCleanCategory = ""; 
     
-    var currentDate = new Date();
+    var currentDate        = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
     var insuredDateOfDeath = new Date(insuredDOD);
     
@@ -846,25 +904,27 @@ $("#assignmessagesubmit").click(function()
     $('#editmessagesubmit').css("opacity",".5");
 
     
-    var formdata = {'policyNumber':policyNumber,
-   	    'msgCategory':msgCategory,
-   	       'insuredDOD':insuredDOD,
-   	      'insuredDOB':insuredDOB,
-   	      'insuredName':insuredName,
-          'sumAssured':sumAssured,
-          'msgIntimationType':msgIntimationType,
-          'locationId':locationId,
-       'nomineeName':nomineeName,
-       'nomineeMob':nomineeMob,
-       'nomineeAdd':nomineeAdd,
-       'insuredAdd':insuredAdd,
-       'toRole':toRole,
-       'toStatus':toStatus,
-        'toRemarks':toRemarks,
-        'caseId':caseId,
-        'caseSubStatus':caseSubstatus,
-        'NotCleanCategory':NotCleanCategory,
-        "toId":toId };
+    var formdata = {
+    		'policyNumber'     : policyNumber,
+   	    	'msgCategory'      : msgCategory,
+   	       	'insuredDOD'       : insuredDOD,
+   	      	'insuredDOB'       : insuredDOB,
+   	      	'insuredName'      : insuredName,
+          	'sumAssured'       : sumAssured,
+          	'msgIntimationType': msgIntimationType,
+          	'locationId'       : locationId,
+	       	'nomineeName'      : nomineeName,
+	       	'nomineeMob'       : nomineeMob,
+	       	'nomineeAdd'       : nomineeAdd,
+	       	'insuredAdd'       : insuredAdd,
+	       	'toRole'           : toRole,
+	       	'toStatus'         : toStatus,
+        	'toRemarks'        : toRemarks,
+        	'caseId'           : caseId,
+        	'caseSubStatus'    : caseSubstatus,
+        	'NotCleanCategory' : NotCleanCategory,
+        	"toId"             : toId 
+        	};
     console.log(formdata);
     
     $.ajax({

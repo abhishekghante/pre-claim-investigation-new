@@ -29,6 +29,7 @@ public class CaseDetails {
 	private String audioFilePath;
 	private String videoFilePath;
 	private String signatureFilePath;
+	private String imageFilePath;
 	private String capturedDate;
 	private String approvedStatus;
 	private String assignerRole;
@@ -299,6 +300,14 @@ public class CaseDetails {
 
 	public void setSignatureFilePath(String signatureFilePath) {
 		this.signatureFilePath = signatureFilePath;
+	}
+
+	public String getImageFilePath() {
+		return imageFilePath;
+	}
+
+	public void setImageFilePath(String imageFilePath) {
+		this.imageFilePath = imageFilePath;
 	}
 
 	public String getCapturedDate() {

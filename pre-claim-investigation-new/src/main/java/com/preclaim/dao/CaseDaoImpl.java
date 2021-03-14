@@ -278,6 +278,7 @@ public class CaseDaoImpl implements CaseDao {
 						detail.setAudioFilePath(rs.getString("audioFilePath"));
 						detail.setVideoFilePath(rs.getString("videoFilePath"));
 						detail.setSignatureFilePath(rs.getString("signatureFilePath"));
+						detail.setImageFilePath(rs.getString("image"));
 						detail.setCapturedDate(rs.getString("capturedDate"));
 						return detail;
 					});
