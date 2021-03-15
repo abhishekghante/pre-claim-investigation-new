@@ -94,7 +94,7 @@ public class Case_movementDaoImpl implements Case_movementDao {
 
 	@Override
 	public List<CaseHistory> getCaseMovementHistory(long caseId) {
-		String sql = "SELECT * FROM audit_case_movement where caseId = ? order by createdDate";	
+		String sql = "SELECT * FROM audit_case_movement where caseId = ? order by updatedDate";	
 		List<CaseHistory> case_details = template.query(sql, new Object[] {caseId}, 
 				(ResultSet rs, int rowNum) -> 
 		{

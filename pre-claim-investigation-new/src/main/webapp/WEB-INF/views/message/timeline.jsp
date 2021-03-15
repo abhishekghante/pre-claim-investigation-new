@@ -193,7 +193,7 @@ session.removeAttribute("case_history");
 						<div class="content">
 							<div class = "row">
 								<div class = "col-md-6">Name :- <%=list.getFromUserName() %></div>
-								<div class = "col-md-6">Received Date :- <%=list.getCreatedDate() %></div>
+								<div class = "col-md-6">Received Date :- <%=list.getUpdatedDate() %></div>
 							</div>
 							<div class = "row">
 								<div class = "col-md-12">Role :- <%=list.getRole() %></div>
