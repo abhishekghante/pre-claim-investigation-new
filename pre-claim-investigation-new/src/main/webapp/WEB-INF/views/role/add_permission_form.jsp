@@ -132,7 +132,7 @@ if(role_permission == null)
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/add")) {%>checked <%} %> name="messages[]" id="messages_add" class="indPLCheck7" value="messages/add"> <label for="messages_add">Add</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/delete")) {%>checked <%} %> name="messages[]" id="messages_delete" class="indPLCheck7" value="messages/delete"> <label for="messages_delete">Delete</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/assign")) {%>checked <%} %> name="messages[]" id="messages_assign" class="indPLCheck7" value="messages/assign"> <label for="messages_assign">Assign</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("messages/reassign")) {%>checked <%} %> name="messages[]" id="messages_reassign" class="indPLCheck7" value="messages/reassign"> <label for="messages_reassign">Re-Assign</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("messages/reopen")) {%>checked <%} %> name="messages[]" id="messages_reopen" class="indPLCheck7" value="messages/reopen"> <label for="messages_reopen">Reopen</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/close")) {%>checked <%} %> name="messages[]" id="messages_close" class="indPLCheck7" value="messages/close"> <label for="messages_close">Case Closure</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/caseSubStatus")) {%>checked <%} %> name="messages[]" id="messages_caseSubStatus" class="indPLCheck7" value="messages/caseSubStatus"> <label for="messages_caseSubStatus">Case Sub-status</label>
 			                    	</td>
@@ -197,13 +197,13 @@ if(role_permission == null)
 			                    
 			                     <tr>
 			                    	<td>
-			                    	    <input type="checkbox" <%if(role_permission.contains("reassign")) {%>checked <%} %> name="reassign" id="reassign" class="allPLCheck13" value="reassign"> <label for="reassign">Re-Assign</label>
+			                    	    <input type="checkbox" <%if(role_permission.contains("reopen")) {%>checked <%} %> name="reopen" id="reopen" class="allPLCheck13" value="reopen"> <label for="reopen">Reopen</label>
 			                    	</td>
 			                    	<td>
 			                    	     <%if(user_role!=null){
 			                    	          for(UserRole role :user_role){	
 			                    	     %>
-			                           <input type="checkbox" <%if(role_permission.contains("reassign/" + role.getRole_code())) {%>checked <%} %> name="reassign[]" id="reassign_<%=role.getRole_code() %>" class="indPLCheck13" value="reassign/<%=role.getRole_code()%>"> <label for="reassign_<%=role.getRole_code()%>"><%=role.getRole() %></label>	
+			                           <input type="checkbox" <%if(role_permission.contains("reopen/" + role.getRole_code())) {%>checked <%} %> name="reopen[]" id="reopen_<%=role.getRole_code() %>" class="indPLCheck13" value="reopen/<%=role.getRole_code()%>"> <label for="reopen_<%=role.getRole_code()%>"><%=role.getRole() %></label>	
 			                        	<%}}%>
 			                        </td>
 			                         		

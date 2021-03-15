@@ -9,7 +9,7 @@ import com.preclaim.models.UserDetails;
 
 public interface CaseDao {
 	
-	String addBulkUpload(String filename, String fromId, String user_role);
+	String addBulkUpload(String filename, UserDetails fromUser, String user_role);
 	long addcase(CaseDetails casedetail);
 	String deleteCase(int caseId);
 	CaseDetails getCaseDetail(long caseID);

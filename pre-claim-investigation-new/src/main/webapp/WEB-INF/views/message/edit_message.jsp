@@ -24,7 +24,7 @@ List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
 session.removeAttribute("userRole");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
-boolean allow_reassign = user_permission.contains("messages/reassign");
+boolean allow_reopen = user_permission.contains("messages/reopen");
 boolean allow_closure = user_permission.contains("messages/close");
 %>
 <style type="text/css">
@@ -446,8 +446,8 @@ boolean allow_closure = user_permission.contains("messages/close");
 	                  	tabindex="-1">
 	                    <option value="-1" disabled>Select</option>
 	                    <option value = "Approved">Approved</option>
-	                    <%if(allow_reassign) {%>
-	                    <option value = "Reassigned">Reassigned</option>
+	                    <%if(allow_reopen) {%>
+	                    <option value = "Reopen">Reopen</option>
 	                    <%} %>
 	                    <%if(allow_closure) {%>
 	                    <option value = "Closed">Closure</option>

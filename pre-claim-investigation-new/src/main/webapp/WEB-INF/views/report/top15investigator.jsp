@@ -75,6 +75,16 @@ $("#downloadInvestigatorReport").click(function(){
 		toastr.error("End Date cannot be blank","Error");
 		errorFlag = 1;
 	}
+	if(startDate != "" && endDate != "")
+	{
+		var beginDate = new Date(startDate);
+	    var lastDate = new Date(endDate);
+	    if(beginDate >= lastDate)
+    	{
+	    	toastr.error("Start Date cannot be greater than End Date","Error");
+			errorFlag = 1;
+    	}
+	}
 	if(errorFlag == 1)
 		return;
 		

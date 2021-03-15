@@ -37,7 +37,7 @@ public class ProfileController {
     @RequestMapping(value = "/updateProfile", method = RequestMethod.POST)
 	public @ResponseBody String updateProfile(HttpSession session, HttpServletRequest request)
 	{
-		UserDetails user_details = new UserDetails();
+		UserDetails user_details = (UserDetails) session.getAttribute("User_Login");
 		user_details.setFull_name(request.getParameter("full_name"));
 		user_details.setUser_email(request.getParameter("user_email"));
 		user_details.setUsername(request.getParameter("username"));

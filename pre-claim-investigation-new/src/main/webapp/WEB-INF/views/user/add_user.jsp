@@ -127,7 +127,7 @@ session.removeAttribute("location_list");
                	</label>
                 <div class="col-md-8">
                   <input type="number" placeholder="fees" name="fees" id="fees" 
-                  	class="form-control" value="%{getText('{0,number,#,###.##}',{fees})}">
+                  	class="form-control" value="0">
                 </div>
               </div>
               
@@ -228,13 +228,13 @@ function accountValidate() {
         validflag = 0;
         toastr.error("Kindly enter Contact Number","Error");
     }
-    if( fees == "" ){
+    if( account_type == "AGNSUP" && fees == "0" ){
         $('#fees').addClass('has-error-2');
         $('#fees').focus();
         validflag = 0;
         toastr.error("Kindly enter fees","Error");
     }
-    else if(contactNumber.length != 10)
+    else if(contactNumber != "" && contactNumber.length != 10)
    	{
     	$('#contactNumber').addClass('has-error-2');
         $('#contactNumber').focus();
@@ -285,7 +285,7 @@ function accountValidate() {
    	{
     	$('#user_email').addClass('has-error-2');
         $('#user_email').focus();
-        toastr.error("Email-ID cannot be blank");
+        toastr.error("Email-ID cannot be blank","Error");
    	}
     if( username == "" ){
         $('#username').addClass('has-error-2');

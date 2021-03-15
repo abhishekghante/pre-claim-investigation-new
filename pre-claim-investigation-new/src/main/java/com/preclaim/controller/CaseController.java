@@ -174,7 +174,7 @@ public class CaseController {
 				Path path = Paths.get(Config.upload_directory + filename);
 				Files.write(path, temp);
 
-				message = caseDao.addBulkUpload(filename, user.getUsername(), role);
+				message = caseDao.addBulkUpload(filename, user, role);
 				if (message.equals("****")) {
 					userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());
 					session.setAttribute("success_message", "File Uploaded successfully");

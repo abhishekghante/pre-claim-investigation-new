@@ -73,12 +73,12 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public String addBulkUpload(String filename, String fromId, String user_role) {
+	public String addBulkUpload(String filename, UserDetails fromUser, String user_role) {
 
 		String extension = StringUtils.getFilenameExtension(filename).toLowerCase();
 		String error = "";
 		if (extension.equals("xlsx"))
-			error = readCaseXlsx(filename, fromId, user_role);
+			error = readCaseXlsx(filename, fromUser, user_role);
 		else
 			error = "Invalid File extension";
 		return error;
@@ -340,7 +340,7 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Transactional
-	public String readCaseXlsx(String filename, String fromId, String user_role) {
+	public String readCaseXlsx(String filename, UserDetails fromUser, String user_role) {
 		try {
 			Set<String> value = new TreeSet<String>();
 			File error_file = new File(Config.upload_directory + "error_log.xlsx");
@@ -358,7 +358,7 @@ public class CaseDaoImpl implements CaseDao {
 				wb.close();
 				return error_message;
 			}
-			CaseSubStatus status = caseDao.getCaseStatus(user_role, 1);
+			CaseSubStatus status = caseDao.getCaseStatus(fromUser.getAccount_type(), 1);
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
 			List<Location> location_list = locationDao.getActiveLocationList();
@@ -495,11 +495,12 @@ public class CaseDaoImpl implements CaseDao {
 					long caseId = addcase(caseDetails);
 					CaseMovement caseMovement = new CaseMovement();
 					caseMovement.setCaseId(caseId);
-					caseMovement.setFromId(fromId);
+					caseMovement.setFromId(fromUser.getUsername());
 					caseMovement.setUser_role(user_role);
 					caseMovement.setZone(caseDetails.getClaimantZone());
 					case_movementDao.CreatecaseMovement(caseMovement);
-					userDao.activity_log("CASE HISTORY", caseDetails.getPolicyNumber(), "ADD CASE", fromId);
+					userDao.activity_log("CASE HISTORY", caseDetails.getPolicyNumber(), "ADD CASE", 
+							fromUser.getUsername());
 				} 
 				else 
 				{
