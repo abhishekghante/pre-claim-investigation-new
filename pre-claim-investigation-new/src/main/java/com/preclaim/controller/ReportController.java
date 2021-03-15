@@ -178,7 +178,7 @@ public class ReportController {
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));
 					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 				}
-				else if(item.getNotCleanRate() >= threshold - 2 && item.getNotCleanRate() <= threshold) {
+				else if(item.getNotCleanRate() >= threshold - 2 && item.getNotCleanRate() < threshold) {
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow					
 				}
 				else if(item.getNotCleanRate() <= threshold) {
@@ -230,6 +230,7 @@ public class ReportController {
 			newRow = investigator_sheet.getRow(2) == null ? investigator_sheet.createRow(2) : investigator_sheet.getRow(2);
 			cell = newRow.createCell(8);
 			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			cell.setCellStyle(style);
 			cell = newRow.createCell(9);
 			cell.setCellValue("Above Average");
@@ -237,6 +238,7 @@ public class ReportController {
 			newRow = investigator_sheet.getRow(3) == null ? investigator_sheet.createRow(3) : investigator_sheet.getRow(3);
 			cell = newRow.createCell(8);
 			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			cell.setCellStyle(style);
 			cell = newRow.createCell(9);  
 			cell.setCellStyle(style);
@@ -245,12 +247,13 @@ public class ReportController {
 			newRow = investigator_sheet.getRow(4) == null ? investigator_sheet.createRow(4) : investigator_sheet.getRow(4);
 			cell = newRow.createCell(8);
 			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 0, 0), new DefaultIndexedColorMap()));  //Red
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			cell.setCellStyle(style);
 			cell = newRow.createCell(9);
 			cell.setCellStyle(style);
 			cell.setCellValue("Below Average");
 		
-			//Cell Asthetic Settings
+			//Cell Esthetic Settings
 			investigator_sheet.autoSizeColumn(1);
 			investigator_sheet.autoSizeColumn(2);
 			investigator_sheet.autoSizeColumn(3);
@@ -286,10 +289,7 @@ public class ReportController {
 		
 		if(investigator == null)
 			return "No cases investigated";
-		
-		if(investigator.size() <= 1)
-			return "No cases investigated";
-		
+	
 		float threshold = investigator.get(investigator.size() - 1).getNotCleanRate();
 		
 		//Generate Excel
@@ -462,7 +462,6 @@ public class ReportController {
 		if(user == null)
 			return "common/login";
 		
-		
 		String region = request.getParameter("region");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -471,9 +470,6 @@ public class ReportController {
 		List<RegionwiseList> regionwise = reportDao.getRegionwiseList(region, startDate, endDate); 
 		
 		if(regionwise == null)
-			return "No cases investigated";
-		
-		if(regionwise.size() <= 1)
 			return "No cases investigated";
 		
 		//Generate Excel
