@@ -8,7 +8,7 @@ List<String> state_list = (List<String>)session.getAttribute("StateList");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-users font-green-sharp"></i>
+          <i class="fa fa-globe font-green-sharp"></i>
           <span class="caption-subject font-green-sharp sbold">Region wise screen Lists</span>
         </div>
         <div class="actions">

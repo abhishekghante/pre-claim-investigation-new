@@ -7,7 +7,7 @@ List<String> user_permission=(List<String>)session.getAttribute("user_permission
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-users font-green-sharp"></i>
+          <i class="icon-bar-chart font-green-sharp"></i>
           <span class="caption-subject font-green-sharp sbold">Top 15 Investigator</span>
         </div>
        <%--  <div class="actions">

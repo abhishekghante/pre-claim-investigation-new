@@ -18,7 +18,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 		<div class="portlet box">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-users font-green-sharp"></i> <span
+					<i class="fa fa-file-text font-green-sharp"></i> <span
 						class="caption-subject font-green-sharp sbold"> Uploaded Document List</span>
 				</div>
 			</div>

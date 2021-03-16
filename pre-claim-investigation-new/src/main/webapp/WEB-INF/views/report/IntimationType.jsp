@@ -10,8 +10,8 @@ session.removeAttribute("intimationTypeScreenLists");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-users font-green-sharp"></i>
-          <span class="caption-subject font-green-sharp sbold">Intimation screen Lists</span>
+          <i class="fa fa-exclamation-triangle font-green-sharp"></i>
+          <span class="caption-subject font-green-sharp sbold">Intimation Type List</span>
         </div>
         <div class="actions">
           <div class="btn-group">

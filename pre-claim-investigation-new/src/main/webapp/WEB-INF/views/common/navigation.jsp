@@ -271,28 +271,28 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                 <%if(user_permission.contains("report/vendorwise")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Vendor wise screen")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/vendorWiseScreen" class="nav-link nav-toggle">
-                    <i class="icon-envelope-open"></i>  Vendor wise screen
+                    <i class="fa fa-user"></i>  Vendor wise screen
                   </a>
                 </li>
                 <%}%>
                 <%if(user_permission.contains("report/regionwise")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Region wise screen")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/regionWiseScreen" class="nav-link nav-toggle">
-                    <i class="icon-like"></i> Region wise screen
+                    <i class="fa fa-globe"></i> Region wise screen
                   </a>
                 </li>
                 <%}%>
                   <%if(user_permission.contains("report/intimationTypeScreen")){ %>
                   <li class="nav-item <%if(details.getSub_menu1().equals("Intimation Type screen")){%>active<%}%>">
                     <a href="${pageContext.request.contextPath}/report/intimationTypeScreen" class="nav-link nav-toggle">
-                     <i class="icon-like"></i> Intimation Type screen
+                     <i class="fa fa-exclamation-triangle"></i> Intimation Type screen
                     </a>
                 </li>
                  <%}%>
                 <%if(user_permission.contains("report/uploadedDocument")){ %>                
                   <li class="nav-item <%if(details.getSub_menu1().equals("Uploaded Document")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/report/uploadedDocument" class="nav-link nav-toggle">
-                    <i class="icon-like"></i> Uploaded Document
+                    <i class="fa fa-file-text"></i> Uploaded Document
                   </a>
                 </li>
                 <%}%>

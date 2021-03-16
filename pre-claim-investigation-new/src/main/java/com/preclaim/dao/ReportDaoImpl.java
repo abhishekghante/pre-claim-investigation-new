@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.preclaim.config.CustomMethods;
-import com.preclaim.models.CaseDetails;
-import com.preclaim.models.IntimationTypeScreen;
 import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.TopInvestigatorList;
+import com.preclaim.models.VendorwiseList;
 
 public class ReportDaoImpl implements ReportDao {
 
@@ -85,102 +84,58 @@ public class ReportDaoImpl implements ReportDao {
 		}
 	}
 
-	public List<IntimationTypeScreen> getIntimationTypeLists(String intimationType,String startDate, String endDate) {
+	public HashMap<String, Integer> getIntimationTypeList(String intimationType, String startDate, 
+			String endDate) 
+	{
 		
-		
-		
-		String user_lists = "";
-		// Main Query - Query to get Top 15 Investigators
-		List<String> investigator_list = new ArrayList<String>();
-		/*
-		1) Get Latest record from audit_case_movement whose role = "AGNSUP"
-		2) Join the above query with case_lists where caseSubStatus is Clean , Not-Clean
-		3) Get Investigator wise Total Count
-		*/
-		String sql = 
-				"SELECT intimationType, count(*) as grandTotal FROM case_lists where  intimationType IN ('PIV') group by intimationType";
-				
-		System.out.println(sql);
-		
-		try
+		String sql = ""; 
+		HashMap<String, Integer> intimationDetails = new HashMap<String, Integer>();
+		if(intimationType.equals("All"))
 		{
-			user_lists = template.query(sql, new Object[] {startDate, endDate},
-					(ResultSet rs, int rowNum) -> 
-					{
-						String userId = "";
-						do 
-						{
-							investigator_list.add(rs.getString("intimationType"));
-							userId +=  "'" + rs.getString("intimationType") + "',";
-						}
-						while(rs.next());			
-						return userId;
-						
-					}).get(0);
-			System.out.println("user_lists"+user_lists);
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-		user_lists = user_lists.substring(0, user_lists.length() - 1);
-		System.out.println(user_lists);
-		
-		//Query 2 - Query to categorize Clean, Not Clean 
-		
-		HashMap<String, Integer> clean = new HashMap<String, Integer>();
-		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
-		
-		sql = 
-				"SELECT intimationType, caseSubStatus, count(*) as grandTotal FROM case_lists where  intimationType IN ('PIV') AND caseSubStatus IN ('Clean','Not-Clean') group by intimationType ,caseSubStatus";
-		
-		template.query(sql, (ResultSet rs, int rowNum) -> {
-			do 
+			sql = "SELECT intimationType, count(*) as grandTotal FROM case_lists "
+				+ "WHERE CONVERT(date,createdDate) BETWEEN ? AND ? "
+				+ "GROUP BY intimationType";
+			try 
 			{
-				if(rs.getString("caseSubStatus").equals("Clean"))
-					clean.put(rs.getString("intimationType"),rs.getInt("grandTotal"));
-				
-				else if(rs.getString("caseSubStatus").equals("Not-Clean"))
-					notClean.put(rs.getString("intimationType"),rs.getInt("grandTotal"));
-			}while(rs.next());
-			
-			return "";
-		});
-
-		//Query 3 - Query to map username & fullname 
-		
-		HashMap<String, String> user_mapping = new HashMap<String, String>();
-		sql = "select * from intimation_type where intimationTypeName in ( " + user_lists +  ")";
-		template.query(sql , (ResultSet rs, int rowNum) -> {
-			do
+				return template.query(sql, new Object[] {startDate, endDate} , 
+						(ResultSet rs, int rowNum) -> {
+							do
+							{
+								intimationDetails.put(rs.getString("intimationType"), 
+										rs.getInt("grandTotal"));
+							}while(rs.next());
+							return intimationDetails;
+						}).get(0);
+			}
+			catch(Exception e)
 			{
-				user_mapping.put(rs.getString("intimationType"),rs.getString("intimationType"));
-			}while(rs.next());
-			return user_mapping;
-		});
-		List<IntimationTypeScreen> intimationTypeList = new ArrayList<IntimationTypeScreen>();
-		int cleanCount = 0;
-		int NotCleanCount = 0;
-		int totalCleanCount = 0;
-		int totalNotCleanCount = 0;
-		for(String user: investigator_list)
-		{
-			cleanCount = clean.get(user) == null ? 0 : clean.get(user);
-			NotCleanCount = notClean.get(user) == null ? 0 : notClean.get(user);
-			intimationTypeList.add(new IntimationTypeScreen(user_mapping.get(user), cleanCount, NotCleanCount));
-			totalCleanCount += cleanCount; 
-			totalNotCleanCount += NotCleanCount;
+				e.printStackTrace();
+				return null;
+			}
 		}
-		intimationTypeList.add(new IntimationTypeScreen("Total", totalCleanCount, totalNotCleanCount));
-		
-		return intimationTypeList;
-		
-	
-		
-		
+		else
+		{
+			sql = "SELECT intimationType, count(*) as grandTotal FROM case_lists "
+					+ "WHERE intimationType = ? and CONVERT(date,createdDate) BETWEEN ? AND ? "
+					+ "GROUP BY intimationType";
+			try
+			{
+				return template.query(sql, new Object[] {intimationType, startDate, endDate} , 
+						(ResultSet rs, int rowNum) -> {
+							do
+							{
+								intimationDetails.put(rs.getString("intimationType"), 
+										rs.getInt("grandTotal"));
+							}while(rs.next());
+							return intimationDetails;
+						}).get(0);
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+		}
 	}
-	
-	
 
 	@Override
 	public List<TopInvestigatorList> getTopInvestigatorList(String startDate, String endDate) {
@@ -418,6 +373,84 @@ public class ReportDaoImpl implements ReportDao {
 		regionwise.add(new RegionwiseList("Pranab Kumar Nath",0,1,0,0));
 		*/
 		return regionwise;
+	}
+
+	@Override
+	public List<VendorwiseList> getVendorwistList(String vendorName, String startDate, String endDate) {
+		
+		List<String> monthwise = new ArrayList<String>();
+		String sql = "SELECT a.toId, FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy') as Month, count(*) as total FROM audit_case_movement a, ("
+				+ "SELECT caseId, max(updatedDate) as updatedDate FROM audit_case_movement "
+				+ "WHERE caseid in (SELECT caseid FROM case_lists WHERE caseSubStatus IN ('Clean','Not-Clean')) "
+				+ "and user_role = 'AGNSUP' "
+				+ "group by caseId) b "
+				+ "where a.caseId = b.caseId and a.updatedDate = b.updatedDate and a.toId = ? and "
+				+ "CONVERT(date, a.updatedDate) BETWEEN ? and ? "
+				+ "group by a.toId, YEAR(a.updatedDate), FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy')";
+		System.out.println(sql);
+		try
+		{
+			template.query(sql, new Object[] {vendorName, startDate, endDate},
+					(ResultSet rs, int rowNum) -> {
+						do
+						{
+							monthwise.add(rs.getString("Month"));
+						}while(rs.next());
+					return monthwise;
+					});
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		HashMap<String, Integer> clean = new HashMap<String, Integer>();
+		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
+		
+		sql = "SELECT a.toId, FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy') as Month, count(*) as cleanCount FROM audit_case_movement a, ("
+				+ "SELECT caseId, max(updatedDate) as updatedDate FROM audit_case_movement "
+				+ "WHERE caseid in (SELECT caseid FROM case_lists WHERE caseSubStatus = 'Clean') "
+				+ "and user_role = 'AGNSUP' "
+				+ "group by caseId) b "
+				+ "where a.caseId = b.caseId and a.updatedDate = b.updatedDate and a.toId = ? and "
+				+ "CONVERT(date, a.updatedDate) BETWEEN ? and ? "
+				+ "group by a.toId, YEAR(a.updatedDate), FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy')";
+		
+		template.query(sql, new Object[] {vendorName, startDate, endDate}, 
+				(ResultSet rs, int rowNum) -> {
+					do
+					{
+						clean.put(rs.getString("Month"), rs.getInt("cleanCount"));
+					}while(rs.next());
+					return clean;
+				});
+		
+		sql = "SELECT a.toId, FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy') as Month, count(*) as notCleanCount FROM audit_case_movement a, ("
+				+ "SELECT caseId, max(updatedDate) as updatedDate FROM audit_case_movement "
+				+ "WHERE caseid in (SELECT caseid FROM case_lists WHERE caseSubStatus = 'Not-Clean') "
+				+ "and user_role = 'AGNSUP' "
+				+ "group by caseId) b "
+				+ "where a.caseId = b.caseId and a.updatedDate = b.updatedDate and a.toId = ? and "
+				+ "CONVERT(date, a.updatedDate) BETWEEN ? and ? "
+				+ "group by a.toId, YEAR(a.updatedDate), FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy')";
+		
+		template.query(sql, new Object[] {vendorName, startDate, endDate}, 
+				(ResultSet rs, int rowNum) -> {
+					do
+					{
+						notClean.put(rs.getString("Month"), rs.getInt("notCleanCount"));
+					}while(rs.next());
+					return clean;
+				});
+		
+		List<VendorwiseList> vendorlist = new ArrayList<VendorwiseList>();
+		for(String month: monthwise)
+		{
+			vendorlist.add(new VendorwiseList(month, 
+					clean.get(month) == null ? 0: clean.get(month), 
+					notClean.get(month) == null ? 0: notClean.get(month)));
+		}	
+		return vendorlist;
 	}	
 
 }
