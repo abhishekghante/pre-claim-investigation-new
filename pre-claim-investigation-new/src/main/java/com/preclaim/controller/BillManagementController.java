@@ -11,7 +11,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -68,8 +71,7 @@ public class BillManagementController {
 		return "common/templatecontent";     
 	}
 	
-	  @RequestMapping(value = "/bill_payment",method = RequestMethod.GET)
-		
+	  @RequestMapping(value = "/bill_payment",method = RequestMethod.GET)	
 	  public String bill_payment(HttpSession session, HttpServletRequest request) 
 	  {	
 		  UserDetails user = (UserDetails) session.getAttribute("User_Login");	
@@ -105,11 +107,13 @@ public class BillManagementController {
 		  	  selectedValues += values + ",";
 		  selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
 		  //Create blank workbook
-		  XSSFWorkbook workbook = new XSSFWorkbook();       
+		  XSSFWorkbook workbook = new XSSFWorkbook();  
+		  XSSFCellStyle style1 = workbook.createCellStyle();
 		  //Create a blank sheet        
 		  XSSFSheet spreadsheet = workbook.createSheet( "Claims Info");       
 		  //Create row object         
 		  XSSFRow row;
+
 
 		  //This data needs to be written (Object[])         
 		  Map<Integer, Object[]> empinfo = billingDao.billPaymentList(selectedValues);   
@@ -126,9 +130,38 @@ public class BillManagementController {
 		      for (Object obj : objectArr)		    
 		      { 
 		    	  Cell cell = row.createCell(cellid++);
+		    	    style1.setBorderLeft(BorderStyle.THIN);  
+		            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		            style1.setBorderRight(BorderStyle.THIN);  
+		            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		            style1.setBorderTop(BorderStyle.THIN);  
+		            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		            style1.setBorderBottom(BorderStyle.THIN);  
+		            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+					cell.setCellStyle(style1);
 		    	  cell.setCellValue(obj.toString()); 
 		      } 
 		  }
+		  
+		  spreadsheet.autoSizeColumn(1);
+		  spreadsheet.autoSizeColumn(2);
+		  spreadsheet.autoSizeColumn(3);
+		  spreadsheet.autoSizeColumn(4);
+		  spreadsheet.autoSizeColumn(5);
+		  spreadsheet.autoSizeColumn(6);
+		  spreadsheet.autoSizeColumn(7);
+		  spreadsheet.autoSizeColumn(8);
+		  spreadsheet.autoSizeColumn(9);
+		  spreadsheet.autoSizeColumn(10);
+		  spreadsheet.autoSizeColumn(11);
+		  spreadsheet.autoSizeColumn(12);
+		  spreadsheet.autoSizeColumn(13);
+		  spreadsheet.autoSizeColumn(14);
+		  spreadsheet.autoSizeColumn(15);
+		  spreadsheet.autoSizeColumn(16);
+		  spreadsheet.autoSizeColumn(17);
+		  spreadsheet.autoSizeColumn(18);
+		  spreadsheet.autoSizeColumn(19);
 		  String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh-mm-ss"));
 		  
 		  //Write the workbook in file system

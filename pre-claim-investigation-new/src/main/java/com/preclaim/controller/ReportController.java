@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.preclaim.config.Config;
 import com.preclaim.config.CustomMethods;
 import com.preclaim.dao.ReportDao;
+import com.preclaim.models.IntimationTypeScreen;
 import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.ScreenDetails;
 import com.preclaim.models.TopInvestigatorList;
@@ -76,6 +78,24 @@ public class ReportController {
     	session.setAttribute("VendorList", reportDao.getVendor());
     	return "common/templatecontent";
     }
+	
+	@RequestMapping(value = "/intimationTypeScreen", method = RequestMethod.GET)
+    public String IntimationTypeScreen(HttpSession session) {	
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+    	session.removeAttribute("ScreenDetails");
+    	ScreenDetails details = new ScreenDetails();
+    	details.setScreen_name("../report/IntimationType.jsp");
+    	details.setScreen_title("Intimation Type Lists");
+    	details.setMain_menu("Report");
+    	details.setSub_menu1("Intimation Type screen");
+    	session.setAttribute("ScreenDetails", details);
+		 session.setAttribute("intimationTypeScreenLists", reportDao.getIntimationType()); 
+    	return "common/templatecontent";
+    }
+	
+	
 	
 	@RequestMapping(value = "/regionWiseScreen", method = RequestMethod.GET)
     public String regionWiseScreen(HttpSession session) {
@@ -127,7 +147,7 @@ public class ReportController {
 			
 			//Print Header
 			cell.setCellValue("Top 15 Investigators in terms of volume");
-			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(128, 212, 255), new DefaultIndexedColorMap()));   //Blue
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			font.setColor(IndexedColors.WHITE.getIndex());
 			font.setBold(true);
@@ -173,16 +193,17 @@ public class ReportController {
 			for (TopInvestigatorList item : investigator) {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
+
 				if(item.getInvestigator().equals("Total"))
 				{
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));
 					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 				}
-				else if(item.getNotCleanRate() >= threshold - 2 && item.getNotCleanRate() < threshold) {
+				else if(item.getNotCleanRate() < threshold  && item.getNotCleanRate() >= threshold -2) {
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow					
 				}
-				else if(item.getNotCleanRate() <= threshold) {
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 0, 0), new DefaultIndexedColorMap()));    //pink
+				else if(item.getNotCleanRate() <= threshold - 2) {
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 102, 51), new DefaultIndexedColorMap()));    //pink
 				}
 				else if(item.getNotCleanRate() >= threshold) {
 					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
@@ -225,32 +246,57 @@ public class ReportController {
 				rowNum++;
 				newRow = investigator_sheet.createRow(rowNum);
 			}
+			XSSFCellStyle style1 = investigator_wb.createCellStyle();
 			
 			//Legends
 			newRow = investigator_sheet.getRow(2) == null ? investigator_sheet.createRow(2) : investigator_sheet.getRow(2);
 			cell = newRow.createCell(8);
-			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
-			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cell.setCellStyle(style);
+			style1.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
+			style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style1.setBorderLeft(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderRight(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderTop(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderBottom(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style1);
 			cell = newRow.createCell(9);
 			cell.setCellValue("Above Average");
 			
+			XSSFCellStyle style2 = investigator_wb.createCellStyle();
 			newRow = investigator_sheet.getRow(3) == null ? investigator_sheet.createRow(3) : investigator_sheet.getRow(3);
 			cell = newRow.createCell(8);
-			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
-			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cell.setCellStyle(style);
+			style2.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
+			style2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style2.setBorderLeft(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderRight(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderTop(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderBottom(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style2);
 			cell = newRow.createCell(9);  
-			cell.setCellStyle(style);
 			cell.setCellValue("Near Average");
 			
+			XSSFCellStyle style3 = investigator_wb.createCellStyle();
 			newRow = investigator_sheet.getRow(4) == null ? investigator_sheet.createRow(4) : investigator_sheet.getRow(4);
 			cell = newRow.createCell(8);
-			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 0, 0), new DefaultIndexedColorMap()));  //Red
-			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cell.setCellStyle(style);
+			style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 102, 51), new DefaultIndexedColorMap()));  //Red
+			style3.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style3.setBorderLeft(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderRight(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderTop(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderBottom(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style3);
 			cell = newRow.createCell(9);
-			cell.setCellStyle(style);
 			cell.setCellValue("Below Average");
 		
 			//Cell Esthetic Settings
@@ -259,6 +305,8 @@ public class ReportController {
 			investigator_sheet.autoSizeColumn(3);
 			investigator_sheet.autoSizeColumn(4);
 			investigator_sheet.autoSizeColumn(5);
+			investigator_sheet.autoSizeColumn(8);
+			investigator_sheet.autoSizeColumn(9);
 			
 			String filename = "Top Investigator_" + LocalDate.now() + ".xlsx";
 			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
@@ -296,7 +344,7 @@ public class ReportController {
 		try 
 		{
 			XSSFWorkbook investigator_wb = new XSSFWorkbook();
-			XSSFSheet investigator_sheet = investigator_wb.createSheet("Top 15 Investigator");
+			XSSFSheet investigator_sheet = investigator_wb.createSheet("Vendorwise Report");
 			int rowNum = 1;
 			Row newRow = investigator_sheet.createRow(rowNum);
 			int colNum = 1;
@@ -305,11 +353,11 @@ public class ReportController {
 			Font font = investigator_wb.createFont();
 			
 			//Print Header
-		    cell.setCellValue("Top 15 Investigators in terms of volume");
 			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
-		
+		    
+			
 			//for border colour
 			style.setBorderLeft(BorderStyle.THIN);  
 			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
@@ -319,7 +367,11 @@ public class ReportController {
 			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 			style.setBorderBottom(BorderStyle.THIN);  
 			style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			
+			cell.setCellValue("Top 15 Investigators in terms of volume");
+			cell.setCellStyle(style);
 			colNum++;
+			
 			
 			cell = newRow.createCell(colNum);
 			cell.setCellValue("Clean");
@@ -362,7 +414,7 @@ public class ReportController {
 		            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 				}
 				else if(item.getNotCleanRate() <= threshold) {
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(248, 203, 173), new DefaultIndexedColorMap()));    //pink
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 102, 51), new DefaultIndexedColorMap()));  
 					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					//for border colour
 		            style.setBorderLeft(BorderStyle.THIN);  
@@ -389,7 +441,7 @@ public class ReportController {
 				}
 				else
 					cell.setCellValue("Top 15 Investigators in terms of volume");
-					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));   //Blue
+			    	style.setFillForegroundColor(new XSSFColor(new java.awt.Color(128, 212, 255), new DefaultIndexedColorMap()));   //Blue
 					style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 				
@@ -442,7 +494,7 @@ public class ReportController {
 			investigator_sheet.autoSizeColumn(4);
 			investigator_sheet.autoSizeColumn(5);
 			
-			String filename = "Top Investigator_" + LocalDate.now() + ".xlsx";
+			String filename = "VendorwiseReport_" + LocalDate.now() + ".xlsx";
 			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
 			investigator_wb.write(outputStream);
 			investigator_wb.close();
@@ -564,6 +616,222 @@ public class ReportController {
 			return e.getMessage();
 		}
     }
+	
+	
+	
+	@RequestMapping(value = "/downloadIntimationType", method = RequestMethod.POST)
+    public @ResponseBody String downloadIntimationType(HttpServletRequest request,HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return "common/login";
+		String intimationType = request.getParameter("intimationType");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		
+		//Print Body
+		List<IntimationTypeScreen> intimationTypeLists  = reportDao.getIntimationTypeLists(intimationType,startDate, endDate); 
+		System.out.println(intimationTypeLists);
+		
+		
+		if(intimationTypeLists == null)
+			return "No cases investigated";
+		
+		if(intimationTypeLists.size() <= 1)
+			return "No cases investigated";
+		
+		float threshold = intimationTypeLists.get(intimationTypeLists.size() - 1).getNotCleanRate();
+		//Generate Excel
+		try 
+		{
+			XSSFWorkbook investigator_wb = new XSSFWorkbook();
+			XSSFSheet investigator_sheet = investigator_wb.createSheet("Top 15 Investigator");
+			int rowNum = 1;
+			Row newRow = investigator_sheet.createRow(rowNum);
+			int colNum = 1;
+			Cell cell = newRow.createCell(colNum);
+			XSSFCellStyle style = investigator_wb.createCellStyle();
+			Font font = investigator_wb.createFont();
+			
+			//Print Header
+			cell.setCellValue("Intimation Type");
+			style.setFillForegroundColor(new XSSFColor(new java.awt.Color(128, 212, 255), new DefaultIndexedColorMap()));   //Blue
+			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			font.setColor(IndexedColors.WHITE.getIndex());
+			font.setBold(true);
+			
+			//for border colour
+            style.setBorderLeft(BorderStyle.THIN);  
+            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderRight(BorderStyle.THIN);  
+            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderTop(BorderStyle.THIN);  
+            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style.setBorderBottom(BorderStyle.THIN);  
+            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			
+            
+		    //style.setFont(font);
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Clean");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Grand Total");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			cell = newRow.createCell(colNum);
+			cell.setCellValue("Not Clean Rate");
+			cell.setCellStyle(style);
+			colNum++;
+			
+			//Print Body
+			rowNum++;
+			newRow = investigator_sheet.createRow(rowNum);
+			for (IntimationTypeScreen item : intimationTypeLists) {
+				colNum = 1;
+				style = investigator_wb.createCellStyle();
+
+				if(item.getIntimationType().equals("Total"))
+				{
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 112, 192), new DefaultIndexedColorMap()));
+					font.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+				}
+				else if(item.getNotCleanRate() < threshold  && item.getNotCleanRate() >= threshold -2) {
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow					
+				}
+				else if(item.getNotCleanRate() <= threshold - 2) {
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 102, 51), new DefaultIndexedColorMap()));    //pink
+				}
+				else if(item.getNotCleanRate() >= threshold) {
+					style.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
+				}
+				style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				style.setBorderLeft(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderRight(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderTop(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            style.setBorderBottom(BorderStyle.THIN);  
+	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+	            
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getIntimationType());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getClean());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotClean());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getTotal());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(item.getNotCleanRate());
+				cell.setCellStyle(style);
+				colNum++;
+				
+				rowNum++;
+				newRow = investigator_sheet.createRow(rowNum);
+			}
+			XSSFCellStyle style1 = investigator_wb.createCellStyle();
+			
+			//Legends
+			newRow = investigator_sheet.getRow(2) == null ? investigator_sheet.createRow(2) : investigator_sheet.getRow(2);
+			cell = newRow.createCell(8);
+			style1.setFillForegroundColor(new XSSFColor(new java.awt.Color(146, 208, 80), new DefaultIndexedColorMap()));   //Green
+			style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style1.setBorderLeft(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderRight(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderTop(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style1.setBorderBottom(BorderStyle.THIN);  
+            style1.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style1);
+			cell = newRow.createCell(9);
+			cell.setCellValue("Above Average");
+			
+			XSSFCellStyle style2 = investigator_wb.createCellStyle();
+			newRow = investigator_sheet.getRow(3) == null ? investigator_sheet.createRow(3) : investigator_sheet.getRow(3);
+			cell = newRow.createCell(8);
+			style2.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 255, 0), new DefaultIndexedColorMap()));  //yellow
+			style2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style2.setBorderLeft(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderRight(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderTop(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style2.setBorderBottom(BorderStyle.THIN);  
+            style2.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style2);
+			cell = newRow.createCell(9);  
+			cell.setCellValue("Near Average");
+			
+			XSSFCellStyle style3 = investigator_wb.createCellStyle();
+			newRow = investigator_sheet.getRow(4) == null ? investigator_sheet.createRow(4) : investigator_sheet.getRow(4);
+			cell = newRow.createCell(8);
+			style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(255, 102, 51), new DefaultIndexedColorMap()));  //Red
+			style3.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			style3.setBorderLeft(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderRight(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderTop(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+            style3.setBorderBottom(BorderStyle.THIN);  
+            style3.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			cell.setCellStyle(style3);
+			cell = newRow.createCell(9);
+			cell.setCellValue("Below Average");
+		
+			//Cell Esthetic Settings
+			investigator_sheet.autoSizeColumn(1);
+			investigator_sheet.autoSizeColumn(2);
+			investigator_sheet.autoSizeColumn(3);
+			investigator_sheet.autoSizeColumn(4);
+			investigator_sheet.autoSizeColumn(5);
+			investigator_sheet.autoSizeColumn(8);
+			investigator_sheet.autoSizeColumn(9);
+			
+			String filename = "Top Investigator_" + LocalDate.now() + ".xlsx";
+			FileOutputStream outputStream = new FileOutputStream(Config.upload_directory + filename);
+			investigator_wb.write(outputStream);
+			investigator_wb.close();
+			return filename;
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return e.getMessage();
+		}
+    }
+	
+	
+	
+	
 	
 	@RequestMapping(value = "/uploadedDocument", method = RequestMethod.GET)
     public String uploadedDocument(HttpSession session) {

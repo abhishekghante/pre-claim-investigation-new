@@ -167,6 +167,7 @@ if(role_permission == null)
 			                    		<input type="checkbox" <%if(role_permission.contains("report/investigator")) {%>checked <%} %> name="report[]" id="report_investigator" class="indPLCheck10" value="report/investigator"> <label for="report_investigator">Top 15 Investigator</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("report/regionwise")) {%>checked <%} %> name="report[]" id="report_regionwise" class="indPLCheck10" value="report/regionwise"> <label for="report_regionwise">Region-wise Report </label>
 			                    		<input type="checkbox" <%if(role_permission.contains("report/vendorwise")) {%>checked <%} %> name="report[]" id="report_vendorwise" class="indPLCheck10" value="report/vendorwise"> <label for="report_vendorwise">Vendor-wise Report</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("report/intimationTypeScreen")) {%>checked <%} %> name="report[]" id="report_intimationTypeScreen" class="indPLCheck10" value="report/intimationTypeScreen"> <label for="report_intimationTypeScreen">Intimation Type Screen</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("report/uploadedDocument")) {%>checked <%} %> name="report[]" id="report_uploadedDocument" class="indPLCheck10" value="report/uploadedDocument"> <label for="report_uploadedDocument">Uploaded Document</label>
 			                    	</td>
 			                    </tr>

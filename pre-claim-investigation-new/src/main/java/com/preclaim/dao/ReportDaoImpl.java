@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.preclaim.config.CustomMethods;
+import com.preclaim.models.CaseDetails;
+import com.preclaim.models.IntimationTypeScreen;
 import com.preclaim.models.RegionwiseList;
 import com.preclaim.models.TopInvestigatorList;
 
@@ -64,6 +66,128 @@ public class ReportDaoImpl implements ReportDao {
 			return null;
 		}
 	}
+	
+	@Override
+	public List<String> getIntimationType() {
+		try
+		{
+			String sql = "select * from intimation_type";
+			return template.query(sql, (ResultSet rs, int row) -> {
+				
+				return rs.getString("intimationTypeName");
+			});
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return null;
+		}
+	}
+
+	public List<IntimationTypeScreen> getIntimationTypeLists(String intimationType,String startDate, String endDate) {
+		
+		
+		
+		String user_lists = "";
+		// Main Query - Query to get Top 15 Investigators
+		List<String> investigator_list = new ArrayList<String>();
+		/*
+		1) Get Latest record from audit_case_movement whose role = "AGNSUP"
+		2) Join the above query with case_lists where caseSubStatus is Clean , Not-Clean
+		3) Get Investigator wise Total Count
+		*/
+		String sql = 
+				"SELECT intimationType, count(*) as grandTotal FROM case_lists where  intimationType IN ('PIV') group by intimationType";
+				
+		System.out.println(sql);
+		
+		try
+		{
+			user_lists = template.query(sql, new Object[] {startDate, endDate},
+					(ResultSet rs, int rowNum) -> 
+					{
+						String userId = "";
+						do 
+						{
+							investigator_list.add(rs.getString("intimationType"));
+							userId +=  "'" + rs.getString("intimationType") + "',";
+						}
+						while(rs.next());			
+						return userId;
+						
+					}).get(0);
+			System.out.println("user_lists"+user_lists);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+		user_lists = user_lists.substring(0, user_lists.length() - 1);
+		System.out.println(user_lists);
+		
+		//Query 2 - Query to categorize Clean, Not Clean 
+		
+		HashMap<String, Integer> clean = new HashMap<String, Integer>();
+		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
+		
+		sql = 
+				"SELECT TOP 15 b.toId, a.caseSubStatus, count(*) as substatusTotal FROM case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate FROM audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate FROM audit_case_movement WHERE user_role = 'AGNSUP' "
+				+ "group by  caseId ) b WHERE a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId AND a.caseSubStatus IN ('Clean','Not-Clean') "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "GROUP BY b.toId, a.caseSubStatus "
+				+ "ORDER BY count(*) desc";
+		
+		template.query(sql, new Object[] {startDate, endDate},(ResultSet rs, int rowNum) -> {
+			do 
+			{
+				if(rs.getString("caseSubStatus").equals("Clean"))
+					clean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
+				
+				else if(rs.getString("caseSubStatus").equals("Not-Clean"))
+					notClean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
+			}while(rs.next());
+			
+			return "";
+		});
+
+		//Query 3 - Query to map username & fullname 
+		
+		HashMap<String, String> user_mapping = new HashMap<String, String>();
+		sql = "SELECT * FROM admin_user b where username in ( " + user_lists +  ")";
+		template.query(sql , (ResultSet rs, int rowNum) -> {
+			do
+			{
+				user_mapping.put(rs.getString("username"),rs.getString("full_name"));
+			}while(rs.next());
+			return user_mapping;
+		});
+		List<IntimationTypeScreen> intimationTypeList = new ArrayList<IntimationTypeScreen>();
+		int cleanCount = 0;
+		int NotCleanCount = 0;
+		int totalCleanCount = 0;
+		int totalNotCleanCount = 0;
+		for(String user: investigator_list)
+		{
+			cleanCount = clean.get(user) == null ? 0 : clean.get(user);
+			NotCleanCount = notClean.get(user) == null ? 0 : notClean.get(user);
+			intimationTypeList.add(new IntimationTypeScreen(user_mapping.get(user), cleanCount, NotCleanCount));
+			totalCleanCount += cleanCount; 
+			totalNotCleanCount += NotCleanCount;
+		}
+		intimationTypeList.add(new IntimationTypeScreen("Total", totalCleanCount, totalNotCleanCount));
+		
+		return intimationTypeList;
+		
+	
+		
+		
+	}
+	
+	
 
 	@Override
 	public List<TopInvestigatorList> getTopInvestigatorList(String startDate, String endDate) {
