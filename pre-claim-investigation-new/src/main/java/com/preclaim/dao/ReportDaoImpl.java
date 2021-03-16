@@ -71,27 +71,43 @@ public class ReportDaoImpl implements ReportDao {
 		String user_lists = "";
 		// Main Query - Query to get Top 15 Investigators
 		List<String> investigator_list = new ArrayList<String>();
-		String sql = "SELECT TOP 15 b.username, count(*) as grandTotal FROM case_lists a ,"
-				+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-				+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
-				+ "order by a.updatedDate desc) b "
-				+ "where a.caseId = b.caseId and a.caseSubStatus IN ('Clean','Not-Clean') "
-				+ "group by b.username order by count(*) desc";
+		/*
+		1) Get Latest record from audit_case_movement whose role = "AGNSUP"
+		2) Join the above query with case_lists where caseSubStatus is Clean , Not-Clean
+		3) Get Investigator wise Total Count
+		*/
+		String sql = 
+				"SELECT TOP 15 b.toId, count(*) as grandTotal FROM case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate FROM audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate FROM audit_case_movement WHERE user_role = 'AGNSUP' "
+				+ "group by  caseId ) b WHERE a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId AND a.caseSubStatus IN ('Clean','Not-Clean') "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "GROUP BY b.toId "
+				+ "ORDER BY count(*) desc";
+				
+		System.out.println(sql);
 		
-		user_lists = template.query(sql, 
-				(ResultSet rs, int rowNum) -> 
-				{
-					String userId = "";
-					do 
+		try
+		{
+			user_lists = template.query(sql, new Object[] {startDate, endDate},
+					(ResultSet rs, int rowNum) -> 
 					{
-						investigator_list.add(rs.getString("username"));
-						userId +=  "'" + rs.getString("username") + "',";
-					}
-					while(rs.next());			
-					return userId;
-					
-				}).get(0);
-		
+						String userId = "";
+						do 
+						{
+							investigator_list.add(rs.getString("toId"));
+							userId +=  "'" + rs.getString("toId") + "',";
+						}
+						while(rs.next());			
+						return userId;
+						
+					}).get(0);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 		user_lists = user_lists.substring(0, user_lists.length() - 1);
 		System.out.println(user_lists);
 		
@@ -100,22 +116,24 @@ public class ReportDaoImpl implements ReportDao {
 		HashMap<String, Integer> clean = new HashMap<String, Integer>();
 		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
 		
-		sql = "SELECT b.username, a.caseSubStatus, count(*) as substatusTotal FROM case_lists a ,"
-				+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-				+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
-				+ "order by a.updatedDate desc) b "
-				+ "where a.caseId = b.caseId and b.username in ( " + user_lists +  ") and "
-				+ "a.caseSubStatus IN ('Clean','Not-Clean') "
-				+ "group by b.username, a.caseSubStatus order by count(*) desc";
+		sql = 
+				"SELECT TOP 15 b.toId, a.caseSubStatus, count(*) as substatusTotal FROM case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate FROM audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate FROM audit_case_movement WHERE user_role = 'AGNSUP' "
+				+ "group by  caseId ) b WHERE a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId AND a.caseSubStatus IN ('Clean','Not-Clean') "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "GROUP BY b.toId, a.caseSubStatus "
+				+ "ORDER BY count(*) desc";
 		
-		template.query(sql,(ResultSet rs, int rowNum) -> {
+		template.query(sql, new Object[] {startDate, endDate},(ResultSet rs, int rowNum) -> {
 			do 
 			{
 				if(rs.getString("caseSubStatus").equals("Clean"))
-					clean.put(rs.getString("username"),rs.getInt("substatusTotal"));
+					clean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
 				
 				else if(rs.getString("caseSubStatus").equals("Not-Clean"))
-					notClean.put(rs.getString("username"),rs.getInt("substatusTotal"));
+					notClean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
 			}while(rs.next());
 			
 			return "";
@@ -155,28 +173,38 @@ public class ReportDaoImpl implements ReportDao {
 		
 		String user_lists = "";
 		List<String> investigator_list = new ArrayList<String>();
-		String sql = "SELECT b.username, count(*) as grandTotal FROM case_lists a, "
-				+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-				+ "where a.user_role = 'AGNSUP' and a.toId = b.username and b.state = '" + region + "' "
-				+ "order by a.updatedDate desc) b where a.caseId = b.caseId and "
-				+ "a.caseStatus IN ('Closed','WIP') group by b.username order by count(*) desc";
-		
+		String sql =
+				"select b.toId, count(*) as grandTotal from case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate from audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
+				+ "group by  caseId ) b where a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId and a.caseStatus IN ('Closed','WIP') and  "
+				+ "b.toId IN (SELECT username from admin_user where state = ?) "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "group by b.toId "
+				+ "order by count(*) desc";
+				
 		System.out.println(sql);
-		
-		user_lists = template.query(sql, 
-				(ResultSet rs, int rowNum) -> 
-				{
-					String userId = "";
-					do 
+		try
+		{
+			user_lists = template.query(sql, new Object[] {region, startDate, endDate}, 
+					(ResultSet rs, int rowNum) -> 
 					{
-						investigator_list.add(rs.getString("username"));
-						userId +=  "'" + rs.getString("username") + "',";
-					}
-					while(rs.next());			
-					return userId;
-					
-				}).get(0);
-		
+						String userId = "";
+						do 
+						{
+							investigator_list.add(rs.getString("toId"));
+							userId +=  "'" + rs.getString("toId") + "',";
+						}
+						while(rs.next());			
+						return userId;
+						
+					}).get(0);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 		user_lists = user_lists.substring(0, user_lists.length() - 1);
 		System.out.println(user_lists);
 		
@@ -185,44 +213,52 @@ public class ReportDaoImpl implements ReportDao {
 		HashMap<String, Integer> pivstopped = new HashMap<String, Integer>();
 		HashMap<String, Integer> wip = new HashMap<String, Integer>();
 		
-		sql = "SELECT b.username, a.caseSubStatus , count(*) as substatusTotal FROM case_lists a, "
-				+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-				+ "where a.user_role = 'AGNSUP' and a.toId = b.username and "
-				+ "b.username in (" + user_lists + ") and b.state = '" + region + "' "
-				+ "order by a.updatedDate desc) b where a.caseId = b.caseId and "
-				+ "a.caseStatus = 'Closed' group by b.username, a.caseSubStatus order by count(*) desc";
+		sql =
+				"select b.toId,  a.caseSubStatus , count(*) as substatusTotal from case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate from audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
+				+ "group by  caseId ) b where a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId and a.caseStatus = 'Closed' and  "
+				+ "b.toId IN (SELECT username from admin_user where state = ?) "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "group by b.toId, a.caseSubStatus "
+				+ "order by count(*) desc";
 		
 		System.out.println(sql);
 		
-		template.query(sql,(ResultSet rs, int rowNum) -> {
+		template.query(sql,new Object[] {region, startDate, endDate}, (ResultSet rs, int rowNum) -> {
 			do 
 			{
 				if(rs.getString("caseSubStatus").equals("Clean"))
-					clean.put(rs.getString("username"),rs.getInt("substatusTotal"));
+					clean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
 				
 				else if(rs.getString("caseSubStatus").equals("Not-Clean"))
-					notClean.put(rs.getString("username"),rs.getInt("substatusTotal"));
+					notClean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
 				
 				else if(rs.getString("caseSubStatus").equals("PIV Stopped"))
-					pivstopped.put(rs.getString("username"),rs.getInt("substatusTotal"));
+					pivstopped.put(rs.getString("toId"),rs.getInt("substatusTotal"));
 			}while(rs.next());
 			
 			return "";
 		});
 		
-		sql = "SELECT b.username, count(*) as statusTotal FROM case_lists a, "
-				+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-				+ "where a.user_role = 'AGNSUP' and a.toId = b.username and "
-				+ "b.username in (" + user_lists + ") and b.state = '" + region + "' "
-				+ "order by a.updatedDate desc) b where a.caseId = b.caseId and "
-				+ "a.caseStatus = 'WIP' group by b.username order by count(*) desc";
+		sql =
+				"select b.toId,  a.caseSubStatus , count(*) as substatusTotal from case_lists a, "
+				+ "(select a.caseId, a.toId, a.updatedDate from audit_case_movement a, "
+				+ "(select caseId,  max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
+				+ "group by  caseId ) b where a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
+				+ ") b where a.caseId = b.caseId and a.caseStatus = 'WIP' and  "
+				+ "b.toId IN (SELECT username from admin_user where state = ?) "
+				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
+				+ "group by b.toId, a.caseSubStatus "
+				+ "order by count(*) desc";
 		
 		System.out.println(sql);
 		
-		template.query(sql,(ResultSet rs, int rowNum) -> {
+		template.query(sql,new Object[] {region, startDate, endDate}, (ResultSet rs, int rowNum) -> {
 			do 
 			{
-				wip.put(rs.getString("username"),rs.getInt("statusTotal"));
+				wip.put(rs.getString("b.toId"),rs.getInt("substatusTotal"));
 			}while(rs.next());
 			
 			return "";
