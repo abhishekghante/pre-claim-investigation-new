@@ -132,23 +132,16 @@ public class ReportDaoImpl implements ReportDao {
 		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
 		
 		sql = 
-				"SELECT TOP 15 b.toId, a.caseSubStatus, count(*) as substatusTotal FROM case_lists a, "
-				+ "(select a.caseId, a.toId, a.updatedDate FROM audit_case_movement a, "
-				+ "(select caseId,  max(updatedDate) as updatedDate FROM audit_case_movement WHERE user_role = 'AGNSUP' "
-				+ "group by  caseId ) b WHERE a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
-				+ ") b where a.caseId = b.caseId AND a.caseSubStatus IN ('Clean','Not-Clean') "
-				+ "and CONVERT(date,b.updatedDate) BETWEEN ? AND ? "
-				+ "GROUP BY b.toId, a.caseSubStatus "
-				+ "ORDER BY count(*) desc";
+				"SELECT intimationType, caseSubStatus, count(*) as grandTotal FROM case_lists where  intimationType IN ('PIV') AND caseSubStatus IN ('Clean','Not-Clean') group by intimationType ,caseSubStatus";
 		
-		template.query(sql, new Object[] {startDate, endDate},(ResultSet rs, int rowNum) -> {
+		template.query(sql, (ResultSet rs, int rowNum) -> {
 			do 
 			{
 				if(rs.getString("caseSubStatus").equals("Clean"))
-					clean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
+					clean.put(rs.getString("intimationType"),rs.getInt("grandTotal"));
 				
 				else if(rs.getString("caseSubStatus").equals("Not-Clean"))
-					notClean.put(rs.getString("toId"),rs.getInt("substatusTotal"));
+					notClean.put(rs.getString("intimationType"),rs.getInt("grandTotal"));
 			}while(rs.next());
 			
 			return "";
@@ -157,11 +150,11 @@ public class ReportDaoImpl implements ReportDao {
 		//Query 3 - Query to map username & fullname 
 		
 		HashMap<String, String> user_mapping = new HashMap<String, String>();
-		sql = "SELECT * FROM admin_user b where username in ( " + user_lists +  ")";
+		sql = "select * from intimation_type where intimationTypeName in ( " + user_lists +  ")";
 		template.query(sql , (ResultSet rs, int rowNum) -> {
 			do
 			{
-				user_mapping.put(rs.getString("username"),rs.getString("full_name"));
+				user_mapping.put(rs.getString("intimationType"),rs.getString("intimationType"));
 			}while(rs.next());
 			return user_mapping;
 		});
