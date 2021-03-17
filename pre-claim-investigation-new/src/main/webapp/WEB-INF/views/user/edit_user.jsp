@@ -271,6 +271,8 @@ function updateAccountValidate() {
     var address1     = $.trim($('#edit_account_form #address1').val());
     var address2     = $.trim($('#edit_account_form #address2').val());
     var address3     = $.trim($('#edit_account_form #address3').val());
+    var fees         = $.trim($('#edit_account_form #fees').val());
+    
     
     $('#full_name').removeClass('has-error-2');
     $('#username').removeClass('has-error-2');
@@ -282,6 +284,7 @@ function updateAccountValidate() {
     $('#state').removeClass('has-error-2');
     $('#zone').removeClass('has-error-2');
     $('#city').removeClass('has-error-2');
+    $('#fees').removeClass('has-error-2');
     let validflag = 1;
     
     if( contactNumber == "" )
@@ -298,6 +301,14 @@ function updateAccountValidate() {
         validflag = 0;
         toastr.error("Mobile number should be of 10 digits","Error");
    	}
+    if(fees == "" )
+    {
+        $('#fees').addClass('has-error-2');
+        $('#fees').focus();
+        validflag = 0;
+        toastr.error("Kindly enter fees","Error");
+    }
+    
     if( state == "" )
     {
         $('#state').addClass('has-error-2');
@@ -378,7 +389,7 @@ function updateAccountValidate() {
     var formdata = {"full_name":full_name, "username":username, "user_email":user_email,
         "password":password, "account_type":account_type, "user_id":user_id, "account_img":account_img,
         "status":status, "city":city, "state":state, "address1":address1, "address2":address2,
-        "address3":address3,"contactNumber":contactNumber}
+        "address3":address3,"contactNumber":contactNumber,"fees":fees}
     
     $.ajax({
         type    : 'POST',

@@ -302,6 +302,7 @@ public class UserController {
 		user_details.setAddress1(request.getParameter("address1"));
 		user_details.setAddress2(request.getParameter("address2"));
 		user_details.setAddress3(request.getParameter("address3"));
+		user_details.setFees(Double.parseDouble(request.getParameter("fees")));
 		user_details.setContactNumber(request.getParameter("contactNumber"));
 		user_details.setUpdatedBy(user.getUsername());
 		String message = dao.updateUserDetails(user_details);
