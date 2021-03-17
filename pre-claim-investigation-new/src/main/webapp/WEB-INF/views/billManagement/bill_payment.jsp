@@ -24,7 +24,7 @@ session.removeAttribute("intimation_list");
       <div class="portlet-title">
         <div class="caption">
             <i class="icon-users font-green-sharp"></i>
-            <span class="caption-subject font-green-sharp sbold">Bill Enquiry Lists</span>
+            <span class="caption-subject font-green-sharp sbold">Bill Payment Lists</span>
         </div>
        <%--  <%if(allow_add){ %> --%>
         <div class="actions">
