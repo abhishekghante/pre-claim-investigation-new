@@ -389,7 +389,7 @@ public class CaseController {
 		
 		long caseId = caseDetail.getCaseId();
 		
-		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,user.getAccount_type());
+		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks, toRole);
 		String message = caseMovementDao.updateCaseMovement(case_movement);
 		if (message.equals("****")) 
 		{
@@ -408,7 +408,6 @@ public class CaseController {
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
-		UserDetails user1 = userDao.getUserDetails(toId);
 		System.out.println("user"+user);
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
@@ -443,7 +442,7 @@ public class CaseController {
 		}
 		caseDao.updateCaseTypeAndSubType(caseDetail);
 		String toRemarks = request.getParameter("toRemarks");
-		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,user1.getAccount_type());
+		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,toRole);
 		String message = caseMovementDao.updateCaseMovement(case_movement);
 		if (message.equals("****")) {
 			session.setAttribute("success_message", "Case assigned successfully");

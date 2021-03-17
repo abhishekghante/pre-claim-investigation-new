@@ -186,6 +186,13 @@ $(document).ready(function(){
 		$("#state").val($("#city option:selected").data("state"));
 		$("#zone").val($("#city option:selected").data("zone"));		
 	});
+	$("#account_type").change(function(){
+		if($(this).val() != "AGNSUP")
+			$("#fees").prop("readonly",true);
+		else
+			$("#fees").prop("readonly",false);
+	});
+	
 });
 </script>
 <script>
@@ -228,12 +235,6 @@ function accountValidate() {
         validflag = 0;
         toastr.error("Kindly enter Contact Number","Error");
     }
-    if( account_type == "AGNSUP" && fees == "0" ){
-        $('#fees').addClass('has-error-2');
-        $('#fees').focus();
-        validflag = 0;
-        toastr.error("Kindly enter fees","Error");
-    }
     else if(contactNumber != "" && contactNumber.length != 10)
    	{
     	$('#contactNumber').addClass('has-error-2');
@@ -241,6 +242,12 @@ function accountValidate() {
         validflag = 0;
         toastr.error("Mobile number should be of 10 digits","Error");
    	}
+    if( account_type == "AGNSUP" && fees == "0" ){
+        $('#fees').addClass('has-error-2');
+        $('#fees').focus();
+        validflag = 0;
+        toastr.error("Kindly enter fees","Error");
+    }
     if( state == "" ){
         $('#state').addClass('has-error-2');
         $('#state').focus();
