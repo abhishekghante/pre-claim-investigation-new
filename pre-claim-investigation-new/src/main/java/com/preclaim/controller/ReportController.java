@@ -332,6 +332,11 @@ public class ReportController {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		
+		ServletContext servletContext = session.getServletContext();
+		
+		File myFile = new File(servletContext.getRealPath(File.separator) +  File.separator 
+				+ "resources" + File.separator + "uploads" + File.separator + "Vendorwise.xlsx" );
+		
 		//Print Body
 		List<VendorwiseList> vendorList = reportDao.getVendorwistList(vendor, startDate, endDate);
 		
@@ -341,7 +346,7 @@ public class ReportController {
 		//Generate Excel
 		try 
 		{
-			XSSFWorkbook vendor_wb = new XSSFWorkbook(new File(Config.upload_directory + "Vendorwise.xlsx"));
+			XSSFWorkbook vendor_wb = new XSSFWorkbook(myFile);
 			XSSFSheet vendor_sheet = vendor_wb.getSheet("Vendorwise Report");
 			int rowNum = 0;
 			Row newRow = vendor_sheet.createRow(rowNum);
@@ -599,7 +604,6 @@ public class ReportController {
 				colNum = 1;
 				style = investigator_wb.createCellStyle();
 
-				style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 				style.setBorderLeft(BorderStyle.THIN);  
 	            style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 	            style.setBorderRight(BorderStyle.THIN);  
