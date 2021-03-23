@@ -158,7 +158,7 @@ public class ReportDaoImpl implements ReportDao {
 				+ "GROUP BY b.toId "
 				+ "ORDER BY count(*) desc";
 				
-		System.out.println(sql);
+		/* System.out.println(sql); */
 		
 		try
 		{
@@ -181,7 +181,7 @@ public class ReportDaoImpl implements ReportDao {
 			return null;
 		}
 		user_lists = user_lists.substring(0, user_lists.length() - 1);
-		System.out.println(user_lists);
+		/* System.out.println(user_lists); */
 		
 		//Query 2 - Query to categorize Clean, Not Clean 
 		
@@ -256,7 +256,7 @@ public class ReportDaoImpl implements ReportDao {
 				+ "group by b.toId "
 				+ "order by count(*) desc";
 				
-		System.out.println(sql);
+		/* System.out.println(sql); */
 		try
 		{
 			user_lists = template.query(sql, new Object[] {region, startDate, endDate}, 
@@ -278,7 +278,7 @@ public class ReportDaoImpl implements ReportDao {
 			return null;
 		}
 		user_lists = user_lists.substring(0, user_lists.length() - 1);
-		System.out.println(user_lists);
+		/* System.out.println(user_lists); */
 		
 		HashMap<String, Integer> clean = new HashMap<String, Integer>();
 		HashMap<String, Integer> notClean = new HashMap<String, Integer>();
@@ -296,7 +296,7 @@ public class ReportDaoImpl implements ReportDao {
 				+ "group by b.toId, a.caseSubStatus "
 				+ "order by count(*) desc";
 		
-		System.out.println(sql);
+		/* System.out.println(sql); */
 		
 		template.query(sql,new Object[] {region, startDate, endDate}, (ResultSet rs, int rowNum) -> {
 			do 
@@ -325,7 +325,7 @@ public class ReportDaoImpl implements ReportDao {
 				+ "group by b.toId, a.caseSubStatus "
 				+ "order by count(*) desc";
 		
-		System.out.println(sql);
+		/* System.out.println(sql); */
 		
 		template.query(sql,new Object[] {region, startDate, endDate}, (ResultSet rs, int rowNum) -> {
 			do 
@@ -387,7 +387,7 @@ public class ReportDaoImpl implements ReportDao {
 				+ "where a.caseId = b.caseId and a.updatedDate = b.updatedDate and a.toId = ? and "
 				+ "CONVERT(date, a.updatedDate) BETWEEN ? and ? "
 				+ "group by a.toId, YEAR(a.updatedDate), FORMAT(a.updatedDate,'MMM') + '-' + FORMAT(a.updatedDate,'yy')";
-		System.out.println(sql);
+		/* System.out.println(sql); */
 		try
 		{
 			template.query(sql, new Object[] {vendorName, startDate, endDate},

@@ -30,7 +30,7 @@ public class IntimationTypeDaoImpl implements IntimationTypeDao {
 			String IntimationTypeCheck = "select count(*) from intimation_type where intimationTypeName='" 
 					+ intimationType.getIntimationType() + "'";
 			int intimationTypeCount = this.template.queryForObject(IntimationTypeCheck, Integer.class);
-			System.out.println(intimationType.toString());
+			/* System.out.println(intimationType.toString()); */
 			if (intimationTypeCount == 0) 
 			{
 				String query = "INSERT INTO intimation_type(intimationTypeName, createdBy, createdDate, updatedDate, "
