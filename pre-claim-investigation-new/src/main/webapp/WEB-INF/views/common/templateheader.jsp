@@ -76,7 +76,7 @@ if(user == null)
                                 			src="${pageContext.request.contextPath}/resources/img/avatar.png">
                                 	<%} %>
                                 <span class="username username-hide-on-mobile">
-                                	Welcome, <%= user == null ? "" : user.getFull_name() %></span>
+                                	Welcome, <%= user == null ? "" : user.getFull_name()+" ("+user.getAccount_type()+")" %></span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">

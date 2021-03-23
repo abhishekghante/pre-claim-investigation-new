@@ -15,7 +15,7 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-plus"></i>
             <span class="caption-subject font-green-sharp sbold">Import Cases</span>
         </div>
         <div class="actions">

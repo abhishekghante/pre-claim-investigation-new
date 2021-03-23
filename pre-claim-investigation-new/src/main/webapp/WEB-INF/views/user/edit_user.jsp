@@ -14,13 +14,49 @@ session.removeAttribute("location_list");
 %>
 <style type="text/css">
 #imgAccount { display:none;}
+@media(max-width:576px)
+{
+	table thead, table tfoot
+	{
+		display:none;
+	}
+
+	table, table tbody, table tr, table td
+	{
+		display : block;
+		width   : 100%;
+	}
+	
+	table td
+	{
+		width : 90%;
+		text-align: right;
+		position   : relative;
+		padding-left: 50%;
+	}
+	table tr
+	{
+		margin-bottom : 15px;
+	}
+	table td::before
+	{
+		 content: attr(data-label);
+		 position : absolute;
+		 left : 10px;
+		 width : 50%;
+		 text-align: left;
+	}
+
+}
+
+
 </style>
 <div class="row">
   <div class="col-md-12 col-sm-12">
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-user-follow"></i>
             <span class="caption-subject font-green-sharp sbold">Edit Users</span>
         </div>
         <div class="actions">

@@ -65,6 +65,7 @@ public class Case_movementDaoImpl implements Case_movementDao {
 			case_movement.setToId(rs.getString("toId"));
 			case_movement.setCaseStatus(rs.getString("caseStatus"));
 			case_movement.setRemarks(rs.getString("Remarks"));
+			case_movement.setZone(rs.getString("zone"));
 			return case_movement;
 		}).get(0);
 	}

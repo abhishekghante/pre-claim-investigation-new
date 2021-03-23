@@ -88,6 +88,11 @@ public class CaseDaoImpl implements CaseDao {
 	public long addcase(CaseDetails casedetail) {
 		try 
 		{
+			String sql = "SELECT count(*) from case_lists where policyNumber = '" + casedetail.getPolicyNumber() + "'";
+			int PolicyNumberExists = template.queryForObject(sql, Integer.class);
+			if(PolicyNumberExists > 0)
+				return 1;
+			
 			String current_date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 			String query = "INSERT INTO case_lists (policyNumber, investigationId, insuredName, "
 					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, "
@@ -133,8 +138,8 @@ public class CaseDaoImpl implements CaseDao {
 			String sql = "";
 			if (user_role.equalsIgnoreCase("RCU")) 
 			{
-				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.fromId = ? and b.user_role ='REGMAN' and b.zone = ? and b.toId ='')";
-				List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username,zone },
+				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.fromId = ? and b.user_role ='REGMAN' and b.toId ='')";
+				List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username},
 						(ResultSet rs, int rowCount) -> {
 							CaseDetailList casedetail = new CaseDetailList();
 							casedetail.setSrNo(rowCount + 1);
@@ -147,6 +152,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
+							casedetail.setZone(rs.getString("zone"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -173,6 +179,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
+							casedetail.setZone(rs.getString("zone"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -197,6 +204,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setIntimationType(rs.getString("intimationType"));
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
+							casedetail.setZone(rs.getString("zone"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -219,7 +227,7 @@ public class CaseDaoImpl implements CaseDao {
 	public List<CaseDetailList> getAssignedCaseList(String username) {
 		try {
 			String sql = "SELECT a.caseId, a.policyNumber, a.insuredName, a.investigationId, "
-					+ "a.sumAssured, a.caseStatus, a.intimationType "
+					+ "a.sumAssured, a.caseStatus, a.intimationType,b.zone "
 					+ "FROM case_lists a, audit_case_movement b where a.caseId = b.caseId and" + " b.fromId = ? ";
 			List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username },
 					(ResultSet rs, int rowCount) -> {
@@ -232,6 +240,7 @@ public class CaseDaoImpl implements CaseDao {
 						casedetail.setSumAssured(rs.getDouble("sumAssured"));
 						casedetail.setCaseStatus(rs.getString("caseStatus"));
 						casedetail.setIntimationType(rs.getString("intimationType"));
+						casedetail.setZone(rs.getString("zone"));
 						return casedetail;
 					});
 
@@ -362,6 +371,7 @@ public class CaseDaoImpl implements CaseDao {
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
 			List<Location> location_list = locationDao.getActiveLocationList();
+			List<CaseDetails> case_details = caseDao.getCaseList();
 			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext()) {
 				error_message = "";
@@ -374,8 +384,23 @@ public class CaseDaoImpl implements CaseDao {
 					cell = cellIterator.next();
 					caseDetails.setPolicyNumber(readCellStringValue(cell).toUpperCase());
 					if (!(caseDetails.getPolicyNumber().startsWith("C")
-							|| caseDetails.getPolicyNumber().startsWith("U")))
+							|| caseDetails.getPolicyNumber().startsWith("U"))) {
+						
+						
 						error_message += "Invalid Policy Number, ";
+					}else if(caseDetails.getPolicyNumber().length() != 10) {
+						error_message += "Policy Number is not equal to 10 digits, ";	
+					}else if(case_details!=null) {
+						
+						for (CaseDetails list : case_details) {
+							if (caseDetails.getPolicyNumber().equals(list.getPolicyNumber())) {
+								
+								error_message += "Policy Number already exists, ";
+								break;
+							}
+						}
+					}
+						
 				}
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
@@ -526,6 +551,41 @@ public class CaseDaoImpl implements CaseDao {
 			return e.getMessage();
 		}
 	}
+	
+	@Override
+	public List<CaseDetails> getCaseList() {
+		String query = "SELECT * FROM case_lists";
+		return template.query(query, (ResultSet rs, int rowNum) -> {
+			CaseDetails detail = new CaseDetails();
+			detail.setCaseId(rs.getLong("caseId"));
+			detail.setPolicyNumber(rs.getString("policyNumber"));
+			detail.setInvestigationId(rs.getInt("investigationId"));
+			detail.setInsuredName(rs.getString("insuredName"));
+			detail.setInsuredDOD(rs.getString("insuredDOD"));
+			detail.setInsuredDOB(rs.getString("insuredDOB"));
+			detail.setSumAssured(rs.getInt("sumAssured"));
+			detail.setIntimationType(rs.getString("intimationType"));
+			detail.setLocationId(rs.getInt("locationId"));
+			detail.setCaseStatus(rs.getString("caseStatus"));
+			detail.setCaseSubStatus(rs.getString("caseSubStatus"));
+			detail.setNominee_name(rs.getString("nominee_name"));
+			detail.setNomineeContactNumber(rs.getString("nominee_ContactNumber"));
+			detail.setNominee_address(rs.getString("nominee_address"));
+			detail.setInsured_address(rs.getString("insured_address"));
+			detail.setCase_description(rs.getString("case_description"));
+			detail.setLongitude(rs.getString("longitude"));
+			detail.setLatitude(rs.getString("latitude"));
+			detail.setPdf1FilePath(rs.getString("pdf1FilePath"));
+			detail.setPdf2FilePath(rs.getString("pdf2FilePath"));
+			detail.setPdf3FilePath(rs.getString("pdf3FilePath"));
+			detail.setAudioFilePath(rs.getString("audioFilePath"));
+			detail.setVideoFilePath(rs.getString("videoFilePath"));
+			detail.setSignatureFilePath(rs.getString("signatureFilePath"));
+			detail.setImageFilePath(rs.getString("image"));
+			detail.setCapturedDate(rs.getString("capturedDate"));
+			return detail;
+		});
+	}
 
 	  public void getExcelMail(String zone) 
 	  {
@@ -613,6 +673,7 @@ public class CaseDaoImpl implements CaseDao {
 		return "****";
 	}
 
+	
 	private void writeErrorCase(Map<CaseDetails, String> error_case) {
 		// File error_file = new File(Config.upload_directory + "error_log.xlsx");
 		try {

@@ -14,12 +14,50 @@ boolean allow_delete = user_permission.contains("users/delete");
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<style>
+@media(max-width:576px)
+{
+	table thead, table tfoot
+	{
+		display:none;
+	}
+
+	table, table tbody, table tr, table td
+	{
+		display : block;
+		width   : 100%;
+	}
+	
+	table td
+	{
+		width : 90%;
+		text-align: right;
+		position   : relative;
+		padding-left: 50%;
+	}
+	table tr
+	{
+		margin-bottom : 15px;
+	}
+	table td::before
+	{
+		 content: attr(data-label);
+		 position : absolute;
+		 left : 10px;
+		 width : 50%;
+		 text-align: left;
+	}
+
+}
+
+
+</style>
 <div class="row">
   <div class="col-xs-12 col-sm-12">
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-user-follow"></i>
             <span class="caption-subject font-green-sharp sbold">Manage Users</span>
         </div>
         <div class="actions">
@@ -131,7 +169,7 @@ $(document).ready(function() {
   
   var i = 0;
   $('#adminuser_list tfoot th').each( function () {
-    if( i == 1 || i == 3 || i == 4 ){
+    if( i == 1 || i == 3 || i == 4 || i == 6){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }else if(i == 2){
     	var tech_selectbox = '<select name="user_type" id="user_type" class="form-control">'
@@ -150,14 +188,14 @@ $(document).ready(function() {
 		%>
 		tech_selectbox += '</select>';
 		$(this).html(tech_selectbox);
-    }else if(i == 6){
+    }/* else if(i == 6){
       var status_selectbox = '<select name="status_type" id="status_type" class="form-control">'
                             +'<option value="">All</option>'
                             +'<option value="Active">Active</option>'
                             +'<option value="Inactive">Inactive</option>'
                             +'</select>';
       $(this).html( status_selectbox );
-    }
+    } */
     i++;
   });
 

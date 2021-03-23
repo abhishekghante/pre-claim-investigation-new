@@ -23,7 +23,7 @@ session.removeAttribute("intimation_list");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-users font-green-sharp"></i>
+            <i class="icon-check"></i>
             <span class="caption-subject font-green-sharp sbold">Case Lists</span>
         </div>
         <%if(allow_add) {%>
@@ -54,11 +54,13 @@ session.removeAttribute("intimation_list");
                           <th class="head1 no-sort">Type of Investigation</th>
                           <th class="head1 no-sort">Sum Assured</th>
                           <th class="head1 no-sort">Type of Intimation</th>
+                          <th class="head1 no-sort">Zone</th>
                           <th class="head1 no-sort">View history</th>
                         </tr>
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
+                          <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
@@ -81,6 +83,7 @@ session.removeAttribute("intimation_list");
                   				<td><%=list_case.getInvestigationCategory()%></td>
                   				<td><%=list_case.getSumAssured()%></td>
                                 <td><%=list_case.getIntimationType()%></td>
+                                <td><%=list_case.getZone()%></td>
                                <td ><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
                                 
                           </tr>                      

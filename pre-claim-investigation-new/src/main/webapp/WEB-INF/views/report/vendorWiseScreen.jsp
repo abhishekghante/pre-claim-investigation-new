@@ -9,7 +9,7 @@ HashMap<String, String> vendorlist = (HashMap<String, String>) session.getAttrib
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-users font-green-sharp"></i>
+         <i class="fa fa-user"></i>
           <span class="caption-subject font-green-sharp sbold">Vendor wise screen Lists</span>
         </div>
         <div class="actions">

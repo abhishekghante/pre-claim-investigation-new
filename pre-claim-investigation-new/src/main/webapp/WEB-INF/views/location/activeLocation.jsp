@@ -11,14 +11,52 @@ boolean allow_delete = user_permission.contains("locations/delete");
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<style>
+@media(max-width:576px)
+{
+	table thead, table tfoot
+	{
+		display:none;
+	}
+
+	table, table tbody, table tr, table td
+	{
+		display : block;
+		width   : 100%;
+	}
+	
+	table td
+	{
+		width : 90%;
+		text-align: right;
+		position   : relative;
+		padding-left: 50%;
+	}
+	table tr
+	{
+		margin-bottom : 15px;
+	}
+	table td::before
+	{
+		 content: attr(data-label);
+		 position : absolute;
+		 left : 10px;
+		 width : 50%;
+		 text-align: left;
+	}
+
+}
+
+
+</style>
 <div class="row">
 	<div class="col-xs-12 col-sm-12">
 		<div class="portlet box">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-users font-green-sharp"></i> <span
+					<i class="icon-check"></i> <span
 						class="caption-subject font-green-sharp sbold">Active
-						Loctions</span>
+						Location</span>
 				</div>
 				<div class="actions">
 					<div class="btn-group">
@@ -67,9 +105,9 @@ boolean allow_delete = user_permission.contains("locations/delete");
 										for (Location list_location : activeList) {
 									%>
 									<tr>
-									     <td><%=i %></td>
-									     <td><%=list_location.getCity() %></td>
-									 	 <td><%=list_location.getState() %></td>
+									     <td data-label = ""><%=i %></td>
+									     <td data-label = "City"><%=list_location.getCity() %></td>
+									 	 <td data-label = "State"><%=list_location.getState() %></td>
 									 	 <td><%=list_location.getZone() %></td>
 									     <td><%if(list_location.getStatus() == 1){ %>
 									     <span class="label label-sm label-success">Active</span>
@@ -124,15 +162,15 @@ $(document).ready(function() {
 	var i = 0;
 	$('#active_location_list tfoot th').each(function() {
 						
-		if (i == 1 || i == 2 || i == 3 ) {
+		if (i == 1 || i == 2 || i == 3 || i == 4 ) {
 			$(this).html('<input type="text" class="form-control">');
 		}
-		else if(i == 4)
+/* 		else if(i == 4)
 		{
-			var select_box = "<select>";
+			var select_box = "<select class = 'form-control'>";
 			select_box += "<option value = '1'>Active</option><option value = '2'>Inactive</option>";
 			select_box += "</select>";
-		}
+		} */
 		i++;
 	});
 

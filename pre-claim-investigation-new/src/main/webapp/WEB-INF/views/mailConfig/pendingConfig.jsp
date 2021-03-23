@@ -11,12 +11,50 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<style>
+@media(max-width:576px)
+{
+	table thead, table tfoot
+	{
+		display:none;
+	}
+
+	table, table tbody, table tr, table td
+	{
+		display : block;
+		width   : 100%;
+	}
+	
+	table td
+	{
+		width : 90%;
+		text-align: right;
+		position   : relative;
+		padding-left: 50%;
+	}
+	table tr
+	{
+		margin-bottom : 15px;
+	}
+	table td::before
+	{
+		 content: attr(data-label);
+		 position : absolute;
+		 left : 10px;
+		 width : 50%;
+		 text-align: left;
+	}
+
+}
+
+
+</style>
 <div class="row">
 	<div class="col-xs-12 col-sm-12">
 		<div class="portlet box">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-inbox font-green-sharp" style = "font-size:20px"></i> <span
+					<i class="icon-clock"></i> <span
 						class="caption-subject font-green-sharp sbold">Pending
 						Mail Configuration</span>
 				</div>

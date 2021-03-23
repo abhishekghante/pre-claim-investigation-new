@@ -16,6 +16,7 @@ public class CaseDetailList {
 	private String caseSubStatus;
 	private String notCleanCategory;
 	private String paymentApproved;
+	private String zone;
 
 	public CaseDetailList() {
 		srNo = 0;
@@ -32,6 +33,7 @@ public class CaseDetailList {
 		notCleanCategory = "";
 		caseSubStatus = "";
 		paymentApproved ="";
+		zone ="";
 
 	}
 
@@ -147,6 +149,15 @@ public class CaseDetailList {
 		this.paymentApproved = paymentApproved;
 	}
 
+	
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
 	@Override
 	public String toString() {
 		return "CaseDetailList [srNo=" + srNo + ", caseId=" + caseId + ", policyNumber=" + policyNumber
@@ -154,8 +165,10 @@ public class CaseDetailList {
 				+ ", investigationCategory=" + investigationCategory + ", intimationType=" + intimationType
 				+ ", sumAssured=" + sumAssured + ", assigneeId=" + assigneeId + ", assigneeName=" + assigneeName
 				+ ", caseStatus=" + caseStatus + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory="
-				+ notCleanCategory + ", paymentApproved=" + paymentApproved + "]";
+				+ notCleanCategory + ", paymentApproved=" + paymentApproved + ", zone=" + zone + "]";
 	}
+
+
 	
 	
 

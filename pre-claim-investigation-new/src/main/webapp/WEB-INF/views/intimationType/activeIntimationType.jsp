@@ -54,7 +54,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-users font-green-sharp"></i>
+           <i class="icon-check"></i>
             <span class="caption-subject font-green-sharp sbold">Active Intimation Type</span>
         </div>
         <div class="actions">
@@ -146,7 +146,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 $(document).ready(function() {
   var i = 0;
   $('#active_group_list tfoot th').each( function () {
-    if( i == 1 ){
+    if( i == 1 || i == 3 ){
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
     i++;

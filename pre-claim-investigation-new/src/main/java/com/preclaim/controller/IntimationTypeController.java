@@ -60,7 +60,7 @@ public class IntimationTypeController {
 		session.removeAttribute("ScreenDetails");
     	ScreenDetails details=new ScreenDetails();
     	details.setScreen_name("../intimationType/pendingIntimationType.jsp");
-    	details.setScreen_title("Pending Intimation Type List");
+    	details.setScreen_title("Pending Intimation Type");
     	details.setMain_menu("Intimation Type");
     	details.setSub_menu1("Pending Intimation");
     	if(session.getAttribute("success_message") != null)

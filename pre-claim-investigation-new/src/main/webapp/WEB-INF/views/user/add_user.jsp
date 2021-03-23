@@ -16,7 +16,7 @@ session.removeAttribute("location_list");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-user-follow"></i>
             <span class="caption-subject font-green-sharp sbold">Add Users</span>
         </div>
         <div class="actions">

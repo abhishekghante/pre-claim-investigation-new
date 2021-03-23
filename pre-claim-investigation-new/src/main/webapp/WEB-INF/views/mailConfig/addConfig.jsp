@@ -3,7 +3,7 @@
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="fa fa-inbox font-green-sharp" style = "font-size:20px"></i>
+          <i class="icon-plus"></i>
           <span class="caption-subject font-green-sharp sbold">Add Mail Config</span>
         </div>
         <div class="actions">

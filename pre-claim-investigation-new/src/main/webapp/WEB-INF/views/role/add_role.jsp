@@ -12,7 +12,7 @@ boolean allow_delete = user_permission.contains("role/delete");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-user-following"></i>
             <span class="caption-subject font-green-sharp sbold">Manage User Role</span>
         </div>
         <div class="actions">

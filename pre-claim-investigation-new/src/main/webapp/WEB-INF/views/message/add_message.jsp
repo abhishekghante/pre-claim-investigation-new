@@ -30,7 +30,7 @@ session.removeAttribute("userRole");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-user font-green-sharp"></i>
+          <i class="icon-plus"></i>
           <span class="caption-subject font-green-sharp sbold">Add Case</span>
         </div>
         <div class="actions">
@@ -451,6 +451,14 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
+	if(policyNumber.length != 10)
+	{
+    	$('#policyNumber').addClass('has-error-2');
+        $('#policyNumber').focus();
+        errorFlag = 1;
+        toastr.error("Policy number should be of 10 digits and start with C or U","Error");
+	}
+    
     
     if(errorFlag == 1)
     	return false;

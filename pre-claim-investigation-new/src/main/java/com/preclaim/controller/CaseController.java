@@ -240,8 +240,14 @@ public class CaseController {
 		long caseId = caseDao.addcase(caseDetail);
 		String zone = request.getParameter("claimantZone");
 		
-		if (caseId == 0)
+		if (caseId == 0) {
+			
 			return "Error adding case";
+			
+		}else if(caseId == 1) {
+			
+			return "Policy Number already exists";
+		}
 
 		//Case Movement & Audit Case Movement
 		CaseMovement caseMovement = new CaseMovement();

@@ -12,7 +12,7 @@ session.removeAttribute("live_cases");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-            <i class="icon-user font-green-sharp"></i>
+            <i class="icon-pointer"></i>
             <span class="caption-subject font-green-sharp sbold">Live tracking for Investigator</span>
         </div>
         <div class="actions"></div>
