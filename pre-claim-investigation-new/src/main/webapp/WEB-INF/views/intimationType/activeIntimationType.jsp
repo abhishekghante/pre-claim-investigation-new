@@ -12,13 +12,50 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/resources/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<style>
+@media(max-width:576px)
+{
+	table thead, table tfoot
+	{
+		display:none;
+	}
+
+	table, table tbody, table tr, table td
+	{
+		display : block;
+		width   : 100%;
+	}
+	
+	table td
+	{
+		width : 90%;
+		text-align: right;
+		position   : relative;
+		padding-left: 50%;
+	}
+	table tr
+	{
+		margin-bottom : 15px;
+	}
+	table td::before
+	{
+		 content: attr(data-label);
+		 position : absolute;
+		 left : 10px;
+		 width : 50%;
+		 text-align: left;
+	}
+
+}
+
+</style>
 <div class="row">
   <div class="col-xs-12 col-sm-12">
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
             <i class="icon-users font-green-sharp"></i>
-            <span class="caption-subject font-green-sharp sbold">Active Groups</span>
+            <span class="caption-subject font-green-sharp sbold">Active Intimation Type</span>
         </div>
         <div class="actions">
             <div class="btn-group">
@@ -33,7 +70,7 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
     <div class="box box-primary">
       <div class="box-body">
           <div class="row">
-            <div class="col-md-12 table-container">
+            <div>
                 <div class="box-body no-padding">
                   <table id="active_group_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                     <thead>
@@ -60,17 +97,17 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
                              		for(IntimationTypeList list_group : active_list){
                               %>
                     		<tr>
-                    			<td><%=list_group.getSrNo() %></td>
-                    		    <td><%=list_group.getIntimationType() %></td>
-                    		    <td><%=list_group.getCreatedDate() %></td>
-                    		    <td>
+                    			<td data-label = ""><%=list_group.getSrNo() %></td>
+                    		    <td data-label = "Intimation Type"><%=list_group.getIntimationType() %></td>
+                    		    <td data-label = "Created Date"><%=list_group.getCreatedDate() %></td>
+                    		    <td data-label = "Status">
 	                    		    <% if(list_group.getStatus()==1){ %> 
 	                    		    	<span class="label label-sm label-success">Active</span>
 	                    		    <%}else{%>
 	                    		    	<span class="label label-sm label-danger">Inactive</span>
 	                    		   <%} %>
                     		    </td>
-                    		    <td>
+                    		    <td data-label = "Action">
                     		         <a href="${pageContext.request.contextPath}/intimationType/pending?intimationtypeName=<%=list_group.getIntimationType() %>&intimationId=<%=list_group.getIntimationId() %>" 
                     		         	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
                     		         	<i class="glyphicon glyphicon-edit"></i>

@@ -32,8 +32,14 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public List<BillManagementList> billPaymentList() 
 		{
 			HashMap<Integer, String> investigationType = investigationDao.getActiveInvestigationMapping();
-			String sql = "SELECT * FROM case_lists a ,(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b where a.user_role = 'AGNSUP' and a.toId = b.username \r\n"
-					+ "order by a.updatedDate desc) b where a.caseId = b.caseId and a.paymentApproved = '' and a.caseStatus = 'Closed'";
+			String sql = 
+					"SELECT * FROM case_lists a ,"
+					+ "(select * from ("
+					+ "select a.caseId, a.toId from audit_case_movement a, ("
+					+ "select caseId, max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
+					+ "group by caseId) b where a.caseId = b.caseId and a.updatedDate = b.updatedDate) a, admin_user b "
+					+ "where a.toId = b.username) b where  a.caseId = b.caseId and a.caseStatus = 'Closed' and a.paymentApproved = ''";
+					
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
 				billManagementList.setSrNo(rowNum + 1);
@@ -53,10 +59,11 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		{
 			HashMap<Integer, String> investigationType = investigationDao.getActiveInvestigationMapping();
 			String sql = "SELECT * FROM case_lists a ,"
-					+ "(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b "
-					+ "where a.user_role = 'AGNSUP' and a.toId = b.username "
-					+ "order by a.updatedDate desc) b "
-					+ "where a.caseId = b.caseId and a.caseStatus = 'Closed'"
+					+ "(select * from ("
+					+ "select a.caseId, a.toId from audit_case_movement a, ("
+					+ "select caseId, max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
+					+ "group by caseId) b where a.caseId = b.caseId and a.updatedDate = b.updatedDate) a, admin_user b "
+					+ "where a.toId = b.username) b where  a.caseId = b.caseId and a.caseStatus = 'Closed' and a.paymentApproved = ''"
 					+ " and a.caseId in('" + list + "')";
 		 
 			Map<Integer, Object[]> paidcases = new HashMap<Integer, Object[]>();
@@ -123,8 +130,15 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 		public List<BillManagementList> billEnquiryList() 
 		{
 			HashMap<Integer, String> investigationType = investigationDao.getActiveInvestigationMapping();
-			String sql = "SELECT * FROM case_lists a ,(SELECT TOP 1 a.caseId, b.* FROM  audit_case_movement a, admin_user b where a.user_role = 'AGNSUP' and a.toId = b.username \r\n"
-					+ "order by a.updatedDate desc) b where a.caseId = b.caseId and a.paymentApproved <> '' and a.caseStatus = 'Closed'";
+			String sql = 
+					"SELECT * FROM case_lists a ,"
+					+ "(select * from ("
+					+ "select a.caseId, a.toId from audit_case_movement a, ("
+					+ "select caseId, max(updatedDate) as updatedDate from audit_case_movement where "
+					+ "user_role = 'AGNSUP' "
+					+ "group by caseId) b where a.caseId = b.caseId and a.updatedDate = b.updatedDate) a, admin_user b "
+					+ "where a.toId = b.username) b where  a.caseId = b.caseId and a.caseStatus = 'Closed' and "
+					+ "a.paymentApproved <> ''";
 		 
 			return template.query(sql, (ResultSet rs, int rowNum) -> {
 				BillManagementList billManagementList = new BillManagementList();
