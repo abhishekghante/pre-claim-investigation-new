@@ -55,6 +55,7 @@ public class LoginController {
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpSession session) {
 		session.removeAttribute("User_Login");
+		session.removeAttribute("user_role");
 		return "common/login";
 	}
 
@@ -73,6 +74,7 @@ public class LoginController {
 			if (user.getStatus() == 0)
 				return "User ID disabled. Kindly contact system administrator";
 			session.setAttribute("User_Login", user);
+			session.setAttribute("user_role", userDao.getUserRole(user.getAccount_type()));
 			List<String> user_permission = userDao.retrievePermission(user.getAccount_type());
 			session.setAttribute("user_permission", user_permission);
 			String remember_me = request.getParameter("remember_me");

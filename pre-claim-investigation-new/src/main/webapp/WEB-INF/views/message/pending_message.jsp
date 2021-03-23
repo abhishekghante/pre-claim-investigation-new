@@ -17,7 +17,6 @@ session.removeAttribute("investigation_list");
 List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
 session.removeAttribute("intimation_list");
 
-
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
 session.removeAttribute("case_detail");
 List<CaseSubStatus> CaseSubStatus = (List<CaseSubStatus>) session.getAttribute("level");
@@ -105,17 +104,17 @@ boolean allow_add = user_permission.contains("messages/add");
                           
                           <tr>
                                 <td><input type="checkbox" class ="selectedCategory" value="<%=list_case.getCaseId()%>"></td>
-                  				<td><%= list_case.getSrNo()%></td>
-                  				<td><%=list_case.getCaseId()%></td>
-                  			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
-                  				<td><%=list_case.getSumAssured()%></td>
-                                <td><%=list_case.getIntimationType()%></td>
-                                 <td><%=list_case.getCaseSubStatus()%></td>
-                                 <td><%=list_case.getZone()%></td>
-                               <td ><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
-                                <td>
+                  				<td data-label = "Sr No"><%= list_case.getSrNo()%></td>
+                  				<td data-label = "Case ID"><%=list_case.getCaseId()%></td>
+                  			   	<td data-label = "Policy Number"><%=list_case.getPolicyNumber()%></td>
+                  				<td data-label = "Insured Name"><%=list_case.getInsuredName()%></td>
+                  				<td data-label = "Investigation Category"><%=list_case.getInvestigationCategory()%></td>
+                  				<td data-label = "Sum Assured"><%=list_case.getSumAssured()%></td>
+                                <td data-label = "Intimation Type"><%=list_case.getIntimationType()%></td>
+                                <td data-label = "Case Sub-Status"><%=list_case.getCaseSubStatus()%></td>
+                                <td data-label = "Zone"><%=list_case.getZone()%></td>
+                               	<td data-label = "Timeline"><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
+                                <td data-label = "Action">
 	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" 
 	                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 	                             	<i class="glyphicon glyphicon-edit"></i>

@@ -21,5 +21,6 @@ public interface CaseDao {
 	List<CaseDetails> getLiveCaseList(String username);
     void getExcelMail(String zone);
     String updateCaseTypeAndSubType(CaseDetails casedetail);
-    CaseSubStatus getCaseStatus(String user_role, int level);    
+    CaseSubStatus getCaseStatus(String user_role, int level);
+    boolean checkPolicyNumber(String policyNumber);
 }

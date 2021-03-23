@@ -57,7 +57,7 @@ boolean allow_delete = user_permission.contains("investigationType/delete");
       <div class="portlet-title">
         <div class="caption">
             <i class="icon-check"></i>
-            <span class="caption-subject font-green-sharp sbold">Active Investigation Types</span>
+            <span class="caption-subject font-green-sharp sbold">Active Investigation Type</span>
         </div>
         <div class="actions">
             <div class="btn-group">
@@ -99,13 +99,13 @@ boolean allow_delete = user_permission.contains("investigationType/delete");
                      %>                   	 
                             <tr>
                                <td><%=list_category.getSrNo()%></td>
-                               <td><%=list_category.getInvestigationType()%></td> 
+                               <td data-label = "Investigation Type"><%=list_category.getInvestigationType()%></td> 
                               <%if(list_category.getStatus() == 1){ %>
-                            	   <td><span class="label label-sm label-success">Active</span></td>
+                            	   <td data-label = "Status"><span class="label label-sm label-success">Active</span></td>
                               <%}else{%>
-                            	   <td><span class="label label-sm label-danger">Inactive</span></td>
+                            	   <td data-label = "Status"><span class="label label-sm label-danger">Inactive</span></td>
                               <%}%>
-                              <td>
+                              <td data-label = "Action">
 	                           		<a href="${pageContext.request.contextPath}/investigationType/pendingInvestigationType?investigationId=<%=list_category.getInvestigationId()%>&investigationType=<%=list_category.getInvestigationType() %>" data-toggle="tooltip" title="Edit"	
 	                           			class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                                <%if(list_category.getStatus() == 1){%>

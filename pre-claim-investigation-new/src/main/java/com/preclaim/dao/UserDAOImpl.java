@@ -28,7 +28,6 @@ public class UserDAOImpl implements UserDAO{
 		this.template = template;
 	}
 
-	@Override
 	public List<UserRole> role_lists() {
 		String sql = "select * from user_role where status = 1";
 		return template.query(sql, new RowMapper<UserRole>(){			

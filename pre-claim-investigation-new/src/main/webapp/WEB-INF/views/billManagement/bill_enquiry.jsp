@@ -114,13 +114,13 @@ session.removeAttribute("intimation_list");
                           
                           <tr>
                   				<td><%=list_case.getSrNo()%></td>
-                  				<td><%=list_case.getCaseID()%></td>
-                  			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInvestigationType()%></td>
-                  				<td><%=list_case.getInitimationType()%></td>
-                                <td><%=list_case.getSupervisorID()%></td>
-                                <td><%=list_case.getSupervisorName()%></td>
-                                <td><%=list_case.getCharges()%></td>
+                  				<td data-label = "Case ID"><%=list_case.getCaseID()%></td>
+                  			   	<td data-label = "Policy Number"><%=list_case.getPolicyNumber()%></td>
+                  				<td data-label = "Investigation Type"><%=list_case.getInvestigationType()%></td>
+                  				<td data-label = "Intimation Type"><%=list_case.getInitimationType()%></td>
+                                <td data-label = "Supervisor ID"><%=list_case.getSupervisorID()%></td>
+                                <td data-label = "Supervisor Name"><%=list_case.getSupervisorName()%></td>
+                                <td data-label = "Fees"><%=list_case.getCharges()%></td>
                           </tr>                      
                        
                        <% 		

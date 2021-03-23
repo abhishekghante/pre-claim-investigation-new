@@ -111,19 +111,19 @@ boolean allow_delete = user_permission.contains("mailConfig/delete");
 									%>
 									<tr>
 										<td><%=i++%></td>
-										<td><%= list_config.getUsername() %></td>
-										<td><%= list_config.getPassword() %></td>
-										<td><%= list_config.getOutgoingServer() %></td>
-										<td><%= list_config.getOutgoingPort() %></td>
-										<td><%= list_config.getEncryptionType() %></td>
-										<td>
+										<td data-label = "Username"><%= list_config.getUsername() %></td>
+										<td data-label = "Password"><%= list_config.getPassword() %></td>
+										<td data-label = "Outgoing SMTP Server"><%= list_config.getOutgoingServer() %></td>
+										<td data-label = "Outgoing SMTP Port"><%= list_config.getOutgoingPort() %></td>
+										<td data-label = "Encryption Type"><%= list_config.getEncryptionType() %></td>
+										<td data-label = "Status">
 										<% if(list_config.getStatus() == 1) {%>
 										<span class="label label-sm label-success">Active</span>
 										<%}else{ %>
 										<span class="label label-sm label-danger">Inactive</span>
 										<%} %>
 										</td>
-										<td>
+										<td data-label = "Action">
 										   <a href="${pageContext.request.contextPath}/mailConfig/edit/<%=list_config.getMailConfigId() %>" 										   										   
 										   		data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 										   		<i class="glyphicon glyphicon-edit"></i>

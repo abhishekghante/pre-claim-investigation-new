@@ -108,14 +108,14 @@ boolean allow_delete = user_permission.contains("locations/delete");
 									     <td data-label = ""><%=i %></td>
 									     <td data-label = "City"><%=list_location.getCity() %></td>
 									 	 <td data-label = "State"><%=list_location.getState() %></td>
-									 	 <td><%=list_location.getZone() %></td>
-									     <td><%if(list_location.getStatus() == 1){ %>
+									 	 <td data-label = "Zone"><%=list_location.getZone() %></td>
+									     <td data-label = "Status"><%if(list_location.getStatus() == 1){ %>
 									     <span class="label label-sm label-success">Active</span>
 									     <%}else{ %>
 									     	<span class="label label-sm label-danger">Inactive</span>
 									     <%} %>
 									     </td>
-									     <td>
+									     <td data-label = "Action">
 										     	<a href="${pageContext.request.contextPath}/location/pending?locationId=<%=list_location.getLocationId() %>" 
 										     		data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 										     		<i class="glyphicon glyphicon-edit"></i>

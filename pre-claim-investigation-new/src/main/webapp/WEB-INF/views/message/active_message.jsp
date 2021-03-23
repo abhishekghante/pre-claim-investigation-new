@@ -77,14 +77,14 @@ session.removeAttribute("intimation_list");
                           
                           <tr>
                   				<td><%= list_case.getSrNo()%></td>
-                  				<td><%=list_case.getCaseId()%></td>
-                  			   	<td><%=list_case.getPolicyNumber()%></td>
-                  				<td><%=list_case.getInsuredName()%></td>
-                  				<td><%=list_case.getInvestigationCategory()%></td>
-                  				<td><%=list_case.getSumAssured()%></td>
-                                <td><%=list_case.getIntimationType()%></td>
-                                <td><%=list_case.getZone()%></td>
-                               <td ><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
+                  				<td data-label = "Case ID"><%=list_case.getCaseId()%></td>
+                  			   	<td data-label = "Policy Number"><%=list_case.getPolicyNumber()%></td>
+                  				<td data-label = "Insured Name"><%=list_case.getInsuredName()%></td>
+                  				<td data-label = "Investigation Category"><%=list_case.getInvestigationCategory()%></td>
+                  				<td data-label = "Sum Assured"><%=list_case.getSumAssured()%></td>
+                                <td data-label = "Intimation Type"><%=list_case.getIntimationType()%></td>
+                                <td data-label = "Zone"><%=list_case.getZone()%></td>
+                               	<td data-label = "Timeline"><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
                                 
                           </tr>                      
                        

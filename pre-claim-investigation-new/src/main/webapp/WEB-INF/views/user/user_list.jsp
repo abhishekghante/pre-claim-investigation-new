@@ -107,19 +107,19 @@ boolean allow_delete = user_permission.contains("users/delete");
                     		{%>
                     		<tr>
                     			<td><%=i %></td>
-                    			<td><%= items.getFull_name()%></td>
-                    			<td><%= items.getAccount_type()%></td>
-                    			<td><%= items.getUsername()%></td>
-                    			<td><%= items.getUser_email()%></td>
-                    			<td><%= items.getPassword()%></td>
-                    			<td>
+                    			<td data-label = "Full Name"><%= items.getFull_name()%></td>
+                    			<td data-label = "User Role"><%= items.getAccount_type()%></td>
+                    			<td data-label = "User ID"><%= items.getUsername()%></td>
+                    			<td data-label = "Email ID"><%= items.getUser_email()%></td>
+                    			<td data-label = "Password"><%= items.getPassword()%></td>
+                    			<td data-label = "Status">
                     				<% if(items.getUser_status()== 1) {%>
                     					<span class="label label-sm label-success">Active</span>
 									<%}else{ %>
 										<span class="label label-sm label-danger">Inactive</span>									
 									<%} %>								
 								</td>                    			
-                    			<td>
+                    			<td data-label = "Action">
                     				<a href="${pageContext.request.contextPath}/user/edit/<%=items.getUser_id() %>" 
                     					data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
                     					<i class="glyphicon glyphicon-edit"></i>

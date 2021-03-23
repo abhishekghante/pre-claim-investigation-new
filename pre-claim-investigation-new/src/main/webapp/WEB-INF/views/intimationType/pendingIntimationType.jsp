@@ -165,10 +165,10 @@ boolean allow_delete = user_permission.contains("intimationType/delete");
 									%>
 									<tr>
 										<td><%=list_intimationType.getSrNo()%></td>
-										<td><%=list_intimationType.getIntimationType()%></td>
-										<td><%=list_intimationType.getCreatedDate()%></td>										
-										<td><span class="label label-sm label-danger">Pending</span></td>											
-										<td>
+										<td data-label = "Intimation Type"><%=list_intimationType.getIntimationType()%></td>
+										<td data-label = "Created Date"><%=list_intimationType.getCreatedDate()%></td>										
+										<td data-label = "Status"><span class="label label-sm label-danger">Pending</span></td>											
+										<td data-label = "Action">
 											<a href="${pageContext.request.contextPath}/intimationType/pending?intimationtypeName=<%=list_intimationType.getIntimationType() %>&intimationId=<%=list_intimationType.getIntimationId() %>" 
 												data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
 												<i class="glyphicon glyphicon-edit"></i>

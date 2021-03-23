@@ -451,14 +451,14 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-	if(policyNumber.length != 10)
+    console.log(policyNumber.match("[CU]{1}[0-9]{9}"));
+	if(policyNumber.match("[CU]{1}[0-9]{9}") == "")
 	{
     	$('#policyNumber').addClass('has-error-2');
         $('#policyNumber').focus();
         errorFlag = 1;
         toastr.error("Policy number should be of 10 digits and start with C or U","Error");
 	}
-    
     
     if(errorFlag == 1)
     	return false;

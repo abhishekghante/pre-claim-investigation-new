@@ -152,9 +152,9 @@ session.removeAttribute("editInvestigation");
                              %>
                             	<tr>
                             	<td><%=list_category.getSrNo() %></td>
-                            	<td><%=list_category.getInvestigationType() %></td>
-                            	<td><span class="label label-sm label-danger">Pending</span></td>
-                            	<td>
+                            	<td data-label = "Investigation Type"><%=list_category.getInvestigationType() %></td>
+                            	<td data-label = "Status"><span class="label label-sm label-danger">Pending</span></td>
+                            	<td data-label = "Action">
                             		<a href="${pageContext.request.contextPath}/investigationType/pendingInvestigationType?investigationId=<%=list_category.getInvestigationId()%>&investigationType=<%=list_category.getInvestigationType() %>" data-toggle="tooltip" title="Edit" 
                             	         class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                             	        

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -371,7 +372,6 @@ public class CaseDaoImpl implements CaseDao {
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
 			List<Location> location_list = locationDao.getActiveLocationList();
-			List<CaseDetails> case_details = caseDao.getCaseList();
 			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext()) {
 				error_message = "";
@@ -383,24 +383,10 @@ public class CaseDaoImpl implements CaseDao {
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
 					caseDetails.setPolicyNumber(readCellStringValue(cell).toUpperCase());
-					if (!(caseDetails.getPolicyNumber().startsWith("C")
-							|| caseDetails.getPolicyNumber().startsWith("U"))) {
-						
-						
+					if(Pattern.compile("[CU]{1}[0-9]{9}").matcher(caseDetails.getPolicyNumber()).find())
 						error_message += "Invalid Policy Number, ";
-					}else if(caseDetails.getPolicyNumber().length() != 10) {
-						error_message += "Policy Number is not equal to 10 digits, ";	
-					}else if(case_details!=null) {
-						
-						for (CaseDetails list : case_details) {
-							if (caseDetails.getPolicyNumber().equals(list.getPolicyNumber())) {
-								
-								error_message += "Policy Number already exists, ";
-								break;
-							}
-						}
-					}
-						
+					else if(!checkPolicyNumber(caseDetails.getPolicyNumber()))
+						error_message += "Policy Number already exists, ";
 				}
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
@@ -806,6 +792,14 @@ public class CaseDaoImpl implements CaseDao {
 			CustomMethods.logError(e);
 			return null;
 		}
+	}
+
+	@Override
+	public boolean checkPolicyNumber(String policyNumber) {
+		String sql = "SELECT count(*) FROM case_lists where policyNumber = '" + policyNumber + "'";
+		if(template.queryForObject(sql, Integer.class) == 0)
+			return true;
+		return false;
 	}
 	
 

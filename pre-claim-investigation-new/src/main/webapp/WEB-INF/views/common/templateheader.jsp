@@ -1,10 +1,11 @@
-<%@page import="java.awt.Window"%>
+<%@page import = "java.util.HashMap"%>
 <%@page import = "com.preclaim.config.Config" %>
 <%@page import = "com.preclaim.models.UserDetails" %>
 <%
 UserDetails user = (UserDetails) session.getAttribute("User_Login");
 if(user == null)
 	user = new UserDetails();
+String designation = "(" + (String) session.getAttribute("user_role") + ")";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +77,7 @@ if(user == null)
                                 			src="${pageContext.request.contextPath}/resources/img/avatar.png">
                                 	<%} %>
                                 <span class="username username-hide-on-mobile">
-                                	Welcome, <%= user == null ? "" : user.getFull_name()+" ("+user.getAccount_type()+")" %></span>
+                                	Welcome, <%= user == null ? "" : user.getFull_name() + " " + designation %></span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">
