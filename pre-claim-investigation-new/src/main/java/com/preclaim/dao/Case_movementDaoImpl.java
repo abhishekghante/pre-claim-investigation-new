@@ -92,6 +92,31 @@ public class Case_movementDaoImpl implements Case_movementDao {
 		}		
 		return "****";
 	}
+	
+	@Override
+	public String BulkupdateCaseMovement(CaseMovement caseMovement,String list) {
+		try
+		{
+		   String query = "UPDATE case_movement SET fromID = ?, toId = ?, caseStatus = ?, remarks = ?, "
+		   		+ "user_role = ?, updatedDate = getdate() where caseId in(" + list + ")";
+		   this.template.update(query,caseMovement.getFromId(), caseMovement.getToId(), 
+				   caseMovement.getCaseStatus(),caseMovement.getRemarks(), 
+				   caseMovement.getUser_role());
+		 
+		   query = "INSERT INTO audit_case_movement SELECT * FROM case_movement where caseId in(" + list + ")";
+			   this.template.update(query);
+	    }
+		catch(Exception e) 
+		{	
+			e.printStackTrace();
+			LOGGER.error(caseMovement.toString());
+			CustomMethods.logError(e);
+			return e.getMessage();
+		}		
+		return "****";
+	}
+	
+	
 
 	@Override
 	public List<CaseHistory> getCaseMovementHistory(long caseId) {

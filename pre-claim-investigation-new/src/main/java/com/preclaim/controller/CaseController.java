@@ -132,6 +132,7 @@ public class CaseController {
 		}
 		Location location = locationDao.getActiveLocationList(user.getCity());
 		session.setAttribute("ScreenDetails", details);
+		session.setAttribute("userRole", userDao.getUserRole_lists(user.getAccount_type(), "Approved"));
 		session.setAttribute("pendingCaseList", caseDao.getPendingCaseList(user.getAccount_type(),location.getZone(),user.getUsername()));
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
@@ -353,6 +354,9 @@ public class CaseController {
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setUpdatedBy(user.getUsername());
 		caseDetail.setCaseId(Long.parseLong(request.getParameter("caseId")));
+		caseDetail.setPdf1FilePath(request.getParameter("filename"));
+		caseDetail.setPdf2FilePath(request.getParameter("filename2"));
+		caseDetail.setPdf3FilePath(request.getParameter("filename3"));
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
@@ -419,7 +423,9 @@ public class CaseController {
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
 		String NotCleanCategory = request.getParameter("NotCleanCategory");
-		
+		caseDetail.setPdf1FilePath(request.getParameter("filename"));
+		caseDetail.setPdf2FilePath(request.getParameter("filename2"));
+		caseDetail.setPdf3FilePath(request.getParameter("filename3"));
 		caseDetail.setCaseId(caseId);
 		CaseSubStatus status = new CaseSubStatus();
 		//Approved
@@ -488,6 +494,104 @@ public class CaseController {
 		return message;
 
 	}
+	
+	
+	@RequestMapping(value = "/bulkAssign", method = RequestMethod.POST)
+	public @ResponseBody String bulkAssign(HttpServletRequest request, HttpSession session) 
+	{
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		CaseDetails caseDetail = new CaseDetails();
+		
+		
+		long caseId = 0L;
+		String selectedValues = "";
+			  String tempStr[] = request.getParameterValues("caseId[]");
+			  for(String values: tempStr) 
+			  	  selectedValues += values + ",";
+			  selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
+			  
+			  System.out.println("selectedValues"+selectedValues);
+		
+		String toRole = request.getParameter("toRole");
+		String toId = request.getParameter("toId");
+		System.out.println("user"+user);
+		String fromId = user.getUsername();
+		String toStatus = request.getParameter("toStatus");
+		String caseSubStatus  = request.getParameter("caseSubStatus");
+		String NotCleanCategory = request.getParameter("NotCleanCategory");
+		
+		/* caseDetail.setCaseId(caseId); */
+		CaseSubStatus status = new CaseSubStatus();
+		//Approved
+		if(toStatus.equals("Approved"))
+		{
+			if(user.getAccount_type().equals("INV") && toRole.equals("AGNSUP"))
+				status = caseDao.getCaseStatus(toRole, 2);
+			else
+				status = caseDao.getCaseStatus(toRole, 1);
+			caseDetail.setCaseStatus(status.getCase_status());
+			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		}
+		//Reopen
+		else if(toStatus.equals("Reopen"))
+		{
+			status = caseDao.getCaseStatus(toRole, -1);
+			caseDetail.setCaseStatus(status.getCase_status());
+			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		}
+		//Closed
+		else if(toStatus.equals("Closed"))
+		{
+			caseDetail.setNotCleanCategory(NotCleanCategory);
+			caseDetail.setCaseStatus(toStatus);
+			caseDetail.setCaseSubStatus(caseSubStatus);			
+		}
+		caseDao.bulkUpdateCaseTypeAndSubType(caseDetail,selectedValues);
+		String toRemarks = request.getParameter("toRemarks");
+		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks,toRole);
+		String message = caseMovementDao.BulkupdateCaseMovement(case_movement,selectedValues);
+		if (message.equals("****")) {
+			session.setAttribute("success_message", "Case assigned successfully");
+			userDao.activity_log("CASE HISTORY", "", "ASSIGN CASE", user.getUsername());
+			try 
+			{
+				MailConfig mail = mailConfigDao.getActiveConfig();
+				if (mail != null) {
+					// From ID
+					mail.setSubject("Bulk Case Assigned - Claims");
+					String message_body = "Dear <User>, \n Bulk Case has been assigned successfully\n\n";
+					message_body = message_body.replaceAll("<User>", user.getFull_name());
+					message_body += "Thanks & Regards,\n Claims";
+					mail.setMessageBody(message_body);
+					mail.setReceipent(user.getUser_email());
+					mailConfigDao.sendMail(mail);
+
+					// To ID
+					if(toId.length() > 0) {
+					UserDetails toUser = userDao.getUserDetails(toId);
+					mail.setSubject("New Bulk Case Assigned - Claims");
+					message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";
+					message_body = message_body.replace("<User>", toUser.getFull_name());
+					message_body += "Thanks & Regards,\n Claims";
+					mail.setMessageBody(message_body);
+					mail.setReceipent(toUser.getUser_email());
+					mailConfigDao.sendMail(mail);
+					}
+				}
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+			}
+		}
+		return message;
+
+	}
+	
+	
+	
+	
 
 	@RequestMapping(value = "/downloadErrorReport", method = RequestMethod.GET)
 	public void downloadErrorReport(HttpServletRequest request, HttpServletResponse response) {

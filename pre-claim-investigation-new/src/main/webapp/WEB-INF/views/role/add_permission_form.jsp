@@ -135,6 +135,8 @@ if(role_permission == null)
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/reopen")) {%>checked <%} %> name="messages[]" id="messages_reopen" class="indPLCheck7" value="messages/reopen"> <label for="messages_reopen">Reopen</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/close")) {%>checked <%} %> name="messages[]" id="messages_close" class="indPLCheck7" value="messages/close"> <label for="messages_close">Case Closure</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/caseSubStatus")) {%>checked <%} %> name="messages[]" id="messages_caseSubStatus" class="indPLCheck7" value="messages/caseSubStatus"> <label for="messages_caseSubStatus">Case Sub-status</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("messages/bulkAssign")) {%>checked <%} %> name="messages[]" id="messages_bulkAssign" class="indPLCheck7" value="messages/bulkAssign"> <label for="messages_bulkAssign">Bulk-Assign</label>
+			                    	
 			                    	</td>
 			                    </tr>
 			                    <tr>

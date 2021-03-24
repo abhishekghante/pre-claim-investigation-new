@@ -32,6 +32,8 @@ boolean allow_reopen = user_permission.contains("messages/reopen");
 boolean allow_closure = user_permission.contains("messages/close");
 boolean allow_delete = user_permission.contains("messages/delete");
 boolean allow_add = user_permission.contains("messages/add");
+boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
+
 
 
 %>
@@ -68,7 +70,9 @@ boolean allow_add = user_permission.contains("messages/add");
                     <table id="pending_case_list" class="table table-striped table-bordered table-hover table-checkable dataTable data-tbl">
                       <thead>
                         <tr class="tbl_head_bg">
+                        <%if(allow_bulkAssign){  %> 
                          <th class="head1 no-sort"><input type="checkbox" id="checkall" /></th>
+                         <%} %>
                           <th class="head1 no-sort">Sr No.</th>
                           <th class="head1 no-sort">Case ID</th>
                           <th class="head1 no-sort">Policy No</th>
@@ -84,7 +88,9 @@ boolean allow_add = user_permission.contains("messages/add");
                       </thead>
                       <tfoot>
                         <tr class="tbl_head_bg">
+                        <%if(allow_bulkAssign){  %>
                           <th class="head2 no-sort"></th>
+                           <%} %>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
@@ -103,7 +109,9 @@ boolean allow_add = user_permission.contains("messages/add");
                         	for(CaseDetailList list_case :pendingCaseDetailList){%>                       
                           
                           <tr>
+                               <%if(allow_bulkAssign){  %> 
                                 <td><input type="checkbox" class ="selectedCategory" value="<%=list_case.getCaseId()%>"></td>
+                                 <%} %>
                   				<td data-label = "Sr No"><%= list_case.getSrNo()%></td>
                   				<td data-label = "Case ID"><%=list_case.getCaseId()%></td>
                   			   	<td data-label = "Policy Number"><%=list_case.getPolicyNumber()%></td>
@@ -140,6 +148,8 @@ boolean allow_add = user_permission.contains("messages/add");
                       
                       </tbody>
                     </table>
+                    
+                   <%if(allow_bulkAssign){  %> 
                     <div class="form-group">
                       <div class="form-group selectDiv" id = "case-closure">
 	                <label class="col-md-1 control-label" for="toRole">Select Role Name 
@@ -168,7 +178,7 @@ boolean allow_add = user_permission.contains("messages/add");
 	                <div class="col-md-2">
 	                  <select name="toStatus" id="toStatus" class="form-control" 
 	                  	tabindex="-1">
-	                    <option value="-1" disabled>Select</option>
+	                    <option value="-1">Select</option>
 	                    <option value = "Approved">Approved</option>
 	                    <%if(allow_reopen) {%>
 	                    <option value = "Reopen">Reopen</option>
@@ -177,16 +187,27 @@ boolean allow_add = user_permission.contains("messages/add");
 	                    <option value = "Closed">Closure</option>
 	                    <%} %> 
 	                  </select>
-	                </div>
-	                       
+	                </div> 
+	                <div class="row">
+	                      <label class="col-sm-1 control-label" for="toRemarks">Remarks :</label>
+	                  <div class="col-sm-2">
+	                      <textarea name="toRemarks" id="toRemarks" class="form-control" rows="3"></textarea>
+	                 </div>
+              	   </div> 
+              	      <div class="row">
+                  <div class="col-md-offset-4 col-md-8">
+                    <button class="btn btn-info" id="assignmessagesubmit" type="button">
+                    	Assign Case
+                   	</button>
+                    <button class="btn btn-danger" onClick="return clearForm();" type="button">Clear</button>
+                  </div>
+                </div>
+              	          
               	 </div>
-   	             	              
-              	<div class="form-group">
-	                <label class="col-md-4 control-label" for="toRemarks">Remarks</label>
-	                <div class="col-md-8">
-	                  <textarea name="toRemarks" id="toRemarks" class="form-control" rows="6"></textarea>
-	                </div>
-              	</div> 
+              </div>  
+              <%} %>
+              
+               <div class="box-footer">
               </div>
                   </div>                 
                 </div>
@@ -272,9 +293,9 @@ $(document).ready(function() {
         }
     });
 </script>
-<!-- <script>
-function createExcelData() { 
-	
+<script>
+ 
+$("#assignmessagesubmit").click(function()	{
     //Create an Array.
     var selected = [];
 
@@ -293,7 +314,185 @@ function createExcelData() {
   	   	toastr.error("Kindly select atleast one case","Error");
   	   	return;
 	   }
+
+
+
+
+	//Validation for Case Closure
+	var caseId  = selected;
+	var toStatus = $( '#toStatus' ).val();
+    var toRemarks = $( '#toRemarks').val();
+    var caseSubStatus = $( '#caseSubStatus').val();
+    var NotCleanCategory = $( '#NotCleanCategory').val(); 
+    
+    console.log("cid"+caseId);
+    console.log("tostatus"+toStatus);
+    
+    
+    var toId = "";
+    var toRole = "";
+    var validFlag = 1;
+    
+    if(toStatus == null || toStatus == -1)
+   	{
+   		toastr.error("Kindly select status", "Error");
+   		validFlag = 0;
+   	}
+   
+
+    if(toStatus != "Closed")
+   	{
+	    toId = $( '#toId' ).val();
+	    toRole = $( '#toRole' ).val();
+   	
+	    console.log("toid"+toId)
+	    console.log("toRole"+toRole)
+	    
+	    if(toId == null)
+	   	{
+	   		toastr.error("Kindly select user", "Error");
+	   		validFlag = 0;
+	   	}
+	    
+	    if(toRole == null)
+	   	{
+	   		toastr.error("Kindly select User Role", "Error");
+	   		validFlag = 0;
+	   	}
+   	}
+    else if(toStatus == "Closed")
+    {	
+   		toId = $( '#toId' ).val();
+	    toRole = $( '#toRole' ).val();
+	    
+	    if(caseSubStatus == null)
+	   	{
+	   		toastr.error("Kindly select Case Sub-status", "Error");
+	   		validFlag = 0;
+	   		   		
+	   	}
+	    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
+		{
+	   		toastr.error("Kindly select Not-clean category", "Error");
+	   		validFlag = 0;	   		
+		}
+   	}
+    
+    if(toStatus == "Rejected" && toRemarks == "")
+   	{
+   		toastr.error("Kindly enter Rejection reason");
+   		validFlag = 0;
+   	}
+    
+    
+    if(validFlag == 0)
+   	{
+		return false;    	
+   	}
+    
+    $("#assignmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+    $("#assignmessagesubmit").prop('disabled', true);
+    $('#assignmessagesubmit').css("opacity",".5");
+    
+    
+    $.ajax({
+	    type: "POST",
+	    url: 'bulkAssign',
+	    data:{
+	    	"toId"            : toId, 
+	    	"toRole"          : toRole, 
+	    	"toStatus"        : toStatus, 
+	    	"toRemarks"       : toRemarks, 
+	    	"caseId"          : caseId,
+	    	"caseSubStatus"   : caseSubStatus,
+	    	"NotCleanCategory": NotCleanCategory},
+	    success:function(message)
+	    {
+	    	$("#assignmessagesubmit").html('Assign Case');
+	        $("#assignmessagesubmit").prop('disabled', false);
+	        $('#assignmessagesubmit').css("opacity","");
+	        
+	    	if(message == "****")
+	    		{
+		    		toastr.success("Case assigned successfully", "Success");
+		    		location.href = "${pageContext.request.contextPath}/message/pending_message";
+		    		return;
+	    		}
+	    	else
+	    		{
+	    			toastr.error(message,"Error");
+    				return;
+	    		}
+	    }
+    });
+	
+});
+</script>
+<script>
+function clearForm(){
+  $( '#small_modal' ).modal();
+  $( '#sm_modal_title' ).html( 'Are you Sure?' );
+  $( '#sm_modal_body' ).html( 'Do you really want to clear this form data?' );
+  $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal_cl" class="btn green">Yes</button>' );
+  $( '#continuemodal_cl' ).click( function() {
+	  $("#toRole").val($("#toRole option:first").val());
+	  $("#toId").val($("#toId option:first").val());
+	  $("#toRemarks").val("");
+	  $('#small_modal').modal('hide');
+  });
 }
+</script>
+<script>
+$("#toRole").change(function(){
+	console.log($("#toRole option:selected").val());
+	var roleCode = $(this).val();
+	$("#toId option").each(function(){
+		if($(this).val() != '-1')
+			$(this).remove();
+	});
+	$.ajax({
+	    type: "POST",
+	    url: 'getUserByRole',
+	    data: {"role_code": roleCode},
+	    success: function(userList)
+	    {
+	    	console.log(userList);
+	  		var options = "";
+	    	for(i = 0; i < userList.length ; i++)
+	  			{
+	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
+	  			}
+	  		console.log(options);
+	    	$("#toId").append(options);
+	    }
+});
 
+});
+</script>
 
+<!-- <script>
+$("#toStatus").change(function(){
+	console.log($("#toStatus option:selected").val());
+	var status = $(this).val();
+	
+	if(status == "Closed")
+		return;
+	$.ajax({
+	    type: "POST",
+	    url: 'getUserRoleBystatus',
+	    data: {"status": status},
+	    success: function(roleList)
+	    {
+	    	console.log(roleList);
+	  		var options = "";
+	    	for(i = 0; i < roleList.length ; i++)
+	  			{
+	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
+	  			}
+	    	$("#toId").append(options);
+	    }
+});
+
+});
 </script> -->
+
