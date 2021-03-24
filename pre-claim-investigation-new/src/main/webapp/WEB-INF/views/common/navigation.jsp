@@ -121,8 +121,8 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                 </li>
               </ul>
             </li>
-             <%} %>
-             <%if(user_permission.contains("intimationType")){ %>
+            <%} %>
+            <%if(user_permission.contains("intimationType")){ %>
             <li class="nav-item <%if(details.getMain_menu().equals("Intimation Type")){%>active open<%}%>">
               <a href="javascript:;" class="nav-link nav-toggle">
                   <i class="fa fa-exclamation-triangle" style = "color:white"></i>
@@ -244,6 +244,70 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
                 <li class="nav-item <%if(details.getSub_menu1().equals("Active Investigation Type")){%>active<%}%>">
                   <a href="${pageContext.request.contextPath}/investigationType/activeInvestigationType" class="nav-link nav-toggle">
                     <i class="icon-check"></i> Active Investigation Type
+                  </a>
+                </li>
+                <%} %>
+              </ul>
+            </li>
+            <%} %>
+            <%if(user_permission.contains("caseStatus")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("Case Status")){%>active open<%}%>">
+              <a href="javascript:;" class="nav-link nav-toggle">
+                  <i class="fa fa-comment" style = "color:white"></i>
+                  <span class="title">Case Status</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                <%if(user_permission.contains("caseStatus/add")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Add Case Status")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseStatus/add" class="nav-link nav-toggle">
+                    <i class="icon-plus"></i> Add Case Status
+                  </a>
+                </li>
+                 <%} %>
+                 <%if(user_permission.contains("caseStatus/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Pending Case Status")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseStatus/pending" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Case Status
+                  </a>
+                </li>
+                <%} %>
+				<%if(user_permission.contains("caseStatus/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Active Case Status")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseStatus/active" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Active Case Status
+                  </a>
+                </li>
+                <%} %>
+              </ul>
+            </li>
+            <%} %>
+            <%if(user_permission.contains("caseCategory")){ %>
+            <li class="nav-item <%if(details.getMain_menu().equals("Case Category")){%>active open<%}%>">
+              <a href="javascript:;" class="nav-link nav-toggle">
+                  <i class="fa fa-list-ul" style = "color:white"></i>
+                  <span class="title">Case Category</span>
+                  <span class="arrow "></span>
+              </a>
+              <ul class="sub-menu">
+                <%if(user_permission.contains("caseCategory/add")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Add Case Category")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseStatus/add" class="nav-link nav-toggle">
+                    <i class="icon-plus"></i> Add Case Category
+                  </a>
+                </li>
+                 <%} %>
+                 <%if(user_permission.contains("caseCategory/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Pending Case Category")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseCategory/pending" class="nav-link nav-toggle">
+                    <i class="icon-clock"></i> Pending Case Category
+                  </a>
+                </li>
+                <%} %>
+				<%if(user_permission.contains("caseCategory/index")){ %>
+                <li class="nav-item <%if(details.getSub_menu1().equals("Active Case Category")){%>active<%}%>">
+                  <a href="${pageContext.request.contextPath}/caseCategory/active" class="nav-link nav-toggle">
+                    <i class="icon-check"></i> Active Case Category
                   </a>
                 </li>
                 <%} %>

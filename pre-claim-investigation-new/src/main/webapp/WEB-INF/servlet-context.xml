@@ -87,4 +87,12 @@
 	<beans:bean id="reportDao" class="com.preclaim.dao.ReportDaoImpl" >
  		<beans:property name="template" ref="jt"/>    
 	</beans:bean>
+	
+	<beans:bean id="caseStatusDao" class="com.preclaim.dao.CaseStatusDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
+	
+	<beans:bean id="caseCategoryDao" class="com.preclaim.dao.CaseCategoryDaoImpl" >
+ 		<beans:property name="template" ref="jt"/>    
+	</beans:bean>
 </beans:beans>

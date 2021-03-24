@@ -71,6 +71,152 @@ function updateIntimationTypeStatus( intimationId, status, checkAuthority ) {
         });
     });
 }
+//Delete Case Status
+function deleteCaseStatus( caseStatusId, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+caseStatusId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'deleteCaseStatus',
+            data : { 'caseStatusId' : caseStatusId },
+            beforeSend: function() { 
+                $("#continuemodal"+caseStatusId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+caseStatusId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal"+caseStatusId).html('Yes');
+                $("#continuemodal"+caseStatusId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                if(msg == "****")
+                {
+                	location.reload();
+                }
+                else
+                	toastr.error(msg,"Error");
+            }
+        });
+    });
+}
+function updateStatus( caseStatusId, status, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    if(status == 1){
+        $( '#sm_modal_body' ).html( 'Do you really want to activate?' );
+    }else{
+        $( '#sm_modal_body' ).html( 'Do you really want to deactivate?' );
+    }
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+caseStatusId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'updateCaseStatus',
+            data : { 'caseStatusId' : caseStatusId, 'status' : status },
+            beforeSend: function() { 
+                $("#continuemodal"+caseStatusId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+caseStatusId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal"+caseStatusId).html('Yes');
+	            $("#continuemodal"+caseStatusId).prop('disabled', false);
+	            $('#small_modal').modal('hide');		            
+                if(msg="****")
+                {
+                  	location.reload();
+	            }
+	            else
+	            	 toastr.error(msg,'Error');
+            }
+        });
+    });
+}
+//Delete Case Category
+function deleteCaseCategory( caseCategoryId, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+caseCategoryId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'deleteCaseCategory',
+            data : { 'caseCategoryId' : caseCategoryId },
+            beforeSend: function() { 
+                $("#continuemodal"+caseCategoryId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+caseCategoryId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal"+caseCategoryId).html('Yes');
+                $("#continuemodal"+caseCategoryId).prop('disabled', false);
+                $('#small_modal').modal('hide');
+                if(msg == "****")
+                {
+                	location.reload();
+                }
+                else
+                	toastr.error(msg,"Error");
+            }
+        });
+    });
+}
+function updateCaseCategoryStatus( caseCategoryId, status, checkAuthority ) {
+	if(!checkAuthority)
+	{
+		toastr.error("Access Denied", "Error");
+		return false;
+	}
+    if(status == 1){
+        $( '#sm_modal_body' ).html( 'Do you really want to activate?' );
+    }else{
+        $( '#sm_modal_body' ).html( 'Do you really want to deactivate?' );
+    }
+    $( '#small_modal' ).modal();
+    $( '#sm_modal_title' ).html( 'Are you Sure?' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#continuemodal'+caseCategoryId ).click( function() {
+        $.ajax({
+            type : 'POST',
+            url  : 'updateCaseCategory',
+            data : { 'caseCategoryId' : caseCategoryId, 'status' : status },
+            beforeSend: function() { 
+                $("#continuemodal"+caseCategoryId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
+                $("#continuemodal"+caseCategoryId).prop('disabled', true);
+            },
+            success : function( msg ) 
+            {
+                $("#continuemodal"+caseCategoryId).html('Yes');
+	            $("#continuemodal"+caseCategoryId).prop('disabled', false);
+	            $('#small_modal').modal('hide');		            
+                if(msg="****")
+                {
+                  	location.reload();
+	            }
+	            else
+	            	 toastr.error(msg,'Error');
+            }
+        });
+    });
+}
 //DELETE Mail Config
 function deleteConfig( mailConfigId , checkAuthority) {
 	if(!checkAuthority)
