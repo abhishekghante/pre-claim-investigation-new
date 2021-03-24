@@ -554,7 +554,6 @@ $("document").ready(function(){
 	    $("#input_userpdf").trigger('click');
 	  });
 
-	$("#toStatus").trigger("change");
 	$("#input_userpdf").change(function(e){ 
 		filename = $("#caseId").val() + "_" +e.target.files[0].name;
 		$("#userpdf").val(filename); 
@@ -585,7 +584,6 @@ $("document").ready(function(){
 		console.log($("#userpdf3").val());
 		uploadFiles(filename3);
 	  });
-	console.log("filename3"+filename3);
 
 	$("#Not-CleanCategory").hide();
 	$("#case-SubStatus").hide();
@@ -604,7 +602,7 @@ $("document").ready(function(){
 			$("#case-closure").hide();
 			$("#case-SubStatus").show();
 		}
-		else if($(this).val() == "Approved" && "<%= allow_substatus%>")
+		else if($(this).val() == "Approved" && <%= allow_substatus%>)
 		{
 			$("#case-SubStatus").show();
 		}
@@ -1094,6 +1092,7 @@ $("#toRole").change(function(){
 		if($(this).val() != '-1')
 			$(this).remove();
 	});
+	$("#toId").prop("disabled",true);
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserByRole',
@@ -1108,6 +1107,7 @@ $("#toRole").change(function(){
 	  			}
 	  		console.log(options);
 	    	$("#toId").append(options);
+	    	$("#toId").prop("disabled",false);
 	    }
 });
 
@@ -1121,7 +1121,6 @@ $("#toStatus").change(function(){
 	
 	if(status == "Closed")
 		return;
-	$("#toId").prop("disabled",true);
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserRoleBystatus',
@@ -1135,7 +1134,6 @@ $("#toStatus").change(function(){
 	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
 	  			}
 	    	$("#toId").append(options);
-	    	$("#toId").prop("disabled",false);
 	    }
 });
 
