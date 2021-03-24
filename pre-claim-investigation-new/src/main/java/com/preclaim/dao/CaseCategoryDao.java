@@ -14,4 +14,5 @@ public interface CaseCategoryDao {
 	String updateCaseCategoryStatus(int caseCategoryId,int status, String username);
 	List<CaseCategory> getActiveCaseCategory();
 	List<String> getActiveCaseCategoryStringList();
+	List<String> getCaseCategoryListByStatus(String case_status);
 }

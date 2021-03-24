@@ -9,7 +9,6 @@ String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 ArrayList<String> keys = new ArrayList<String>();
 for(String item: dashboard.keySet())
 	keys.add(item);
-System.out.println(keys);
 %>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

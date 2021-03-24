@@ -88,7 +88,7 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 			                  				<%
 			                  				if(caseCategoryList != null)
 			                  				{
-			                  					if(caseCategoryList.getCaseCategory().
+			                  					if(caseCategoryList.getCaseStatus().
 			                  							equals(item.getCaseStatus())) 
 			                  				{ %>selected <%}} %>>
 			                  			<%=item.getCaseStatus() %></option>
@@ -202,10 +202,10 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 										<td data-label = "Created Date"><%=list_CaseCategory.getCreatedDate()%></td>										
 										<td data-label = "Status"><span class="label label-sm label-danger">Pending</span></td>											
 										<td data-label = "Action">
-											<a href="${pageContext.request.contextPath}/caseCategory/pending?caseCategory=<%=list_CaseCategory.getCaseCategory() %>&caseCategoryId=<%=list_CaseCategory.getCaseCategoryId() %>" 
-												data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
-												<i class="glyphicon glyphicon-edit"></i>
-							   		  		</a>
+											<a href="${pageContext.request.contextPath}/caseCategory/pending?caseStatus=<%=list_CaseCategory.getCaseStatus() %>&caseCategory=<%=list_CaseCategory.getCaseCategory() %>&caseCategoryId=<%=list_CaseCategory.getCaseCategoryId() %>" 
+                    		         			data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
+                    		         			<i class="glyphicon glyphicon-edit"></i>
+                   		         			</a>
 									   		
 									   		<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateCaseCategoryStatus('<%=list_CaseCategory.getCaseCategoryId()%>',1,<%=allow_statusChg %>);" 
 									   		  	class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>

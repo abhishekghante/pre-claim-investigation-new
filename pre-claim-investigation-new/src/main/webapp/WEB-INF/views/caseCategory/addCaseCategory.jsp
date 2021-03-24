@@ -40,7 +40,7 @@ session.removeAttribute("case_status");
                   		for(CaseStatus item: case_status)
                   		{ 
                   	%>
-                  			<option value = "item.getCaseStatus()"><%=item.getCaseStatus() %></option>
+                  			<option value = "<%= item.getCaseStatus()%>"><%=item.getCaseStatus() %></option>
                   	<%	}
                   		}%>
                   </select>

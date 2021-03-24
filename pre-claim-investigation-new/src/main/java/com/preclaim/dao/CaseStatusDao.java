@@ -14,4 +14,5 @@ public interface CaseStatusDao {
 	String updateStatus(int caseStatusId,int status, String username);
 	List<CaseStatus> getActiveCaseStatus();
 	List<String> getActiveCaseStatusStringList();
+	List<String> getCaseStatusByRole(String role);
 }

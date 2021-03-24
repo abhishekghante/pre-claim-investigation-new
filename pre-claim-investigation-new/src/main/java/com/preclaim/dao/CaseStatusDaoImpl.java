@@ -143,6 +143,16 @@ public class CaseStatusDaoImpl implements CaseStatusDao {
 		return template.query(sql, (ResultSet rs, int rowNum) ->
 				{return rs.getString("caseStatus");});
 	}
-	
-
+	@Override
+	public List<String> getCaseStatusByRole(String role)
+	{
+		String sql = "SELECT * FROM case_status WHERE status = '1' AND caseStatus IN "
+				+ "(select module from permission where role_code = ?)";
+		return template.query(sql, new Object[] {role},
+				(ResultSet rs, int rowNum) ->
+				{
+					return rs.getString("caseStatus");
+				}
+				);
+	}
 }

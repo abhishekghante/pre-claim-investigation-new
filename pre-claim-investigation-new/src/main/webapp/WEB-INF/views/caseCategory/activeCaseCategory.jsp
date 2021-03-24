@@ -124,7 +124,7 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 	                   		            	 class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
 	                  		              </a>
                		                <%} %>
-                     		         <a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteCaseCategory('<%=list_group.getCaseCategory() %>',<%=allow_delete %>);" 
+                     		         <a href="javascript:;" data-toggle="tooltip" title="Delete" onClick="return deleteCaseCategory('<%=list_group.getCaseCategoryId() %>',<%=allow_delete %>);" 
                     		             class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i>
                    		             </a>
                     		    </td>

@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.preclaim.config.Config;
 import com.preclaim.config.CustomMethods;
+import com.preclaim.dao.CaseCategoryDao;
 import com.preclaim.dao.CaseDao;
+import com.preclaim.dao.CaseStatusDao;
 import com.preclaim.dao.Case_movementDao;
 import com.preclaim.dao.IntimationTypeDao;
 import com.preclaim.dao.InvestigationTypeDao;
@@ -66,6 +68,12 @@ public class CaseController {
 
 	@Autowired
 	MailConfigDao mailConfigDao;
+	
+	@Autowired
+	CaseStatusDao caseStatusDao;
+	
+	@Autowired
+	CaseCategoryDao caseCategoryDao;
 
 	@RequestMapping(value = "/import_case", method = RequestMethod.GET)
 	public String import_case(HttpSession session) {
@@ -257,7 +265,6 @@ public class CaseController {
 		caseMovement.setZone(zone);
 		caseMovement.setUser_role(request.getParameter("roleName"));
 		String message = caseMovementDao.CreatecaseMovement(caseMovement);
-		System.out.println("message"+message);
 		if (message.equals("****")) 
 		{
 			userDao.activity_log("CASE HISTORY", caseDetail.getPolicyNumber(), "ADD CASE", user.getUsername());
@@ -329,6 +336,7 @@ public class CaseController {
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
 		session.setAttribute("case_detail", caseDao.getCaseDetail(Integer.parseInt(request.getParameter("caseId"))));
+		session.setAttribute("case_status", caseStatusDao.getCaseStatusByRole(user.getAccount_type()));
 		return "common/templatecontent";
 	}
 
@@ -338,7 +346,6 @@ public class CaseController {
 		if (user == null)
 			return "common/login";
 
-		System.out.println("calling ");
 		CaseDetails caseDetail = new CaseDetails();
 		caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
 		caseDetail.setInvestigationId(Integer.parseInt(request.getParameter("msgCategory")));
@@ -418,7 +425,6 @@ public class CaseController {
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
-		System.out.println("user"+user);
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
@@ -495,26 +501,21 @@ public class CaseController {
 
 	}
 	
-	
 	@RequestMapping(value = "/bulkAssign", method = RequestMethod.POST)
 	public @ResponseBody String bulkAssign(HttpServletRequest request, HttpSession session) 
 	{
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		CaseDetails caseDetail = new CaseDetails();
-		
-		
+			
 		long caseId = 0L;
 		String selectedValues = "";
-			  String tempStr[] = request.getParameterValues("caseId[]");
-			  for(String values: tempStr) 
-			  	  selectedValues += values + ",";
-			  selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
+		String tempStr[] = request.getParameterValues("caseId[]");
+		for(String values: tempStr) 
+			selectedValues += values + ",";	  
+		selectedValues = selectedValues.substring(0, selectedValues.length()-1); 
 			  
-			  System.out.println("selectedValues"+selectedValues);
-		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
-		System.out.println("user"+user);
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
@@ -589,10 +590,6 @@ public class CaseController {
 
 	}
 	
-	
-	
-	
-
 	@RequestMapping(value = "/downloadErrorReport", method = RequestMethod.GET)
 	public void downloadErrorReport(HttpServletRequest request, HttpServletResponse response) {
 		ServletContext context = request.getSession().getServletContext();
@@ -663,4 +660,13 @@ public class CaseController {
 
 	}
 
+	@RequestMapping(value = "/getCaseCategory", method = RequestMethod.POST)
+	public @ResponseBody List<String> getCaseCategory(HttpServletRequest request, HttpSession session) {
+		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		if(user == null)
+			return null;
+		String case_status = request.getParameter("caseSubStatus");
+		return caseCategoryDao.getCaseCategoryListByStatus(case_status);
+
+	}
 }

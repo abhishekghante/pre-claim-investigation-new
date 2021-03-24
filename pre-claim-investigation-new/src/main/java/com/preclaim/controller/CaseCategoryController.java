@@ -160,7 +160,8 @@ public class CaseCategoryController {
 		if(message.equals("****"))
 		{
 			session.setAttribute("success_message", "Case status updated successfully");
-			userDao.activity_log("CaseCategory", CaseCategory, "UPDATE", user.getUsername());
+			userDao.activity_log("CaseCategory", CaseCategory.length() > 10 ?
+					CaseCategory.substring(0,10) : CaseCategory, "UPDATE", user.getUsername());
 		}
 		return message;
 	}

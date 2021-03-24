@@ -92,10 +92,11 @@ public class CaseCategoryDaoImpl implements CaseCategoryDao {
 		{
 			String caseCategoryCheck = "select count(*) from case_category where "
 					+ "caseStatus = '" + caseStatus + "' and "
-					+ "caseCategory = '" + caseCategory + "'";
+					+ "caseCategory = '" + caseCategory + "' and "
+					+ "caseCategoryId <> " + caseCategoryId;
 			int caseCategoryCount = this.template.queryForObject(caseCategoryCheck, Integer.class);
 			/* System.out.println(intimationType.toString()); */
-			if (caseCategoryCount == 0) 
+			if (caseCategoryCount != 0) 
 				return "Case Category already exists";
 			String sql = "UPDATE case_category SET caseCategory = ? , updatedDate = getdate(), "
 					+ "updatedBy = ? WHERE caseCategoryId = ?";
@@ -149,6 +150,13 @@ public class CaseCategoryDaoImpl implements CaseCategoryDao {
 		String sql = "SELECT * FROM case_category where status = 1";
 		return template.query(sql, (ResultSet rs, int rowNum) ->
 				{return rs.getString("caseCategory");});
+	}
+
+	@Override
+	public List<String> getCaseCategoryListByStatus(String case_status) {
+		String sql = "SELECT * FROM case_category where status = 1 and caseStatus = ?";
+		return template.query(sql, new Object[] {case_status},(ResultSet rs, int rowNum) ->
+		{return rs.getString("caseCategory");});
 	}
 	
 

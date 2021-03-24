@@ -1,6 +1,7 @@
 <%@page import = "java.util.ArrayList" %>
 <%@page import="java.util.List" %>
 <%@page import="com.preclaim.models.UserRole" %>
+<%@page import="com.preclaim.models.CaseStatus" %>
 <%
 ArrayList<String> role_permission = new ArrayList<String>();
 role_permission = (ArrayList<String>) session.getAttribute("permission");
@@ -12,6 +13,8 @@ session.removeAttribute("user role");
 ArrayList<String> user_permission=(ArrayList<String>)session.getAttribute("user_permission");
 List<UserRole> user_role=(List<UserRole>)session.getAttribute("role_list");
 session.removeAttribute("role_list");
+List<CaseStatus> case_status = (List<CaseStatus>) session.getAttribute("case_status");
+session.removeAttribute("case_status");
 
 if(role_permission == null)
 	role_permission = new ArrayList<String>();
@@ -134,7 +137,7 @@ if(role_permission == null)
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/assign")) {%>checked <%} %> name="messages[]" id="messages_assign" class="indPLCheck7" value="messages/assign"> <label for="messages_assign">Assign</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/reopen")) {%>checked <%} %> name="messages[]" id="messages_reopen" class="indPLCheck7" value="messages/reopen"> <label for="messages_reopen">Reopen</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/close")) {%>checked <%} %> name="messages[]" id="messages_close" class="indPLCheck7" value="messages/close"> <label for="messages_close">Case Closure</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("messages/caseSubStatus")) {%>checked <%} %> name="messages[]" id="messages_caseSubStatus" class="indPLCheck7" value="messages/caseSubStatus"> <label for="messages_caseSubStatus">Case Sub-status</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("messages/caseSubStatus")) {%>checked <%} %> name="messages[]" id="messages_caseSubStatus" class="indPLCheck7" value="messages/caseSubStatus"> <label for="messages_caseSubStatus">Assign & Sub-status</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("messages/bulkAssign")) {%>checked <%} %> name="messages[]" id="messages_bulkAssign" class="indPLCheck7" value="messages/bulkAssign"> <label for="messages_bulkAssign">Bulk-Assign</label>
 			                    	
 			                    	</td>
@@ -208,7 +211,7 @@ if(role_permission == null)
 			                    
 			                     <tr>
 			                    	<td>
-			                    	    <input type="checkbox" <%if(role_permission.contains("approve")) {%>checked <%} %> name="approve" id="approve" class="allPLCheck12" value="approve"> <label for="approve">Approve</label>
+			                    	    <input type="checkbox" <%if(role_permission.contains("approve")) {%>checked <%} %> name="approve" id="approve" class="allPLCheck12" value="approve"> <label for="approve">Assign</label>
 			                    	</td>
 			                    	<td>
 			                    	     <%if(user_role!=null){
@@ -233,7 +236,19 @@ if(role_permission == null)
 			                        </td>
 			                         		
 			                    </tr>
-			                    
+			                    <tr>
+			                    	<td>
+			                    	    <input type="checkbox" <%if(role_permission.contains("caseType")) {%>checked <%} %> name="caseType" id="caseType" class="allPLCheck14" value="caseType"> <label for="caseType">Case Type</label>
+			                    	</td>
+			                    	<td>
+			                    	     <%if(case_status !=null){
+			                    	          for(CaseStatus item : case_status){	
+			                    	     %>
+			                           <input type="checkbox" <%if(role_permission.contains(item.getCaseStatus())) {%>checked <%} %> name="caseType[]" id="caseType_<%=item.getCaseStatus() %>" class="indPLCheck14" value="<%=item.getCaseStatus()%>"> <label for="caseType_<%=item.getCaseStatus()%>"><%=item.getCaseStatus() %></label>	
+			                        	<%}}%>
+			                        </td>
+			                         		
+			                    </tr>
 		                	</tbody>
                         </table>
                       </div>
@@ -354,6 +369,13 @@ if(role_permission == null)
 			$( '.indPLCheck13' ).prop( "checked", true );
 		} else {
 			$( '.indPLCheck13' ).prop( 'checked', false );
+		}
+	});
+	$( '.allPLCheck14' ).on( 'click', function() {
+		if( $( this ).is( ':checked' ) ) {
+			$( '.indPLCheck14' ).prop( "checked", true );
+		} else {
+			$( '.indPLCheck14' ).prop( 'checked', false );
 		}
 	});
 	$( '.allPLCheckRM' ).on( 'click', function() {

@@ -7,12 +7,13 @@
 <%@page import="com.preclaim.models.IntimationType"%>
 <%@page import="com.preclaim.models.CaseDetails"%>
 <%@page import="com.preclaim.models.CaseSubStatus"%>
+<%@page import="com.preclaim.models.CaseStatus"%>
+<%@page import="com.preclaim.models.CaseCategory"%>
 <%
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
 session.removeAttribute("case_detail");
 List<CaseSubStatus> CaseSubStatus = (List<CaseSubStatus>) session.getAttribute("level");
-System.out.println(CaseSubStatus);
 session.removeAttribute("level");
 List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
 session.removeAttribute("investigation_list");
@@ -22,10 +23,13 @@ List<Location> location_list = (List<Location>) session.getAttribute("location_l
 session.removeAttribute("location_list");
 List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
 session.removeAttribute("userRole");
+List<String> case_status = (List<String>) session.getAttribute("case_status");
+session.removeAttribute("case_status");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reopen = user_permission.contains("messages/reopen");
 boolean allow_closure = user_permission.contains("messages/close");
+boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 %>
 <style type="text/css">
 .placeImg { display:none !important;}
@@ -40,8 +44,8 @@ boolean allow_closure = user_permission.contains("messages/close");
     <div class="portlet box">
       <div class="portlet-title">
         <div class="caption">
-          <i class="icon-user font-green-sharp"></i>
-          <span class="caption-subject font-green-sharp sbold">Add Case</span>
+          <i class="icon-envelope-letter"></i>
+          <span class="caption-subject font-green-sharp sbold">Edit Case</span>
         </div>
         <div class="actions">
             <div class="btn-group">
@@ -299,34 +303,59 @@ boolean allow_closure = user_permission.contains("messages/close");
                 <div class="form-group">
                   <label class="col-md-4 control-label">Case Docs</label>
                   <div class="col-md-8 col-nopadding-l">
-                    <div class="col-md-3">
-                  <a href="javascript:void(0);">
-                    <img src="${pageContext.request.contextPath}/resources/img/upload_img.png" 
-                    	id="img_userpdf" style="height:120px;width: 100%;" data-src="#"> <br />
-                    <input type='file' id="input_userpdf" style = "display:none" accept = "application/pdf">
-                    <a href = "<%=Config.upload_url + case_detail.getPdf1FilePath() %>" download target="_blank">  <i class = "fa fa-download"></i> Download</a>
-                  </a>
+                    <div class="col-md-4 text-center">
+	                  <a href="javascript:void(0);">
+	                    <img 
+	                    	<%if(case_detail.getPdf1FilePath().equals("")) {%> 
+	                    		src="${pageContext.request.contextPath}/resources/img/upload_img.png"
+	                    	<%} else {%>
+	                    		src="${pageContext.request.contextPath}/resources/img/pdf.png"
+	                    	<%} %>	
+	                    	id="img_userpdf" style="height:120px;" data-src="#" title = "Click here to upload PDF"> <br />
+	                        <%if(!case_detail.getPdf1FilePath().equals("")) {%>
+	                       		<a href = "<%=Config.upload_url + case_detail.getPdf1FilePath() %>" 
+		                    		target="_blank"><i class = "fa fa-download"></i> Download</a>
+                   			<%} %>
+                   		<input type='file' id="input_userpdf" style = "display:none" accept = "application/pdf">
+                  	  	</a>
                   <input type="hidden" id="userpdf" name="userpdf">
                 </div>
-                    <div class="col-md-3">
-                  <a href="javascript:void(0);">
-                    <img src="${pageContext.request.contextPath}/resources/img/upload_img.png" 
-                    	id="img_userpdf2" style="height:120px;width: 100%;" data-src="#"> <br />
-                    <input type='file' id="input_userpdf2" style = "display:none" accept = "application/pdf">
-                    <a href = "<%=Config.upload_url + case_detail.getPdf2FilePath() %>" download target="_blank">  <i class = "fa fa-download"></i> Download</a>
-                  </a>
+                
+                  <div class="col-md-4 text-center">
+	                  <a href="javascript:void(0);">
+	                    <img
+	                    	<%if(case_detail.getPdf2FilePath().equals("")) {%> 
+	                    		src="${pageContext.request.contextPath}/resources/img/upload_img.png"
+	                    	<%} else {%>
+	                    		src="${pageContext.request.contextPath}/resources/img/pdf.png"
+	                    	<%} %> 
+	                    	id="img_userpdf2" style="height:120px;" data-src="#" title = "Click here to upload PDF"> <br />
+	                    <input type='file' id="input_userpdf2" style = "display:none" accept = "application/pdf">
+	                    <%if(!case_detail.getPdf2FilePath().equals("")) {%>
+	                        <a href = "<%=Config.upload_url + case_detail.getPdf2FilePath() %>" 
+	                    		target="_blank"><i class = "fa fa-download"></i> Download</a>
+	                  		</a>
+                  		<%} %>
                      <input type="hidden" id="userpdf2" name="userpdf2">
-                    </div>
+                  </div>
                     
-                    <div class="col-md-3">
-                  <a href="javascript:void(0);">
-                    <img src="${pageContext.request.contextPath}/resources/img/upload_img.png" 
-                    	id="img_userpdf3" style="height:120px;width: 100%;" data-src="#"> <br />
-                    <input type='file' id="input_userpdf3" style = "display:none" accept = "application/pdf">
-                    <a href = "<%=Config.upload_url + case_detail.getPdf3FilePath() %>" download target="_blank">  <i class = "fa fa-download"></i> Download</a>
-                  </a>
+                  <div class="col-md-4  text-center">
+	                  <a href="javascript:void(0);">
+	                    <img 
+	                    	<%if(case_detail.getPdf3FilePath().equals("")) {%> 
+	                    		src="${pageContext.request.contextPath}/resources/img/upload_img.png"
+	                    	<%} else {%>
+	                    		src="${pageContext.request.contextPath}/resources/img/pdf.png"
+	                    	<%} %>	
+	                    	id="img_userpdf3" style="height:120px;" data-src="#" title = "Click here to upload PDF"> <br />
+	                    <input type='file' id="input_userpdf3" style = "display:none" accept = "application/pdf">
+	                    <%if(!case_detail.getPdf3FilePath().equals("")) {%>
+	                        <a href = "<%=Config.upload_url + case_detail.getPdf3FilePath() %>" 
+	                    		target="_blank"><i class = "fa fa-download"></i> Download</a>
+	                  		</a>
+	                  	<%} %>
                    <input type="hidden" id="userpdf3" name="userpdf3">
-                    </div>  
+                 </div>  
               	</div>
               </div>
               
@@ -334,11 +363,19 @@ boolean allow_closure = user_permission.contains("messages/close");
 	              <div class="form-group">
 	       		  	<label class="col-md-4 control-label">Image</label>
 	           		<div class="col-md-4">
-	                	<img src = "<%= Config.upload_url + case_detail.getImageFilePath() %>" height="170px" width="auto">
+	                	<a href="<%= Config.upload_url + case_detail.getImageFilePath() %>" 
+	                		target = "_blank">
+	                		<img src = "<%= Config.upload_url + case_detail.getImageFilePath() %>" 
+	                			height="170px" width="auto">
+	              		</a>
 	              	</div>
 	              	<label class="col-md-1 control-label">Signature</label>
 	           		<div class="col-md-3">
-	                	<a href="<%= Config.upload_url + case_detail.getSignatureFilePath() %> "download><img src = "<%= Config.upload_url + case_detail.getSignatureFilePath() %>" height="170px" width="auto"></a>
+	                	<a href="<%= Config.upload_url + case_detail.getSignatureFilePath() %>" 
+	                		target = "_blank">
+	                		<img src = "<%= Config.upload_url + case_detail.getSignatureFilePath() %>" 
+	                			height="170px" width="auto">
+               			</a>
 	              	</div>
 	              	
 	              </div>                    
@@ -448,9 +485,12 @@ boolean allow_closure = user_permission.contains("messages/close");
 		                <div class="col-md-2">
 		                  <select name="caseSubStatus" id="caseSubStatus" class="form-control">
 		                  	<option value = '-1' selected disabled>Select</option>             	
-		                  	<option value = "Clean">Clean</option>
-		                  	<option value = "Not-Clean">Not-Clean</option>
-		                  	<option value = "PIV Stoppped">PIV Stoppped</option>
+		                  	<%if(case_status != null) {
+		                  		for(String item : case_status)
+		                  		{
+		                  	%>
+		                  		<option value = "<%=item %>"><%=item %></option>
+		                  	<%}} %>
 		                  </select>
 		            	</div>
 	            	</div>
@@ -460,14 +500,7 @@ boolean allow_closure = user_permission.contains("messages/close");
 		                	<span class="text-danger">*</span></label>
 		                <div class="col-md-2">
 		                  <select name="NotCleanCategory" id="NotCleanCategory" class="form-control">
-		                  	<option value = '-1' selected disabled>Select</option>		                  	
-		                  	<option value = 'Death Prior Application'> Death Prior Application</option>
-		                  	<option value = 'Medical Non-Disclosure'> Medical Non-Disclosure</option>
-		                  	<option value = 'Address not traceable'>Address not traceable</option>
-		                  	<option value = 'Mis-statement of Age'>Mis-statement of Age</option>
-		                  	<option value = 'Mis-statement of Income / Occupation'>Mis-statement of Income / Occupation</option>
-		                  	<option value = 'Personal Habit non-disclosure'>Personal Habit non-disclosure</option>
-		                  	<option value = 'Others'>Others</option> 
+		                  	<option value = '-1' selected disabled>Select</option>		                  	 
 		                  </select>
 		            	</div>
 	            	</div>
@@ -521,13 +554,13 @@ $("document").ready(function(){
 	    $("#input_userpdf").trigger('click');
 	  });
 
+	$("#toStatus").trigger("change");
 	$("#input_userpdf").change(function(e){ 
 		filename = $("#caseId").val() + "_" +e.target.files[0].name;
 		$("#userpdf").val(filename); 
 		console.log($("#userpdf").val());
 		uploadFiles(filename);
 	  });
-	console.log("filename"+filename);
 	
 	var filename2 ="";
 	$("#img_userpdf2").on('click', function() {
@@ -540,7 +573,6 @@ $("document").ready(function(){
 		console.log($("#userpdf2").val());
 		uploadFiles(filename2);
 	  });
-	console.log("filename2"+filename2);
 	
 	var filename3 ="";
 	$("#img_userpdf3").on('click', function() {
@@ -554,10 +586,6 @@ $("document").ready(function(){
 		uploadFiles(filename3);
 	  });
 	console.log("filename3"+filename3);
-	
-	
-	
-	
 
 	$("#Not-CleanCategory").hide();
 	$("#case-SubStatus").hide();
@@ -576,6 +604,10 @@ $("document").ready(function(){
 			$("#case-closure").hide();
 			$("#case-SubStatus").show();
 		}
+		else if($(this).val() == "Approved" && "<%= allow_substatus%>")
+		{
+			$("#case-SubStatus").show();
+		}
 		else
 		{
 			$("#case-closure").show();
@@ -586,15 +618,34 @@ $("document").ready(function(){
 	});
 
 	$("#caseSubStatus").change(function(){
-		if($(this).val() == "Not-Clean")
-		{
-			$("#Not-CleanCategory").show();
-		}
-		else
-		{
-			$("#Not-CleanCategory").hide();
-		}
-		
+		var caseSubStatus = $(this).val();
+		var optionSelect = "";
+		$("#NotCleanCategory option").each(function(){
+			if($(this).val() != '-1')
+				$(this).remove();
+		});
+		$.ajax({
+			type:"POST",
+			url :"${pageContext.request.contextPath}/message/getCaseCategory",
+			data:{"caseSubStatus":caseSubStatus},
+			success:function(data)
+			{
+				console.log(data);
+				for(i = 0; i< data.length ; i++)
+				{
+					optionSelect += "<option value = '" + data[i] + "'>" + data[i] + "</option> ";
+				}
+				if(optionSelect == "")
+				{
+					$("#Not-CleanCategory").hide();
+				}
+				else
+				{
+					$("#NotCleanCategory").append(optionSelect);
+					$("#Not-CleanCategory").show();
+				}
+			}
+		});
 	});
 	
 	
@@ -1070,6 +1121,7 @@ $("#toStatus").change(function(){
 	
 	if(status == "Closed")
 		return;
+	$("#toId").prop("disabled",true);
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserRoleBystatus',
@@ -1083,8 +1135,11 @@ $("#toStatus").change(function(){
 	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
 	  			}
 	    	$("#toId").append(options);
+	    	$("#toId").prop("disabled",false);
 	    }
 });
 
 });
 </script>
+		                  		                  		
+		                  		
