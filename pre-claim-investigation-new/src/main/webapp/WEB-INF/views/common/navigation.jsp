@@ -292,7 +292,7 @@ ArrayList<String> user_permission = (ArrayList<String>)session.getAttribute("use
               <ul class="sub-menu">
                 <%if(user_permission.contains("caseCategory/add")){ %>
                 <li class="nav-item <%if(details.getSub_menu1().equals("Add Case Category")){%>active<%}%>">
-                  <a href="${pageContext.request.contextPath}/caseStatus/add" class="nav-link nav-toggle">
+                  <a href="${pageContext.request.contextPath}/caseCategory/add" class="nav-link nav-toggle">
                     <i class="icon-plus"></i> Add Case Category
                   </a>
                 </li>

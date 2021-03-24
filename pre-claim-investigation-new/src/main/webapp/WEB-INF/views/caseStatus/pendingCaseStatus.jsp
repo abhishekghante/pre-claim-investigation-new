@@ -86,8 +86,8 @@ boolean allow_delete = user_permission.contains("caseStatus/delete");
 									<%
 									if(caseStatusList != null){
 									%>
-									<input type="hidden" value="<%=caseStatusList.getCaseStatusId()%>" id="intimationId"
-										name="intimationId">
+									<input type="hidden" value="<%=caseStatusList.getCaseStatusId()%>" id="caseStatusId"
+										name="caseStatusId">
 									<button class="btn btn-info" id="editCaseStatusSubmit"
 										onClick="return updateCaseStatus();" type="button">Update</button>
 									<a href="${pageContext.request.contextPath}/caseStatus/pending"

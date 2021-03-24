@@ -348,6 +348,15 @@ boolean allow_closure = user_permission.contains("messages/close");
               	</div>
               </div>
               
+              <%if(!case_detail.getSignatureFilePath().equals("")) {%>
+	              <div class="form-group">
+	       		  	<label class="col-md-4 control-label">Signature</label>
+	           		<div class="col-md-8">
+	                	<img src = "<%= Config.upload_url + case_detail.getSignatureFilePath() %>">
+	              	</div>
+	              </div>                    
+              <%} %>
+              
               <%if(!case_detail.getImageFilePath().equals("")) {%>
 	              <div class="form-group">
 	       		  	<label class="col-md-4 control-label">Image</label>

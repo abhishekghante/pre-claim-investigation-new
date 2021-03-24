@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.preclaim.dao.CaseCategoryDao;
+import com.preclaim.dao.CaseStatusDao;
 import com.preclaim.dao.UserDAO;
 import com.preclaim.models.CaseCategory;
 import com.preclaim.models.CaseCategoryList;
@@ -24,6 +25,9 @@ public class CaseCategoryController {
 	
     @Autowired
 	private CaseCategoryDao caseCategoryDao;
+    
+    @Autowired
+	private CaseStatusDao caseStatusDao;
     
     @Autowired
     private UserDAO userDao;
@@ -48,6 +52,7 @@ public class CaseCategoryController {
     		session.removeAttribute("success_message");
     	}
     	session.setAttribute("ScreenDetails", details);
+    	session.setAttribute("case_status", caseStatusDao.getActiveCaseStatus());
     	return "common/templatecontent";
     }
    
@@ -69,6 +74,7 @@ public class CaseCategoryController {
     		session.removeAttribute("success_message");
     	}
     	session.setAttribute("ScreenDetails", details);
+    	session.setAttribute("case_status", caseStatusDao.getActiveCaseStatus());
     	List<CaseCategoryList> pending_list= caseCategoryDao.caseCategory_list(0);
     	session.setAttribute("pending_caseCategory", pending_list);
     	
@@ -126,15 +132,18 @@ public class CaseCategoryController {
 	public @ResponseBody String addGroup(HttpSession session, HttpServletRequest request) 
 	{	
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
+		String caseStatus = request.getParameter("caseStatus");
 		String caseCategory = request.getParameter("caseCategory");
 		CaseCategory case_status = new CaseCategory();
+		case_status.setCaseStatus(caseStatus);
 		case_status.setCaseCategory(caseCategory);
 		case_status.setCreatedBy(user.getUsername());
 		String message = caseCategoryDao.add_caseCategory(case_status);
 		if(message.equals("****"))
 		{
 			session.setAttribute("success_message", "Case Category added successfully");
-			userDao.activity_log("CaseCategory", caseCategory, "ADD", user.getUsername());
+			userDao.activity_log("CaseCategory", caseCategory.length() > 10 ? 
+					caseCategory.substring(0, 10) : caseCategory, "ADD", user.getUsername());
 		}
 		return message;
 	}

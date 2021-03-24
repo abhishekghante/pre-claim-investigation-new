@@ -138,7 +138,7 @@ public class CaseStatusController {
 	}
 	
 	@RequestMapping(value = "/updateCaseStatus",method = RequestMethod.POST)
-	public @ResponseBody String updateGroup(HttpSession session, HttpServletRequest request) 
+	public @ResponseBody String updateCaseStatus(HttpSession session, HttpServletRequest request) 
 	{	
 		int caseStatusId = Integer.parseInt(request.getParameter("caseStatusId"));		
 		String CaseStatus = request.getParameter("caseStatus");
@@ -154,7 +154,7 @@ public class CaseStatusController {
 	}
 	
 	@RequestMapping(value = "/updateStatus",method = RequestMethod.POST)
-	public @ResponseBody String updateCaseStatusStatus(HttpSession session, HttpServletRequest request) 
+	public @ResponseBody String updateStatus(HttpSession session, HttpServletRequest request) 
 	{	
 		int caseStatusId = Integer.parseInt(request.getParameter("caseStatusId"));	
 		int status = Integer.parseInt(request.getParameter("status"));

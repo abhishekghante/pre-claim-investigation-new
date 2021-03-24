@@ -114,7 +114,7 @@ public class CaseCategoryDaoImpl implements CaseCategoryDao {
 	public String updateCaseCategoryStatus(int caseCategoryId, int status, String username) {
 		try 
 		{
-			String sql="UPDATE caseCategory SET status = ?, updatedDate = getdate(), updatedBy = ? "
+			String sql="UPDATE case_category SET status = ?, updatedDate = getdate(), updatedBy = ? "
 					+ "WHERE caseCategoryId = ?";       
 			template.update(sql, status, username, caseCategoryId);	
            return  "****";

@@ -1,10 +1,13 @@
 <%@page import = "java.util.List"%>
 <%@page import = "com.preclaim.models.CaseCategoryList"%>
+<%@page import="com.preclaim.models.CaseStatus"%>
 <%
 List<CaseCategoryList> pending_list = (List<CaseCategoryList>) session.getAttribute("pending_caseCategory");
 session.removeAttribute("pending_caseCategory");
 CaseCategoryList caseCategoryList = (CaseCategoryList) session.getAttribute("caseCategoryList");
 session.removeAttribute("caseCategoryList");
+List<CaseStatus> case_status = (List<CaseStatus>) session.getAttribute("case_status");
+session.removeAttribute("case_status");
 List<String> user_permission = (List<String>)session.getAttribute("user_permission");
 boolean allow_statusChg = user_permission.contains("caseCategory/status");
 boolean allow_delete = user_permission.contains("caseCategory/delete");
@@ -70,13 +73,40 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 				<form novalidate id="add_case_status" role="form" method="post"
 					class="form-horizontal">
 					<div class="row">
+			            <div class="col-md-6">
+			              <div class="form-group">
+			                <label class="col-md-4 control-label" for="caseStatus">Case Status <span class="text-danger">*</span></label>
+			                <div class="col-md-8">
+			                  <select id="caseStatus" class="form-control">
+			                  	<option value = "-1" <%if(caseCategoryList == null) { %>selected <%} %>
+			                  		disabled>Select</option>
+			                  	<%if(case_status != null) {
+			                  		for(CaseStatus item: case_status)
+			                  		{ 
+			                  	%>
+			                  			<option value = "<%=item.getCaseStatus()%>"
+			                  				<%
+			                  				if(caseCategoryList != null)
+			                  				{
+			                  					if(caseCategoryList.getCaseCategory().
+			                  							equals(item.getCaseStatus())) 
+			                  				{ %>selected <%}} %>>
+			                  			<%=item.getCaseStatus() %></option>
+			                  	<%	}
+			                  		}%>
+			                  </select>
+			                </div>
+			              </div>
+			            </div>
+		          	</div>
+					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label class="col-md-4 control-label" for="caseCategory">Case Category
 									 <span class="text-danger">*</span>
 								</label>
 								<div class="col-md-8">
-									<input type="text" placeholder="Case Type Name"
+									<input type="text" placeholder="Case Category"
 										id="caseCategory" class="form-control" name="caseCategory"
 										value = "<%=caseCategoryList == null ? "" : caseCategoryList.getCaseCategory()%>">
 								</div>
@@ -86,8 +116,8 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 									<%
 									if(caseCategoryList != null){
 									%>
-									<input type="hidden" value="<%=caseCategoryList.getCaseCategoryId()%>" id="intimationId"
-										name="intimationId">
+									<input type="hidden" value="<%=caseCategoryList.getCaseCategoryId()%>" id="caseCategoryId"
+										name="caseCategoryId">
 									<button class="btn btn-info" id="editCaseCategorySubmit"
 										onClick="return updateCaseCategory();" type="button">Update</button>
 									<a href="${pageContext.request.contextPath}/caseCategory/pending"
@@ -155,7 +185,7 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 										<th class="head2 no-sort"></th>
 										<th class="head2 no-sort"></th>
 										<th class="head2 no-sort"></th>
-										<th class="head2 no-sort">Status</th>
+										<th class="head2 no-sort"></th>
 										<th class="head2 no-sort"></th>
 									</tr>
 								</tfoot>
@@ -177,7 +207,7 @@ boolean allow_delete = user_permission.contains("caseCategory/delete");
 												<i class="glyphicon glyphicon-edit"></i>
 							   		  		</a>
 									   		
-									   		<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateStatus('<%=list_CaseCategory.getCaseCategoryId()%>',1,<%=allow_statusChg %>);" 
+									   		<a href="javascript:;" data-toggle="tooltip" title="Active" onClick="return updateCaseCategoryStatus('<%=list_CaseCategory.getCaseCategoryId()%>',1,<%=allow_statusChg %>);" 
 									   		  	class="btn btn-success btn-xs"><i class="glyphicon glyphicon-ok-circle"></i>
 								   		  	</a>
 									   		
@@ -243,12 +273,22 @@ function addCaseCategory() {
 		toastr.error("Access Denied","Error");
 		return false;
 	<%}%>
-	var caseStatus = $('#add_case_status #caseStatus').val();
-	if (caseStatus == '') {
-		toastr.error('Case status cannot be blank', 'Error');
-		return false;
+	var caseStatus = $( '#add_case_status #caseStatus' ).val(); 
+	var caseCategory = $( '#add_case_status #caseCategory' ).val();
+	var errorFlag = 0;
+	if(caseStatus == null)
+	{
+	  toastr.error('Case Status cannot be blank','Error');
+	  errorFlag = 1;
 	}
-	var formdata = {'caseStatus' : caseStatus};
+	if(caseCategory == "")
+	{
+		toastr.error('Case Category cannot be blank','Error');
+	  	errorFlag = 1;
+	}
+	if(errorFlag == 1)
+		return false;
+	var formdata ={'caseStatus':caseStatus, "caseCategory" : caseCategory};
 	$.ajax({
 		type : "POST",
 		url : '${pageContext.request.contextPath}/caseCategory/addCaseCategory',
@@ -278,13 +318,25 @@ function updateCaseCategory() {
 		toastr.error("Access Denied","Error");
 		return false;
 	<%}%>
-	var caseStatus = $('#add_case_status #caseStatus').val();
+	var caseStatus = $( '#add_case_status #caseStatus' ).val(); 
+	var caseCategory = $( '#add_case_status #caseCategory' ).val();
 	var caseCategoryId = $('#add_case_status #caseCategoryId').val();
-	if (caseStatus == '') {
-		toastr.error('Case status cannot be blank', 'Error');
+	var errorFlag = 0;
+	if(caseStatus == null)
+	{
+	  toastr.error('Case Status cannot be blank','Error');
+	  errorFlag = 1;
+	}
+	if(caseCategory == "")
+	{
+		toastr.error('Case Category cannot be blank','Error');
+	  	errorFlag = 1;
+	}
+	if(errorFlag == 1)
 		return false;
-	}	
-	var formdata = {'caseStatus' : caseStatus,'caseCategoryId' : caseCategoryId};
+	
+	var formdata = {'caseStatus' : caseStatus,"caseCategory" : caseCategory,
+					'caseCategoryId' : caseCategoryId};
 		$.ajax({
 			type : "POST",
 			url : '${pageContext.request.contextPath}/caseCategory/updateCaseCategory',

@@ -81,7 +81,7 @@ function deleteCaseStatus( caseStatusId, checkAuthority ) {
     $( '#small_modal' ).modal();
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
     $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
-    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+caseStatusId+'" class="btn green">Yes</button>' );
     $( '#continuemodal'+caseStatusId ).click( function() {
         $.ajax({
             type : 'POST',
@@ -119,11 +119,11 @@ function updateStatus( caseStatusId, status, checkAuthority ) {
     }
     $( '#small_modal' ).modal();
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
-    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+caseStatusId+'" class="btn green">Yes</button>' );
     $( '#continuemodal'+caseStatusId ).click( function() {
         $.ajax({
             type : 'POST',
-            url  : 'updateCaseStatus',
+            url  : 'updateStatus',
             data : { 'caseStatusId' : caseStatusId, 'status' : status },
             beforeSend: function() { 
                 $("#continuemodal"+caseStatusId).html('<img src="../resources/img/input-spinner.gif"> Loading...');
@@ -154,7 +154,7 @@ function deleteCaseCategory( caseCategoryId, checkAuthority ) {
     $( '#small_modal' ).modal();
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
     $( '#sm_modal_body' ).html( 'Do you really want to delete this record?' );
-    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+caseCategoryId+'" class="btn green">Yes</button>' );
     $( '#continuemodal'+caseCategoryId ).click( function() {
         $.ajax({
             type : 'POST',
@@ -192,11 +192,11 @@ function updateCaseCategoryStatus( caseCategoryId, status, checkAuthority ) {
     }
     $( '#small_modal' ).modal();
     $( '#sm_modal_title' ).html( 'Are you Sure?' );
-    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+intimationId+'" class="btn green">Yes</button>' );
+    $( '#sm_modal_footer' ).html( '<button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button><button type="button" id="continuemodal'+caseCategoryId+'" class="btn green">Yes</button>' );
     $( '#continuemodal'+caseCategoryId ).click( function() {
         $.ajax({
             type : 'POST',
-            url  : 'updateCaseCategory',
+            url  : 'updateCaseCategoryStatus',
             data : { 'caseCategoryId' : caseCategoryId, 'status' : status },
             beforeSend: function() { 
                 $("#continuemodal"+caseCategoryId).html('<img src="../resources/img/input-spinner.gif"> Loading...');

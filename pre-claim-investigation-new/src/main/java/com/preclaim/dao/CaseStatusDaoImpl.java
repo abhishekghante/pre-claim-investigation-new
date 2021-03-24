@@ -87,7 +87,7 @@ public class CaseStatusDaoImpl implements CaseStatusDao {
 	public String updateCaseStatus(int caseStatusId, String caseStatus, String username) {
 		try {
 			String CaseStatusCheck = "select count(*) from case_status where caseStatus='" 
-					+ caseStatus + "'";
+					+ caseStatus + "' and caseStatusId <> " + caseStatusId;
 			int CaseStatusCount = this.template.queryForObject(CaseStatusCheck, Integer.class);
 			if(CaseStatusCount > 0)
 				return "Case Status already exists";
@@ -108,7 +108,7 @@ public class CaseStatusDaoImpl implements CaseStatusDao {
 	public String updateStatus(int caseStatusId, int status, String username) {
 		try 
 		{
-			String sql="UPDATE caseStatus SET status = ?, updatedDate = getdate(), updatedBy = ? "
+			String sql="UPDATE case_status SET status = ?, updatedDate = getdate(), updatedBy = ? "
 					+ "WHERE caseStatusId = ?";       
 			template.update(sql, status, username, caseStatusId);	
            return  "****";

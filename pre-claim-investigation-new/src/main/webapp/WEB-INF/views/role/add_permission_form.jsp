@@ -156,7 +156,7 @@ if(role_permission == null)
 			                    		<input type="checkbox" <%if(role_permission.contains("caseCategory/index")) {%>checked <%} %>  name="caseCategory[]" id="caseCategory_index"  class="indPLCheckCC" value="caseCategory/index">  <label for="caseCategory_index">View</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("caseCategory/add"))   {%>checked <%} %>  name="caseCategory[]" id="caseCategory_add"    class="indPLCheckCC" value="caseCategory/add">    <label for="caseCategory_add">Add</label>
 			                    		<input type="checkbox" <%if(role_permission.contains("caseCategory/delete")) {%>checked <%} %> name="caseCategory[]" id="caseCategory_delete" class="indPLCheckCC" value="caseCategory/delete"> <label for="caseCategory_delete">Delete</label>
-			                    		<input type="checkbox" <%if(role_permission.contains("caseCategory/Category")) {%>checked <%} %> name="caseCategory[]" id="caseCategory_Category" class="indPLCheckCC" value="caseCategory/Category"> <label for="caseCategory_Category">Approve Status</label>
+			                    		<input type="checkbox" <%if(role_permission.contains("caseCategory/status")) {%>checked <%} %> name="caseCategory[]" id="caseCategory_status" class="indPLCheckCC" value="caseCategory/status"> <label for="caseCategory_status">Approve Status</label>
 			                    	</td>
 			                    </tr>
 			                    <tr>
