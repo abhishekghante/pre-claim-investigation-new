@@ -451,8 +451,8 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-    console.log(policyNumber.match("[CU]{1}[0-9]{9}"));
-	if(policyNumber.match("[CU]{1}[0-9]{9}") == "")
+    var filter = /[C/U]{1}[0-9]{9}/;
+	if(filter.test(policyNumber) == false)
 	{
     	$('#policyNumber').addClass('has-error-2');
         $('#policyNumber').focus();

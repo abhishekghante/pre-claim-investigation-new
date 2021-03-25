@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
@@ -388,6 +389,7 @@ public class CaseDaoImpl implements CaseDao {
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
 			List<Location> location_list = locationDao.getActiveLocationList();
+			List<CaseDetails> case_details = caseDao.getCaseList();
 			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext()) {
 				error_message = "";
@@ -399,10 +401,32 @@ public class CaseDaoImpl implements CaseDao {
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
 					caseDetails.setPolicyNumber(readCellStringValue(cell).toUpperCase());
-					if(Pattern.compile("[CU]{1}[0-9]{9}").matcher(caseDetails.getPolicyNumber()).find())
+		
+					if (!(caseDetails.getPolicyNumber().startsWith("C")||caseDetails.getPolicyNumber().startsWith("U"))) {							
 						error_message += "Invalid Policy Number, ";
-					else if(!checkPolicyNumber(caseDetails.getPolicyNumber()))
-						error_message += "Policy Number already exists, ";
+					} if(caseDetails.getPolicyNumber().length() != 10) {
+						error_message += "Policy Number is not equal to 10 digits, ";	
+					}if(caseDetails.getPolicyNumber().length()==10)	
+					   {
+							String regex = "[C/U]{1}[0-9]{9}";
+							Pattern p = Pattern.compile(regex);
+							Matcher m = p.matcher(caseDetails.getPolicyNumber());
+					   if(m.matches() == false) 
+					   {
+							error_message += "Policy Number should be in this format(CXXXXXXXXXX/UXXXXXXXXXX), ";	
+				 	   }
+						
+					}if(case_details!=null) {
+
+						for (CaseDetails list : case_details) {
+							if (caseDetails.getPolicyNumber().equals(list.getPolicyNumber())) {
+
+								error_message += "Policy Number already exists, ";
+								break;
+							}
+						}
+					}
+
 				}
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
