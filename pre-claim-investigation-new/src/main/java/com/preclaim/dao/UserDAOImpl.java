@@ -50,9 +50,9 @@ public class UserDAOImpl implements UserDAO{
 		if(status.equals("Approved"))
 		      sql = "select * from user_role where 'approve/' + role_code in (\n"
 				      + "select module from permission where module like 'approve/%' and role_code = ?)";
-		else if(status.equals("Reassigned"))
-		      sql = "select * from user_role where 'reassign/'+ role_code in (\n"
-				+ "select module from permission where module like 'reassign/%' and role_code = ?)";
+		else if(status.equals("Reopen"))
+		      sql = "select * from user_role where 'reopen/'+ role_code in (\n"
+				+ "select module from permission where module like 'reopen/%' and role_code = ?)";
 		      
 		return template.query(sql,new Object[] {role_code}, new RowMapper<UserRole>(){			
 			public UserRole mapRow(ResultSet rs, int row) throws SQLException

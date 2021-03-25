@@ -64,7 +64,7 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 					+ "select caseId, max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
 					+ "group by caseId) b where a.caseId = b.caseId and a.updatedDate = b.updatedDate) a, admin_user b "
 					+ "where a.toId = b.username) b where  a.caseId = b.caseId and a.caseStatus = 'Closed' and a.paymentApproved = ''"
-					+ " and a.caseId in('" + list + "')";
+					+ " and a.caseId in(" + list + ")";
 		 
 			Map<Integer, Object[]> paidcases = new HashMap<Integer, Object[]>();
 			paidcases.put(0, new Object[] {"Sr No", "Case ID", "Policy Number", "Investigation Type", 
@@ -73,23 +73,10 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 				"Longitude", "Latitude", "Case Description", "Captured Date",
 				"Agency Supervisor", "Fees"});
 			
-			return template.query(sql,  
-					(ResultSet rs, int rowNum) ->
+			template.query(sql,  (ResultSet rs, int rowNum) ->
 					{
-						int i = 1;
-						paidcases.put(i, new Object[] {
-								i,rs.getLong("caseId"), rs.getString("policyNumber"),
-								investigationType.get(rs.getInt("investigationId")), 
-								rs.getString("intimationType"), rs.getString("insuredName"), 
-								rs.getString("insuredDOB"), rs.getString("insuredDOD"), 
-								rs.getString("insured_address"), rs.getString("nominee_Name"), 
-								rs.getString("nominee_ContactNumber"), rs.getString("nominee_address"), 
-								rs.getString("sumAssured"),rs.getString("longitude"), 
-								rs.getString("latitude"), rs.getString("case_description"), 
-								rs.getString("capturedDate"), rs.getString("full_name"), 
-								rs.getFloat("fees") 
-						});
-						while(rs.next())
+						int i = 1;						
+						do
 						{
 							paidcases.put(i, new Object[] {
 									i,rs.getLong("caseId"), rs.getString("policyNumber"),
@@ -104,9 +91,10 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 									rs.getFloat("fees") 
 							});
 							i++;
-						}
+						}while(rs.next());
 						return paidcases;
-					}).get(0);
+					});
+			return paidcases;
 		}
 		
 		@Override
@@ -154,10 +142,4 @@ public class BillingManagementDaoImpl implements BillingManagementDao {
 			});
 		}
 		
-		
-		
-		
-
-
-
 }

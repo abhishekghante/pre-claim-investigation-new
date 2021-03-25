@@ -339,7 +339,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                      <input type="hidden" id="userpdf2" name="userpdf2">
                   </div>
                     
-                  <div class="col-md-4  text-center">
+                  <div class="col-md-4 text-center">
 	                  <a href="javascript:void(0);">
 	                    <img 
 	                    	<%if(case_detail.getPdf3FilePath().equals("")) {%> 
@@ -437,39 +437,17 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	                  	disabled readonly><%=case_detail.getAssignerRemarks() %></textarea>
 	                </div>
               	 </div>
-              	 
-		         <div class="form-group selectDiv" id = "case-closure">
-	                <label class="col-sm-4 control-label" for="toRole">Select Role Name 
-	                	<span class="text-danger">*</span></label>
-	                <div class="col-sm-3">
-	                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
-	                  	>
-	                    <option value="-1" selected disabled>Select</option>
-	                     <%if(userRole != null){
-	                    	for(UserRole userRoleLists: userRole){%>
-	                    	<option value = "<%=userRoleLists.getRole_code()%>">
-	                    		<%=userRoleLists.getRole() %></option>
-	                    <%}} %> 
-	                  </select>
-	                </div>
-                
-	                <label class="col-md-2 control-label" for="toId">Select User 
-	                	<span class="text-danger">*</span></label>
-	                <div class="col-md-3">
-	                  <select name="toId" id="toId" class="form-control">
-	                  	<option value = '-1' selected disabled>Select</option>
-	                  </select>
-	            	</div>
-              	 </div>
-              	 
+              	               	 
 	             <div class="form-group selectDiv">
 	                <label class="col-md-4 control-label" for="toStatus">Case Status 
 	                	<span class="text-danger">*</span></label>
 	                <div class="col-md-2">
 	                  <select name="toStatus" id="toStatus" class="form-control" 
 	                  	tabindex="-1">
-	                    <option value="-1" >Select</option>
-	                    <option value = "Approved">Approved</option>
+	                    <option value="-1" disabled>Select</option>
+	                    <%if(allow_assign) {%>
+	                    <option value = "Approved" selected>Approved</option>
+	                    <%} %>
 	                    <%if(allow_reopen) {%>
 	                    <option value = "Reopen">Reopen</option>
 	                    <%} %>
@@ -479,10 +457,10 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	                  </select>
 	                </div>
 	                            
-	                <div class="form-group selectDiv" id ="case-SubStatus">
-	                 <label class="col-md-1 control-label" for="caseSubStatus">Case Sub-status 
+	                <div class="form-group selectDiv col-md-3" id ="case-SubStatus">
+	                 <label class="col-md-4 control-label" for="caseSubStatus">Case Sub-status 
 		                	<span class="text-danger">*</span></label>
-		                <div class="col-md-2">
+		                <div class="col-md-8">
 		                  <select name="caseSubStatus" id="caseSubStatus" class="form-control">
 		                  	<option value = '-1' selected disabled>Select</option>             	
 		                  	<%if(case_status != null) {
@@ -496,7 +474,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	            	</div>
 	            	
             	 	<div class="form-group selectDiv" id ="Not-CleanCategory">
-	                 	<label class="col-md-4 control-label" for="NotCleanCategory">Not Clean Category 
+	                 	<label class="col-md-1 control-label" for="NotCleanCategory">Not Clean Category 
 		                	<span class="text-danger">*</span></label>
 		                <div class="col-md-2">
 		                  <select name="NotCleanCategory" id="NotCleanCategory" class="form-control">
@@ -506,7 +484,26 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	            	</div>
 	            		  
    	             </div>
-   	             	              
+   	             	
+		         <div class="form-group selectDiv" id = "case-closure">
+	                <label class="col-sm-4 control-label" for="toRole">Select Role Name 
+	                	<span class="text-danger">*</span></label>
+	                <div class="col-sm-3">
+	                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
+	                  	>
+	                    <option value="-1" selected disabled>Select</option> 
+	                  </select>
+	                </div>
+                
+	                <label class="col-md-2 control-label" for="toId">Select User 
+	                	<span class="text-danger">*</span></label>
+	                <div class="col-md-3">
+	                  <select name="toId" id="toId" class="form-control">
+	                  	<option value = '-1' selected disabled>Select</option>
+	                  </select>
+	            	</div>
+              	 </div>
+              	               
               	<div class="form-group">
 	                <label class="col-md-4 control-label" for="toRemarks">Remarks</label>
 	                <div class="col-md-8">
@@ -599,42 +596,20 @@ $("document").ready(function(){
 		$("#img_userpdf3").attr("src","../resources/img/pdf.png");
 	  });
 	
-	
-	
-                                                                                   //div hide 
 	$("#Not-CleanCategory").hide();
+	<%if(allow_substatus){%>
+	$("#case-SubStatus").show();
+	<%}else{%>
 	$("#case-SubStatus").hide();
-	
-	
+	<%}%>
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
 	});
 	
 	$("#claimantCity").trigger("change");
+	$("#toStatus").trigger("change");
 	
-	$("#toStatus").change(function(){
-		console.log("value"+$(this).val())
-		if($(this).val() == "Closed")
-		{
-			$("#case-closure").hide();
-			$("#case-SubStatus").show();
-		}
-		else if($(this).val() == "Approved" && <%= allow_substatus%>)
-		{
-			
-			$("#case-SubStatus").show();
-		}
-		else
-		{
-			
-			$("#case-closure").show();
-			$("#case-SubStatus").hide();
-			$("#Not-CleanCategory").hide();
-		}
-		
-	});
-
 	$("#caseSubStatus").change(function(){
 		var caseSubStatus = $(this).val();
 		var optionSelect = "";
@@ -666,8 +641,6 @@ $("document").ready(function(){
 		});
 	});
 	
-	
-	
 	function uploadFiles() {
 	    var formData = new FormData();
 		var files = $("input[type = 'file']");
@@ -694,14 +667,14 @@ $("document").ready(function(){
 	
 	
 	$("#assignmessagesubmit").click(function()
-			{
+	{
 				//Validation for Case Closure
 				var caseId = $( '#edit_message_form #caseId' ).val();
 				var toStatus = $( '#edit_message_form #toStatus' ).val();
 			    var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
 			    var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
 			    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
-			    debugger;
+			    
 			    var toId = "";
 			    var toRole = "";
 			    var validFlag = 1;
@@ -1111,15 +1084,8 @@ $("document").ready(function(){
 
 </script>
 
-
-<script>
-
-
-</script>
-
 <script type="text/javascript">
  
-
 function clearForm(){
   $( '#small_modal' ).modal();
   $( '#sm_modal_title' ).html( 'Are you Sure?' );
@@ -1163,30 +1129,59 @@ $("#toRole").change(function(){
 });
 </script>
 
-<!-- <script>
+<script>
 $("#toStatus").change(function(){
 	console.log($("#toStatus option:selected").val());
 	var status = $(this).val();
 	
 	if(status == "Closed")
+	{
+		$("#case-closure").hide();
+		$("#case-SubStatus").show();
 		return;
+	}
+	else if($(this).val() == "Approved" && <%= allow_substatus%>)
+	{
+		$("#case-SubStatus").show();
+	}
+	else
+	{
+		$("#case-closure").show();
+		$("#case-SubStatus").hide();
+		$("#Not-CleanCategory").hide();
+	}
+	
+	if(status == null)
+		return;
+	console.log(status);
+	$("#toRole option").each(function(){
+		if($(this).val() != '-1')
+			$(this).remove();
+	});
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserRoleBystatus',
 	    data: {"status": status},
 	    success: function(roleList)
 	    {
+	    	if(roleList == "")
+	    		return;
 	    	console.log(roleList);
 	  		var options = "";
 	    	for(i = 0; i < roleList.length ; i++)
-	  			{
-	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
-	  			}
-	    	$("#toId").append(options);
+  			{
+  				options += "<option value ='" + roleList[i].role_code + "'>" + roleList[i].role + "</option>";  
+  			}
+	    	$("#toRole").append(options);
+	    	console.log($("#toRole").val());
+	    	if($("#toRole").val() != null)
+		    	$("#toRole").trigger("change");
+		    
 	    }
+	    
 });
 
 });
-</script> -->
+</script>
 		                  		                  		
 		                  		

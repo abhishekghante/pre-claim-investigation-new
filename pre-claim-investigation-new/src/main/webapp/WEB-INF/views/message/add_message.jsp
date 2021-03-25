@@ -457,7 +457,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').addClass('has-error-2');
         $('#policyNumber').focus();
         errorFlag = 1;
-        toastr.error("Policy number should be of 10 digits and start with C or U","Error");
+        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
 	}
     
     if(errorFlag == 1)

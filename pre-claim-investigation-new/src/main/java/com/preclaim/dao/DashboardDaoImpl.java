@@ -35,7 +35,7 @@ public class DashboardDaoImpl implements DashboardDao {
 		String sql = ""; 
 		if(permission.contains("dashboard/new"))
 		{
-			sql = "SELECT count(*) from case_movement where toId = ''";
+			sql = "SELECT count(*) from case_movement where caseStatus <> 'Closed' and toId = ''";
 			count = template.queryForObject(sql, Integer.class);
 			dashboardCount.put("New Cases", count);
 		}

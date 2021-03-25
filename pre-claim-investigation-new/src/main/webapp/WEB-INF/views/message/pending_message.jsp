@@ -222,14 +222,20 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
 <script type="text/javascript">
 $(document).ready(function() {
   var i = 0;
+  var offset = 0;
+  <%if(allow_bulkAssign){  %>
+  	offset = 1;
+  <%}%>
   //DataTable  
   var table = $('#pending_case_list').DataTable();
 
    $('#pending_case_list tfoot th').each( function () {
-    if( i == 1 || i == 2 || i == 3 || i == 4 ){
+    if( i == 1 + offset || i == 2 + offset || i == 3 + offset || i == 5 + offset || i == 7 + offset || 
+    		i == 8 + offset)
+    {
       $(this).html( '<input type="text" class="form-control" placeholder="" />' );
     }
-    else if(i == 5)
+    else if(i == 4 + offset)
     {
       var cat_selectbox = '<select name="category" id="category" class="form-control">'
                               +'<option value="">All</option>';
@@ -242,7 +248,7 @@ $(document).ready(function() {
 		cat_selectbox += '</select>';
         $(this).html( cat_selectbox );
     }
-    else if(i == 7)
+    else if(i == 6 + offset)
     {
       var cat_selectbox = '<select name="intimation" id="intimation" class="form-control">'
                               +'<option value="">All</option>';
