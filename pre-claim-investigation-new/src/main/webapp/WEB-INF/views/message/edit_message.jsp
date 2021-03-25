@@ -557,11 +557,20 @@ $("document").ready(function(){
 	    $("#input_userpdf").trigger('click');
 	  });
 
-	$("#input_userpdf").change(function(e){ 
-		filename = $("#caseId").val() + "_" +e.target.files[0].name;
-		$("#userpdf").val(filename); 
-		console.log($("#userpdf").val());
-		uploadFiles(filename);
+	$("#input_userpdf").change(function(e){
+		if($(this).val() != "")
+		{
+			filename = $("#caseId").val() + "_" +e.target.files[0].name;
+			$("#userpdf").val(filename); 
+			console.log($("#userpdf").val());
+			uploadFiles();
+			$("#img_userpdf").attr("src","../resources/img/pdf.png");
+		}
+		else	
+		{
+			filename = "";
+			$("#img_userpdf").attr("src","../resources/img/upload_img.png");
+		}
 	  });
 	
 	var filename2 ="";                                                             //pdf2
@@ -573,7 +582,8 @@ $("document").ready(function(){
 		filename2 = $("#caseId").val() + "_" +e.target.files[0].name;
 		$("#userpdf2").val(filename2); 
 		console.log($("#userpdf2").val());
-		uploadFiles(filename2);
+		uploadFiles();
+		$("#img_userpdf2").attr("src","../resources/img/pdf.png");
 	  });
 	
 	var filename3 ="";                                                             //pdf3
@@ -585,7 +595,8 @@ $("document").ready(function(){
 		filename3 = $("#caseId").val() + "_" +e.target.files[0].name;
 		$("#userpdf3").val(filename3); 
 		console.log($("#userpdf3").val());
-		uploadFiles(filename3);
+		uploadFiles();
+		$("#img_userpdf3").attr("src","../resources/img/pdf.png");
 	  });
 	
 	
@@ -657,14 +668,13 @@ $("document").ready(function(){
 	
 	
 	
-	function uploadFiles(prefix) {
+	function uploadFiles() {
 	    var formData = new FormData();
 		var files = $("input[type = 'file']");
 		$(files).each(function (i,value) {
 	         		formData.append('file[]', value.files[i]);
 	    });
-	    if(prefix != undefined)
-			formData.append("prefix",prefix);
+	    formData.append("prefix","<%=case_detail.getCaseId()%>");
 	    $.ajax({
 	        type: "POST",
 	        url: '${pageContext.request.contextPath}/uploadFile',
@@ -691,10 +701,24 @@ $("document").ready(function(){
 			    var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
 			    var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
 			    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
-			    
+			    debugger;
 			    var toId = "";
 			    var toRole = "";
 			    var validFlag = 1;
+			    console.log(filename);
+			    if(filename == "")
+			   	{
+			   		filename = "<%=case_detail.getPdf1FilePath()%>";
+			   	}
+			    
+			    if(filename2 == "")
+			   	{
+			   		filename2 = "<%=case_detail.getPdf2FilePath()%>";
+			   	}
+			    if(filename3 == "")
+			   	{
+			   		filename3 = "<%=case_detail.getPdf3FilePath()%>";
+			   	}
 			    
 			    if(toStatus == null)
 			   	{
@@ -840,6 +864,22 @@ $("document").ready(function(){
 		    
 		    var errorFlag = 0;
 		   
+		    console.log(filename);
+		    if(filename == "")
+		   	{
+		   		filename = "<%=case_detail.getPdf1FilePath()%>";
+		   	}
+		    
+		    if(filename2 == "")
+		   	{
+		   		filename2 = "<%=case_detail.getPdf2FilePath()%>";
+		   	}
+		    if(filename3 == "")
+		   	{
+		   		filename3 = "<%=case_detail.getPdf3FilePath()%>";
+		   	}
+		    
+		    
 		    if(toStatus != "Closed")
 		    {   
 		    	caseSubstatus = "";
@@ -1123,7 +1163,7 @@ $("#toRole").change(function(){
 });
 </script>
 
-<script>
+<!-- <script>
 $("#toStatus").change(function(){
 	console.log($("#toStatus option:selected").val());
 	var status = $(this).val();
@@ -1147,6 +1187,6 @@ $("#toStatus").change(function(){
 });
 
 });
-</script>
+</script> -->
 		                  		                  		
 		                  		
