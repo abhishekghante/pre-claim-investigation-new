@@ -378,12 +378,21 @@ public class CaseController {
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("AGNSUP") && !toRole.equals("INV"))
-				status = caseDao.getCaseStatus(toRole, 2);
+			if(caseSubStatus == null)
+			{
+				if(user.getAccount_type().equals("INV") && toRole.equals("AGNSUP"))
+					status = caseDao.getCaseStatus(toRole, 2);
+				else
+					status = caseDao.getCaseStatus(toRole, 1);
+				caseDetail.setCaseStatus(status.getCase_status());
+				caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			}
 			else
-				status = caseDao.getCaseStatus(toRole, 1);
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			{
+				caseDetail.setCaseStatus(caseSubStatus);
+				if(NotCleanCategory != null)
+					caseDetail.setCaseSubStatus(NotCleanCategory);
+			}
 		}
 		//Reopen
 		else if(toStatus.equals("Reopen"))
@@ -437,12 +446,21 @@ public class CaseController {
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("INV") && toRole.equals("AGNSUP"))
-				status = caseDao.getCaseStatus(toRole, 2);
+			if(caseSubStatus == null)
+			{
+				if(user.getAccount_type().equals("INV") && toRole.equals("AGNSUP"))
+					status = caseDao.getCaseStatus(toRole, 2);
+				else
+					status = caseDao.getCaseStatus(toRole, 1);
+				caseDetail.setCaseStatus(status.getCase_status());
+				caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			}
 			else
-				status = caseDao.getCaseStatus(toRole, 1);
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			{
+				caseDetail.setCaseStatus(caseSubStatus);
+				if(NotCleanCategory != null)
+					caseDetail.setCaseSubStatus(NotCleanCategory);
+			}
 		}
 		//Reopen
 		else if(toStatus.equals("Reopen"))

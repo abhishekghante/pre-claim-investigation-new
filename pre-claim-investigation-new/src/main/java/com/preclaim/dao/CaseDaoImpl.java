@@ -789,18 +789,18 @@ public class CaseDaoImpl implements CaseDao {
 	public CaseSubStatus getCaseStatus(String user_role, int level) {
 		try
 		{
+			CaseSubStatus detail = new CaseSubStatus();
 			String sql = "SELECT * FROM case_substatus where user_role = ? and level = ?";
-			return this.template.query(sql, new Object[] {user_role, level},
+			template.query(sql, new Object[] {user_role, level},
 					(ResultSet rs, int rowCount) -> {
-						CaseSubStatus detail = new CaseSubStatus();
 						detail.setId(rs.getLong("id"));
 						detail.setUser_role(rs.getString("user_role"));
 						detail.setCase_status(rs.getString("Case_status"));
 						detail.setCaseSubStatus(rs.getString("caseSubStatus"));
 						detail.setLevel(rs.getInt("level"));
 						return detail;
-					}).get(0);
-
+					});
+			return detail;
 		} 
 		catch (Exception e) 
 		{
