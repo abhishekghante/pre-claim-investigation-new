@@ -468,7 +468,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	                <div class="col-md-2">
 	                  <select name="toStatus" id="toStatus" class="form-control" 
 	                  	tabindex="-1">
-	                    <option value="-1" disabled>Select</option>
+	                    <option value="-1" >Select</option>
 	                    <option value = "Approved">Approved</option>
 	                    <%if(allow_reopen) {%>
 	                    <option value = "Reopen">Reopen</option>
@@ -549,8 +549,11 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 </div>
 <script>
 $("document").ready(function(){
+	
+	// for pdf
+	
 	var filename ="";
-	$("#img_userpdf").on('click', function() {
+	$("#img_userpdf").on('click', function() {                                      //pdf1
 	    $("#input_userpdf").trigger('click');
 	  });
 
@@ -561,7 +564,7 @@ $("document").ready(function(){
 		uploadFiles(filename);
 	  });
 	
-	var filename2 ="";
+	var filename2 ="";                                                             //pdf2
 	$("#img_userpdf2").on('click', function() {
 	    $("#input_userpdf2").trigger('click');
 	  });
@@ -573,7 +576,7 @@ $("document").ready(function(){
 		uploadFiles(filename2);
 	  });
 	
-	var filename3 ="";
+	var filename3 ="";                                                             //pdf3
 	$("#img_userpdf3").on('click', function() {
 	    $("#input_userpdf3").trigger('click');
 	  });
@@ -584,7 +587,10 @@ $("document").ready(function(){
 		console.log($("#userpdf3").val());
 		uploadFiles(filename3);
 	  });
-
+	
+	
+	
+                                                                                   //div hide 
 	$("#Not-CleanCategory").hide();
 	$("#case-SubStatus").hide();
 	
@@ -597,6 +603,7 @@ $("document").ready(function(){
 	$("#claimantCity").trigger("change");
 	
 	$("#toStatus").change(function(){
+		console.log("value"+$(this).val())
 		if($(this).val() == "Closed")
 		{
 			$("#case-closure").hide();
@@ -604,10 +611,12 @@ $("document").ready(function(){
 		}
 		else if($(this).val() == "Approved" && <%= allow_substatus%>)
 		{
+			
 			$("#case-SubStatus").show();
 		}
 		else
 		{
+			
 			$("#case-closure").show();
 			$("#case-SubStatus").hide();
 			$("#Not-CleanCategory").hide();
