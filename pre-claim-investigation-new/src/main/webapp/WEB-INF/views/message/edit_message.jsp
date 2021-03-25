@@ -1020,6 +1020,14 @@ $("document").ready(function(){
 		    	$('#policyNumber').focus();
 		    	errorFlag = 1;
 		    }
+		    var filter = /[CU]{1}[0-9]{9}/;
+			if(filter.test(policyNumber) == false)
+			{
+		    	$('#policyNumber').addClass('has-error-2');
+		        $('#policyNumber').focus();
+		        errorFlag = 1;
+		        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
+			}
 		    
 		    if(errorFlag == 1)
 		    	return false;
