@@ -138,7 +138,9 @@ public class CaseDaoImpl implements CaseDao {
 			String sql = "";
 			if (user_role.equalsIgnoreCase("RCU")) 
 			{
-				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and (b.fromId = ? and b.user_role ='REGMAN' and b.toId ='')";
+				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and "
+						+ "a.caseStatus <> 'Closed' and (b.fromId = ? and b.user_role ='REGMAN' and "
+						+ "b.toId ='')";
 				List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username},
 						(ResultSet rs, int rowCount) -> {
 							CaseDetailList casedetail = new CaseDetailList();
@@ -162,10 +164,39 @@ public class CaseDaoImpl implements CaseDao {
 							investigationList.get(Integer.valueOf(caseDetail.getInvestigationCategoryId())));
 				return casedetailList;
 
-			} 
+			}
+			else if (user_role.equalsIgnoreCase("SUPADM")) 
+			{
+				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and "
+						+ "a.caseStatus <> 'Closed' and (b.user_role ='REGMAN' and b.toId ='')";
+				List<CaseDetailList> casedetailList = template.query(sql,
+						(ResultSet rs, int rowCount) -> {
+							CaseDetailList casedetail = new CaseDetailList();
+							casedetail.setSrNo(rowCount + 1);
+							casedetail.setCaseId(rs.getLong("caseId"));
+							casedetail.setPolicyNumber(rs.getString("policyNumber"));
+							casedetail.setInsuredName(rs.getString("insuredName"));
+							casedetail.setInvestigationCategoryId(rs.getInt("investigationId"));
+							casedetail.setSumAssured(rs.getDouble("sumAssured"));
+							casedetail.setCaseStatus(rs.getString("caseStatus"));
+							casedetail.setIntimationType(rs.getString("intimationType"));
+							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
+							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
+							casedetail.setZone(rs.getString("zone"));
+							casedetail.setCreatedDate(rs.getString("createdDate"));
+							return casedetail;
+						});
+				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
+				for (CaseDetailList caseDetail : casedetailList)
+					caseDetail.setInvestigationCategory(
+							investigationList.get(Integer.valueOf(caseDetail.getInvestigationCategoryId())));
+				return casedetailList;
+
+			}
 			else if(user_role.equalsIgnoreCase("REGMAN")) 
 			{
-				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId and a.caseStatus <> 'Closed' and "
+				sql = "SELECT * FROM case_lists a, case_movement b where a.caseId = b.caseId "
+						+ "and a.caseStatus <> 'Closed' and "
 						+ "(toId = ? or (b.user_role = ? and b.zone = ? and b.toId =''))";
 				List<CaseDetailList> casedetailList = template.query(sql, new Object[] {username, user_role,zone },
 						(ResultSet rs, int rowCount) -> {
@@ -526,6 +557,29 @@ public class CaseDaoImpl implements CaseDao {
 				}
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
+					if (readCellStringValue(cell).equals("")) {
+
+						if (!(intimationType.equals("PIV") || intimationType.equals("PIRV")
+								|| intimationType.equals("LIVE")))
+							error_message += "Nominee Pincode is mandatory, ";
+					}
+					else 
+					{
+						try
+						{
+							if(!Pattern.matches("[0-9]{6}", String.valueOf(readCellIntValue(cell))))
+								error_message += "Pincode should be of 6 digits, ";
+							else
+								caseDetails.setPincode(String.valueOf(readCellIntValue(cell)));
+						}
+						catch(Exception e)
+						{
+							error_message += "Invalid Pincode, ";
+						}
+					}
+				}
+				if (cellIterator.hasNext()) {
+					cell = cellIterator.next();
 					caseDetails.setInsured_address(readCellStringValue(cell));
 					if (caseDetails.getInsured_address().equals("")) {
 
@@ -551,7 +605,7 @@ public class CaseDaoImpl implements CaseDao {
 				else 
 				{
 					error_message = error_message.trim();
-					error_message = error_message.substring(0, error_message.length());
+					error_message = error_message.substring(0, error_message.length() - 1);
 					error_case.put(caseDetails, error_message);
 				}
 			}
@@ -563,10 +617,12 @@ public class CaseDaoImpl implements CaseDao {
 			}
 			
 			// Error File
-			if (error_case != null)
+			if (error_case.size() != 0)
 				writeErrorCase(error_case);
 			return "****";
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 			CustomMethods.logError(e);
 			return e.getMessage();
@@ -748,6 +804,9 @@ public class CaseDaoImpl implements CaseDao {
 				colNum++;
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(entry.getKey().getNominee_address());
+				colNum++;
+				cell = newRow.createCell(colNum);
+				cell.setCellValue(entry.getKey().getPincode());
 				colNum++;
 				cell = newRow.createCell(colNum);
 				cell.setCellValue(entry.getKey().getInsured_address());

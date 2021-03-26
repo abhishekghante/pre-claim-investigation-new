@@ -66,10 +66,8 @@ public class LoginController {
 		Base64.Encoder encoder = Base64.getEncoder();
 		String password = encoder.encodeToString(request.getParameter("password").getBytes());
 		Login login = new Login(username, password);
-		System.out.println(login.toString());
 		UserDetails user = dao.validateUser(login);
-		
-		  
+		 
 		if (user != null) {
 			if (user.getStatus() == 0)
 				return "User ID disabled. Kindly contact system administrator";
@@ -106,7 +104,6 @@ public class LoginController {
 				String filename = item.getOriginalFilename();
 				filename = prefix == null ? filename : prefix + "_" + filename;
 				Path path = Paths.get(Config.upload_directory + filename);
-				System.out.println("Entered");
 				Files.write(path, temp);
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -22,6 +22,7 @@ public class CustomMethods {
 		header_list.add("Nominee Name");
 		header_list.add("Nominee Mob");
 		header_list.add("Nominee Address");
+		header_list.add("Nominee Pincode");
 		header_list.add("Insured Address");
 		return header_list;
 	}

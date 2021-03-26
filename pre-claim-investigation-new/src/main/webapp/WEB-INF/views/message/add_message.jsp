@@ -158,7 +158,7 @@ session.removeAttribute("userRole");
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
-                  <input type="text" placeholder="pincode" name="pincode" id="pincode" class="form-control" >
+                  <input type="number" placeholder="Pincode" name="pincode" id="pincode" class="form-control" >
                 </div>
               </div>                         
               <div class="form-group">
@@ -346,6 +346,13 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
    	}
     if(!(msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
    	{
+    	if(pincode == '')
+        {
+          toastr.error('Pincode Cannot be empty','Error');
+          $("#pincode").addClass('has-error-2');
+          $("#pincode").focus();
+          errorFlag = 1;
+        }
 	    if(nomineeAdd == '')
 	    {
 	        toastr.error('Please enter Nominee Address','Error');
@@ -396,13 +403,16 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
 		$("#claimantCity").focus();
 		errorFlag = 1;
     }
-    if(pincode == '')
-    {
-      toastr.error('Pincode Cannot be empty','Error');
-      $("#pincode").addClass('has-error-2');
-      $("#pincode").focus();
-      errorFlag = 1;
-    }
+    if(pincode != "")
+   	{
+   		if(pincode.length != 6)
+		{
+   		  toastr.error('Pincode should be of 6 digits','Error');
+   	      $("#pincode").addClass('has-error-2');
+   	      $("#pincode").focus();
+   	      errorFlag = 1;
+		}
+   	}
     if(msgIntimationType == '')
     {
         toastr.error('Please select Intimation Type','Error');
@@ -469,15 +479,17 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-    var filter = /[CU]{1}[0-9]{9}/;
-	if(filter.test(policyNumber) == false)
+    /*
+    var filter = "/[CU]{1}[0-9]{9}/";
+    console.log("Super" + filter.test(policyNumber));
+	if(policyNumber.test(policyNumber) == "")
 	{
     	$('#policyNumber').addClass('has-error-2');
         $('#policyNumber').focus();
         errorFlag = 1;
         toastr.error("Policy number should be of 10 chars and start with C or U","Error");
 	}
-    
+    */
     if(errorFlag == 1)
     	return false;
         

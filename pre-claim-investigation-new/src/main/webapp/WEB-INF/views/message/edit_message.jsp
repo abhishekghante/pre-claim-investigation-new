@@ -921,6 +921,13 @@ $("document").ready(function(){
 		    }
 		    if(!(msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
 		   	{
+		    	if(pincode == '')
+		        {
+		          toastr.error('Pincode Cannot be empty','Error');
+		          $("#pincode").addClass('has-error-2');
+		          $("#pincode").focus();
+		          errorFlag = 1;
+		        }
 			    if(nomineeAdd == '')
 			    {
 			        toastr.error('Please enter Nominee Address','Error');
@@ -967,13 +974,16 @@ $("document").ready(function(){
 		      $("#claimantZone").focus();
 		      errorFlag = 1;
 		    }
-		    if(pincode == '')
-		    {
-		      toastr.error('pincode Cannot be empty','Error');
-		      $("#pincode").addClass('has-error-2');
-		      $("#pincode").focus();
-		      errorFlag = 1;
-		    }
+		    if(pincode != "")
+		   	{
+		   		if(pincode.length != 6)
+				{
+		   		  toastr.error('Pincode should be of 6 digits','Error');
+		   	      $("#pincode").addClass('has-error-2');
+		   	      $("#pincode").focus();
+		   	      errorFlag = 1;
+				}
+		   	}
 		    if(claimantCity == null)
 		    {
 				toastr.error('Claimant City cannot be empty','Error');
@@ -1195,6 +1205,7 @@ $("#toStatus").change(function(){
 		if($(this).val() != '-1')
 			$(this).remove();
 	});
+	$("#toRole").prop("disabled",true);
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserRoleBystatus',
@@ -1210,7 +1221,7 @@ $("#toStatus").change(function(){
   				options += "<option value ='" + roleList[i].role_code + "'>" + roleList[i].role + "</option>";  
   			}
 	    	$("#toRole").append(options);
-	    	console.log($("#toRole").val());
+	    	$("#toRole").prop("disabled",false);
 	    	if($("#toRole").val() != null)
 		    	$("#toRole").trigger("change");
 		    

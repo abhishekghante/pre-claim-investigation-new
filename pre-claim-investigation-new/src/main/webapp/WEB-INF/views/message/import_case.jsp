@@ -43,15 +43,7 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
                   <input type="file" name="userfile" id="userfile" class="form-control" required>
                   <note>Kindly upload .xlsx file only</note>
                 </div>
-                <div class="col-md-2 padding-left-0 col-xs-2">
-                  <button type="button" class="btn btn-info btn-sm" name="importfile" id ="importfile" onclick="importData()">
-                  	Import
-                  </button>
-                  <%if(!details.getSuccess_message1().equals("")){%>
-                  		<a href = "${pageContext.request.contextPath}/message/downloadErrorReport" 
-                  			id = "error_log"><i class =" fa fa-exclamation"></i></a>
-                  	<%}%>
-                </div>
+                
                 <div class="col-md-6 text-center">
                   <div>
                   	<a style="display: inline-block;" href="../resources/uploads/Import Case.xlsx">Click to download sample "Excel" file</a>
@@ -71,6 +63,16 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
                   </select>
                 </div>
                 
+              </div>
+              <div class="col-md-4 control-label">
+                  <button type="button" class="btn btn-info btn-sm" name="importfile" id ="importfile" onclick="importData()">
+                  	Import
+                  </button>
+                  <%if(!(details.getSuccess_message1().equals("File Uploaded successfully") 
+                		  || details.getSuccess_message1().equals(""))){%>
+                  		<a href = "${pageContext.request.contextPath}/message/downloadErrorReport" 
+                  			id = "error_log"><i class =" fa fa-exclamation"></i></a>
+                  	<%}%>
               </div>
             </form>
           </div>

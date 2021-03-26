@@ -35,7 +35,12 @@ public class DashboardDaoImpl implements DashboardDao {
 		String sql = ""; 
 		if(permission.contains("dashboard/new"))
 		{
-			sql = "SELECT count(*) from case_movement where caseStatus <> 'Closed' and toId = ''";
+			if(user.getAccount_type().equals("SUPADM"))
+				sql = "SELECT count(*) from case_movement where caseStatus <> 'Closed' and toId = ''";
+			else
+				sql = "SELECT count(*) from case_movement where caseStatus <> 'Closed' and toId = '' "
+						+ "AND zone IN (SELECT zone FROM location_lists WHERE city IN ("
+						+ "SELECT city FROM admin_user where username = '" + user.getUsername() + "'))";
 			count = template.queryForObject(sql, Integer.class);
 			dashboardCount.put("New Cases", count);
 		}

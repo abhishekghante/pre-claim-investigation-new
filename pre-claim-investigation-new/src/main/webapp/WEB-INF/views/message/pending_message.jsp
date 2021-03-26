@@ -155,17 +155,27 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
                    <%if(allow_bulkAssign){  %> 
                     <div class="form-group">
                       <div class="form-group selectDiv" id = "case-closure">
-	                <label class="col-md-1 control-label" for="toRole">Select Role Name 
+                      <label class="col-md-1 control-label" for="toStatus">Case Status 
+	                	<span class="text-danger">*</span></label>
+		              <div class="col-md-2">
+		                  <select name="toStatus" id="toStatus" class="form-control" 
+		                  	tabindex="-1">
+		                    <option value="-1">Select</option>
+		                    <option value = "Approved">Approved</option>
+		                    <%if(allow_reopen) {%>
+		                    <option value = "Reopen">Reopen</option>
+		                    <%} %>
+		                    <%if(allow_closure) {%>
+		                    <option value = "Closed">Closure</option>
+		                    <%} %> 
+		                  </select>
+		              </div>
+	                
+             		<label class="col-md-1 control-label" for="toRole">Select Role Name 
 	                	<span class="text-danger">*</span></label>
 	                <div class="col-md-2">
-	                  <select name="toRole" id="toRole" class="form-control" tabindex="-1"
-	                  	>
-	                    <option value="-1" selected disabled>Select</option>
-	                     <%if(userRole != null){
-	                    	for(UserRole userRoleLists: userRole){%>
-	                    	<option value = "<%=userRoleLists.getRole_code()%>">
-	                    		<%=userRoleLists.getRole() %></option>
-	                    <%}} %> 
+	                  <select name="toRole" id="toRole" class="form-control" tabindex="-1">
+	                    <option value="-1" selected disabled>Select</option> 
 	                  </select>
 	                </div>
                 
@@ -176,21 +186,7 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
 	                  	<option value = '-1' selected disabled>Select</option>
 	                  </select>
 	            	</div>
-	            	<label class="col-md-1 control-label" for="toStatus">Case Status 
-	                	<span class="text-danger">*</span></label>
-	                <div class="col-md-2">
-	                  <select name="toStatus" id="toStatus" class="form-control" 
-	                  	tabindex="-1">
-	                    <option value="-1">Select</option>
-	                    <option value = "Approved">Approved</option>
-	                    <%if(allow_reopen) {%>
-	                    <option value = "Reopen">Reopen</option>
-	                    <%} %>
-	                    <%if(allow_closure) {%>
-	                    <option value = "Closed">Closure</option>
-	                    <%} %> 
-	                  </select>
-	                </div> 
+	            	 
 	                <div class="row">
 	                      <label class="col-sm-1 control-label" for="toRemarks">Remarks :</label>
 	                  <div class="col-sm-2">
@@ -479,29 +475,42 @@ $("#toRole").change(function(){
 });
 </script>
 
-<!-- <script>
+<script>
 $("#toStatus").change(function(){
 	console.log($("#toStatus option:selected").val());
 	var status = $(this).val();
 	
 	if(status == "Closed")
 		return;
+	
+	$("#toRole option").each(function(){
+		if($(this).val() != '-1')
+			$(this).remove();
+	});
+	$("#toRole").prop("disabled",true);
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserRoleBystatus',
 	    data: {"status": status},
 	    success: function(roleList)
 	    {
+	    	if(roleList == "")
+	    		return;
 	    	console.log(roleList);
 	  		var options = "";
 	    	for(i = 0; i < roleList.length ; i++)
-	  			{
-	  				options += "<option value ='" + userList[i].username + "'>" + userList[i].full_name + "</option>";  
-	  			}
-	    	$("#toId").append(options);
+  			{
+  				options += "<option value ='" + roleList[i].role_code + "'>" + roleList[i].role + "</option>";  
+  			}
+	    	$("#toRole").append(options);
+	    	$("#toRole").prop("disabled",false);
+	    	if($("#toRole").val() != null)
+		    	$("#toRole").trigger("change");
+		    
 	    }
+	    
 });
 
 });
-</script> -->
+</script>
 
