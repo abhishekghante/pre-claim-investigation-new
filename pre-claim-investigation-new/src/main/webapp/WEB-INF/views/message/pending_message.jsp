@@ -83,6 +83,7 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
                           <th class="head1 no-sort">Case Sub-status</th>
                           <th class="head1 no-sort">Zone</th>
                           <th class="head1 no-sort">View history</th>
+                          <th class="head1 no-sort">Created Date</th>
                           <th class="head1 no-sort">Action</th>
                         </tr>
                       </thead>
@@ -102,6 +103,7 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
                           <th class="head2 no-sort"></th>
+                           <th class="head2 no-sort"></th>
                         </tr>
                       </tfoot>
                       <tbody>
@@ -122,6 +124,7 @@ boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
                                 <td data-label = "Case Sub-Status"><%=list_case.getCaseSubStatus()%></td>
                                 <td data-label = "Zone"><%=list_case.getZone()%></td>
                                	<td data-label = "Timeline"><a href="${pageContext.request.contextPath}/message/case_history?caseId=<%=list_case.getCaseId()%>">Case History</a></td>
+                               <td data-label = "Created Date"><%=list_case.getCreatedDate()%></td>
                                 <td data-label = "Action">
 	                             <a href="${pageContext.request.contextPath}/message/edit?caseId=<%=list_case.getCaseId()%>" 
 	                             	data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">

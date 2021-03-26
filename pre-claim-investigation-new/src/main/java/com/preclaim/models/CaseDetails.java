@@ -12,6 +12,7 @@ public class CaseDetails {
 	private double sumAssured;
 	private String intimationType;
 	private int locationId;
+	private String pincode;
 	private String claimantCity;
 	private String claimantZone;
 	private String claimantState;
@@ -26,6 +27,7 @@ public class CaseDetails {
 	private String pdf1FilePath;
 	private String pdf2FilePath;
 	private String pdf3FilePath;
+	private String excelFilePath;
 	private String audioFilePath;
 	private String videoFilePath;
 	private String signatureFilePath;
@@ -52,6 +54,8 @@ public class CaseDetails {
 		insuredDOD = "";
 		insuredDOB = "";
 		sumAssured = 0;
+		pincode = "";
+		excelFilePath = "";
 		intimationType = "";
 		locationId = 0;
 		claimantCity = "";
@@ -414,24 +418,41 @@ public class CaseDetails {
 		this.paymentApproved = paymentApproved;
 	}
 
+	public String getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
+	}
+
+	public String getExcelFilePath() {
+		return excelFilePath;
+	}
+
+	public void setExcelFilePath(String excelFilePath) {
+		this.excelFilePath = excelFilePath;
+	}
+
 	@Override
 	public String toString() {
 		return "CaseDetails [caseId=" + caseId + ", policyNumber=" + policyNumber + ", investigationId="
 				+ investigationId + ", investigationCategory=" + investigationCategory + ", insuredName=" + insuredName
 				+ ", insuredDOD=" + insuredDOD + ", insuredDOB=" + insuredDOB + ", sumAssured=" + sumAssured
-				+ ", intimationType=" + intimationType + ", locationId=" + locationId + ", claimantCity=" + claimantCity
-				+ ", claimantZone=" + claimantZone + ", claimantState=" + claimantState + ", caseStatus=" + caseStatus
-				+ ", nominee_name=" + nominee_name + ", nomineeContactNumber=" + nomineeContactNumber
-				+ ", nominee_address=" + nominee_address + ", insured_address=" + insured_address
-				+ ", case_description=" + case_description + ", longitude=" + longitude + ", latitude=" + latitude
-				+ ", pdf1FilePath=" + pdf1FilePath + ", pdf2FilePath=" + pdf2FilePath + ", pdf3FilePath=" + pdf3FilePath
+				+ ", intimationType=" + intimationType + ", locationId=" + locationId + ", pincode=" + pincode
+				+ ", claimantCity=" + claimantCity + ", claimantZone=" + claimantZone + ", claimantState="
+				+ claimantState + ", caseStatus=" + caseStatus + ", nominee_name=" + nominee_name
+				+ ", nomineeContactNumber=" + nomineeContactNumber + ", nominee_address=" + nominee_address
+				+ ", insured_address=" + insured_address + ", case_description=" + case_description + ", longitude="
+				+ longitude + ", latitude=" + latitude + ", pdf1FilePath=" + pdf1FilePath + ", pdf2FilePath="
+				+ pdf2FilePath + ", pdf3FilePath=" + pdf3FilePath + ", excelFilePath=" + excelFilePath
 				+ ", audioFilePath=" + audioFilePath + ", videoFilePath=" + videoFilePath + ", signatureFilePath="
-				+ signatureFilePath + ", capturedDate=" + capturedDate + ", approvedStatus=" + approvedStatus
-				+ ", assignerRole=" + assignerRole + ", assignerName=" + assignerName + ", assignerStatus="
-				+ assignerStatus + ", assignerRemarks=" + assignerRemarks + ", createdBy=" + createdBy
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", updatedBy=" + updatedBy
-				+ ", caseSubStatus=" + caseSubStatus + ", notCleanCategory=" + notCleanCategory + ", paymentApproved="
-				+ paymentApproved + "]";
+				+ signatureFilePath + ", imageFilePath=" + imageFilePath + ", capturedDate=" + capturedDate
+				+ ", approvedStatus=" + approvedStatus + ", assignerRole=" + assignerRole + ", assignerName="
+				+ assignerName + ", assignerStatus=" + assignerStatus + ", assignerRemarks=" + assignerRemarks
+				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedDate=" + updatedDate
+				+ ", updatedBy=" + updatedBy + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory="
+				+ notCleanCategory + ", paymentApproved=" + paymentApproved + "]";
 	}
 
 }

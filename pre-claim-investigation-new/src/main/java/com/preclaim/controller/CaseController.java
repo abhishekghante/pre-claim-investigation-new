@@ -240,6 +240,7 @@ public class CaseController {
 		caseDetail.setNomineeContactNumber(request.getParameter("nomineeMob"));
 		caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
+		caseDetail.setPincode(request.getParameter("pincode"));
 		caseDetail.setCreatedBy(user.getUsername());
 		//Get Case Status
 		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(), 1);
@@ -356,6 +357,7 @@ public class CaseController {
 		caseDetail.setIntimationType(request.getParameter("msgIntimationType"));
 		caseDetail.setLocationId(Integer.parseInt(request.getParameter("locationId")));
 		caseDetail.setNominee_name(request.getParameter("nomineeName"));
+		caseDetail.setPincode(request.getParameter("pincode"));
 		caseDetail.setNomineeContactNumber(request.getParameter("nomineeMob"));
 		caseDetail.setNominee_address(request.getParameter("nomineeAdd"));
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));

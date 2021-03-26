@@ -202,7 +202,16 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                   <input type="text" value="<%=case_detail.getClaimantZone()%>" placeholder="Claimant Zone" name="claimantZone" id="claimantZone" 
                   	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
-              </div>
+              </div>            
+               <div class="form-group">
+                <label class="col-md-4 control-label" for="pincode">Pincode
+                	<span class="text-danger">*</span>
+               	</label>
+                <div class="col-md-8">
+                  <input type="text" value="<%=case_detail.getPincode()%>" placeholder="pincode" name="pincode" id="pincode" 
+                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
+                </div>
+              </div>             
               
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nomineeName">Nominee Name
@@ -303,7 +312,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                 <div class="form-group">
                   <label class="col-md-4 control-label">Case Docs</label>
                   <div class="col-md-8 col-nopadding-l">
-                    <div class="col-md-4 text-center">
+                    <div class="col-md-3 text-center">
 	                  <a href="javascript:void(0);">
 	                    <img 
 	                    	<%if(case_detail.getPdf1FilePath().equals("")) {%> 
@@ -321,7 +330,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                   <input type="hidden" id="userpdf" name="userpdf">
                 </div>
                 
-                  <div class="col-md-4 text-center">
+                  <div class="col-md-3 text-center">
 	                  <a href="javascript:void(0);">
 	                    <img
 	                    	<%if(case_detail.getPdf2FilePath().equals("")) {%> 
@@ -339,7 +348,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                      <input type="hidden" id="userpdf2" name="userpdf2">
                   </div>
                     
-                  <div class="col-md-4 text-center">
+                  <div class="col-md-3 text-center">
 	                  <a href="javascript:void(0);">
 	                    <img 
 	                    	<%if(case_detail.getPdf3FilePath().equals("")) {%> 
@@ -355,7 +364,16 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	                  		</a>
 	                  	<%} %>
                    <input type="hidden" id="userpdf3" name="userpdf3">
-                 </div>  
+                 </div>
+                  <%if(!case_detail.getExcelFilePath().equals("")) {%>
+                   <div class="col-md-3 text-center">
+	                	<a href="<%= Config.upload_url + case_detail.getExcelFilePath() %>" 
+	                		target = "_blank">
+	                		<img src = "<%= Config.upload_url + case_detail.getExcelFilePath() %>" 
+	                			height="170px" width="auto">
+	              		</a>
+                 </div>                 
+                  <%} %>               
               	</div>
               </div>
               
@@ -800,6 +818,7 @@ $("document").ready(function(){
 		    var msgIntimationType  = $( '#edit_message_form #msgIntimationType' ).val();    
 		    var locationId     = $( '#edit_message_form #claimantCity' ).val();
 		    var claimantZone   = $( '#edit_message_form #claimantZone' ).val();
+		    var pincode        = $( '#edit_message_form #pincode' ).val();		    
 		    var claimantState  = $( '#edit_message_form #claimantState' ).val();
 		    var subStatus      = $( '#edit_message_form #subStatus' ).val();
 		    var nomineeName    = $( '#edit_message_form #nomineeName' ).val();
@@ -827,6 +846,7 @@ $("document").ready(function(){
 		    $("#msgIntimationType").removeClass('has-error-2');
 		    $("#claimantCity").removeClass('has-error-2');
 		    $("#claimantZone").removeClass('has-error-2');
+		    $("#pincode").removeClass('has-error-2');
 		    $("#claimantState").removeClass('has-error-2');
 		    $("#nomineeName").removeClass('has-error-2');
 		    $("#nomineeAdd").removeClass('has-error-2');
@@ -947,6 +967,13 @@ $("document").ready(function(){
 		      $("#claimantZone").focus();
 		      errorFlag = 1;
 		    }
+		    if(pincode == '')
+		    {
+		      toastr.error('pincode Cannot be empty','Error');
+		      $("#pincode").addClass('has-error-2');
+		      $("#pincode").focus();
+		      errorFlag = 1;
+		    }
 		    if(claimantCity == null)
 		    {
 				toastr.error('Claimant City cannot be empty','Error');
@@ -1049,6 +1076,7 @@ $("document").ready(function(){
 			       	'nomineeName'      : nomineeName,
 			       	'nomineeMob'       : nomineeMob,
 			       	'nomineeAdd'       : nomineeAdd,
+			       	'pincode'          : pincode,
 			       	'insuredAdd'       : insuredAdd,
 			       	'toRole'           : toRole,
 			       	'toStatus'         : toStatus,
@@ -1057,9 +1085,10 @@ $("document").ready(function(){
 		        	'caseSubStatus'    : caseSubstatus,
 		        	'NotCleanCategory' : NotCleanCategory,
 		        	"toId"             : toId,
-		        	"filename"      : filename,
-			    	"filename2"      : filename2,
-			    	"filename3"      : filename3
+		        	"pincode"          :pincode,
+		        	"filename"         : filename,
+			    	"filename2"        : filename2,
+			    	"filename3"        : filename3
 		        	};
 		    console.log(formdata);
 		    

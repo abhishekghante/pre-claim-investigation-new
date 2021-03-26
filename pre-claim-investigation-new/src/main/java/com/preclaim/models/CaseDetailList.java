@@ -17,6 +17,7 @@ public class CaseDetailList {
 	private String notCleanCategory;
 	private String paymentApproved;
 	private String zone;
+	private String createdDate;
 
 	public CaseDetailList() {
 		srNo = 0;
@@ -32,8 +33,9 @@ public class CaseDetailList {
 		caseStatus = "";
 		notCleanCategory = "";
 		caseSubStatus = "";
-		paymentApproved ="";
-		zone ="";
+		paymentApproved = "";
+		zone = "";
+		createdDate = "";
 
 	}
 
@@ -149,13 +151,20 @@ public class CaseDetailList {
 		this.paymentApproved = paymentApproved;
 	}
 
-	
 	public String getZone() {
 		return zone;
 	}
 
 	public void setZone(String zone) {
 		this.zone = zone;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	@Override
@@ -165,11 +174,8 @@ public class CaseDetailList {
 				+ ", investigationCategory=" + investigationCategory + ", intimationType=" + intimationType
 				+ ", sumAssured=" + sumAssured + ", assigneeId=" + assigneeId + ", assigneeName=" + assigneeName
 				+ ", caseStatus=" + caseStatus + ", caseSubStatus=" + caseSubStatus + ", notCleanCategory="
-				+ notCleanCategory + ", paymentApproved=" + paymentApproved + ", zone=" + zone + "]";
+				+ notCleanCategory + ", paymentApproved=" + paymentApproved + ", zone=" + zone + ", createdDate="
+				+ createdDate + "]";
 	}
-
-
-	
-	
 
 }

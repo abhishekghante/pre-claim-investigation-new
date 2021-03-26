@@ -98,12 +98,12 @@ public class CaseDaoImpl implements CaseDao {
 					+ "insuredDOD, insuredDOB, sumAssured, intimationType, locationId, caseStatus, "
 					+ "caseSubstatus, notCleanCategory, paymentApproved, nominee_name, "
 					+ "nominee_ContactNumber, nominee_address, insured_address, case_description, "
-					+ "longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, audioFilePath, "
+					+ "longitude, latitude, pdf1FilePath , pdf2FilePath, pdf3FilePath, excelFilepath, pincode , audioFilePath, "
 					+ "videoFilePath, signatureFilePath , image, capturedDate, createdDate, createdBy, "
 					+ "updatedDate, updatedBy)"
 					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 					//pdf1FilePath onwards
-					+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')";
+					+ "?, ?, ?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, '')";
 			this.template.update(query, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
@@ -111,8 +111,8 @@ public class CaseDaoImpl implements CaseDao {
 					casedetail.getPaymentApproved(), casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), 
 					casedetail.getNominee_address(), casedetail.getInsured_address(), casedetail.getCase_description(), 
 					casedetail.getLongitude(), casedetail.getLatitude(), casedetail.getPdf1FilePath(),
-					casedetail.getPdf2FilePath(), casedetail.getPdf3FilePath(), casedetail.getAudioFilePath(),
-					casedetail.getVideoFilePath(), casedetail.getSignatureFilePath(),"",casedetail.getCapturedDate(),
+					casedetail.getPdf2FilePath(), casedetail.getPdf3FilePath(),casedetail.getExcelFilePath(),casedetail.getPincode(), 
+					casedetail.getAudioFilePath(),casedetail.getVideoFilePath(), casedetail.getSignatureFilePath(),"",casedetail.getCapturedDate(),
 					current_date, casedetail.getCreatedBy(), current_date);
 
 			query = "SELECT caseId FROM case_lists where policyNumber = ? and createdBy = ? and "
@@ -153,6 +153,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							casedetail.setZone(rs.getString("zone"));
+							casedetail.setCreatedDate(rs.getString("createdDate"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -180,6 +181,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							casedetail.setZone(rs.getString("zone"));
+							casedetail.setCreatedDate(rs.getString("createdDate"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -205,6 +207,7 @@ public class CaseDaoImpl implements CaseDao {
 							casedetail.setNotCleanCategory(rs.getString("notCleanCategory"));
 							casedetail.setCaseSubStatus(rs.getString("caseSubStatus"));
 							casedetail.setZone(rs.getString("zone"));
+							casedetail.setCreatedDate(rs.getString("createdDate"));
 							return casedetail;
 						});
 				HashMap<Integer, String> investigationList = investigationDao.getActiveInvestigationMapping();
@@ -289,6 +292,8 @@ public class CaseDaoImpl implements CaseDao {
 						detail.setSignatureFilePath(rs.getString("signatureFilePath"));
 						detail.setImageFilePath(rs.getString("image"));
 						detail.setCapturedDate(rs.getString("capturedDate"));
+						detail.setExcelFilePath(rs.getString("excelFilepath"));
+						detail.setPincode(rs.getString("pincode"));
 						return detail;
 					});
 
@@ -317,13 +322,13 @@ public class CaseDaoImpl implements CaseDao {
 			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, "
 					+ "insuredDOD = ?, insuredDOB = ?, sumAssured = ?, intimationType = ?, locationId = ?, "
 					+ "nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
-					+ "insured_address = ?, pdf1FilePath = ?, pdf2FilePath = ?, pdf3FilePath = ?, caseStatus = ?,"
+					+ "insured_address = ?, pdf1FilePath = ?, pdf2FilePath = ?, pdf3FilePath = ?,pincode=?, caseStatus = ?,"
 					+ " caseSubstatus = ?, notCleanCategory = ?, updatedDate = getdate(), updatedBy = ? where caseId = ?";
 			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
 					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getPdf1FilePath(),casedetail.getPdf2FilePath(),casedetail.getPdf3FilePath(),
+					casedetail.getInsured_address(), casedetail.getPdf1FilePath(),casedetail.getPdf2FilePath(),casedetail.getPdf3FilePath(),casedetail.getPincode(),
 					casedetail.getCaseStatus(), casedetail.getCaseSubStatus(),casedetail.getNotCleanCategory(), casedetail.getUpdatedBy(), casedetail.getCaseId());
 
 		} catch (Exception e) {
