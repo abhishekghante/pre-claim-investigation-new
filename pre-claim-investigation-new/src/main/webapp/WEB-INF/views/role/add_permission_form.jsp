@@ -360,6 +360,7 @@ if(role_permission == null)
 	$( '.allPLCheck12' ).on( 'click', function() {
 		if( $( this ).is( ':checked' ) ) {
 			$( '.indPLCheck12' ).prop( "checked", true );
+			$("#messages_assign").prop("checked", true );
 		} else {
 			$( '.indPLCheck12' ).prop( 'checked', false );
 		}
@@ -367,6 +368,7 @@ if(role_permission == null)
 	$( '.allPLCheck13' ).on( 'click', function() {
 		if( $( this ).is( ':checked' ) ) {
 			$( '.indPLCheck13' ).prop( "checked", true );
+			$("#messages_reopen").prop("checked", true );
 		} else {
 			$( '.indPLCheck13' ).prop( 'checked', false );
 		}

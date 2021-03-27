@@ -4,7 +4,6 @@
 <%@page import = "com.preclaim.models.CaseDetailList"%>
 <%@page import = "com.preclaim.models.CaseDetails"%>
 <%@page import = "com.preclaim.models.Location"%>
-<%@page import = "com.preclaim.models.UserRole"%>
 <%@page import = "com.preclaim.models.CaseSubStatus"%>
 <%@page import = "com.preclaim.models.IntimationType" %>
 <%@page import = "com.preclaim.models.InvestigationType" %>
@@ -24,8 +23,6 @@ System.out.println(CaseSubStatus);
 session.removeAttribute("level");
 List<Location> location_list = (List<Location>) session.getAttribute("location_list");
 session.removeAttribute("location_list");
-List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
-session.removeAttribute("userRole");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reopen = user_permission.contains("messages/reopen");

@@ -1,7 +1,6 @@
 <%@page import="java.util.List" %>
 <%@page import="java.util.ArrayList" %>
 <%@page import="com.preclaim.config.Config"%>
-<%@page import="com.preclaim.models.UserRole"%>
 <%@page import="com.preclaim.models.Location"%>
 <%@page import="com.preclaim.models.InvestigationType"%>
 <%@page import="com.preclaim.models.IntimationType"%>
@@ -21,8 +20,6 @@ List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttr
 session.removeAttribute("intimation_list");
 List<Location> location_list = (List<Location>) session.getAttribute("location_list");
 session.removeAttribute("location_list");
-List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
-session.removeAttribute("userRole");
 List<String> case_status = (List<String>) session.getAttribute("case_status");
 session.removeAttribute("case_status");
 boolean allow_edit = user_permission.contains("messages/add");
@@ -1057,8 +1054,8 @@ $("document").ready(function(){
 		    	$('#policyNumber').focus();
 		    	errorFlag = 1;
 		    }
-		    var filter = /[CU]{1}[0-9]{9}/;
-			if(filter.test(policyNumber) == false)
+		    var filter = /^[CU]{1}[0-9]{9}$/;
+		    if(filter.test(policyNumber) == "")
 			{
 		    	$('#policyNumber').addClass('has-error-2');
 		        $('#policyNumber').focus();

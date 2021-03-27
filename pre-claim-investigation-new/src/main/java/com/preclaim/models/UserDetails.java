@@ -11,6 +11,8 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.preclaim.config.CustomMethods;
+
 import java.util.Base64.Decoder;
 
 public class UserDetails {
@@ -230,7 +232,6 @@ public class UserDetails {
 			if (!candidatePhoto.isFile())
 				return;
 			String extension = FilenameUtils.getExtension(userImageb64);
-			System.out.println(extension.toLowerCase());
 			BufferedImage bImage = ImageIO.read(new File(userImageb64));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(bImage, extension.toLowerCase(), baos);
@@ -239,7 +240,8 @@ public class UserDetails {
 			baos.close();
 			this.userImageb64 = DatatypeConverter.printBase64Binary(imageInByteArray);
 		} catch (Exception e) {
-			System.out.println("Error" + e.getMessage());
+			CustomMethods.logError(e);
+			e.printStackTrace();
 			this.userImageb64 = "";
 		}
 	}

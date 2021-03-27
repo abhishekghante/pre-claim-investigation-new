@@ -140,7 +140,6 @@ public class CaseController {
 		}
 		Location location = locationDao.getActiveLocationList(user.getCity());
 		session.setAttribute("ScreenDetails", details);
-		session.setAttribute("userRole", userDao.getUserRole_lists(user.getAccount_type(), "Approved"));
 		session.setAttribute("pendingCaseList", caseDao.getPendingCaseList(user.getAccount_type(),location.getZone(),user.getUsername()));
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());
@@ -265,6 +264,7 @@ public class CaseController {
 		caseMovement.setFromId(caseDetail.getCreatedBy());
 		caseMovement.setZone(zone);
 		caseMovement.setUser_role(request.getParameter("roleName"));
+		caseMovement.setToId(request.getParameter("assigneeId"));
 		String message = caseMovementDao.CreatecaseMovement(caseMovement);
 		if (message.equals("****")) 
 		{
@@ -332,7 +332,6 @@ public class CaseController {
 		details.setSub_menu2("Manage Cases");
 		details.setSub_menu2_path("../message/pending_message.jsp");
 		session.setAttribute("ScreenDetails", details);
-		session.setAttribute("userRole", userDao.getUserRole_lists(user.getAccount_type(), "Approved"));
 		session.setAttribute("location_list", locationDao.getActiveLocationList());
 		session.setAttribute("investigation_list", investigationDao.getActiveInvestigationList());
 		session.setAttribute("intimation_list", intimationTypeDao.getActiveIntimationType());

@@ -202,13 +202,15 @@ session.removeAttribute("userRole");
                   </select>
                 </div>
                 
-                <!-- <label class="col-md-2 control-label" for="userRole">Select User 
-                	<span class="text-danger">*</span></label>
-                <div class="col-md-3">
-                  <select name="assigneeId" id="assigneeId" class="form-control">
-                  	<option value = '-1' selected disabled>Select</option>
-                  </select>
-                </div> -->
+                <div class = "assigneeDetails">
+	                <label class="col-md-2 control-label" for="assigneeId">Select User 
+	                	<span class="text-danger">*</span></label>
+	                <div class="col-md-3">
+	                  <select name="assigneeId" id="assigneeId" class="form-control">
+	                  	<option value = '-1' selected disabled>Select</option>
+	                  </select>
+	                </div>
+                </div>
                 
               </div>
               <!--  Footer -->
@@ -232,11 +234,19 @@ session.removeAttribute("userRole");
 
 $("document").ready(function(){
 	
+	//City Change
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
 	});
-		
+	//Intimation Type Change
+	$("#msgIntimationType").change(function(){
+		if($(this).val() == "CDP")
+			$("#assigneeDetails").show();
+		else
+			$("#assigneeDetails").hide();
+	});
+	
 });
 
 
@@ -287,8 +297,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     var insuredAdd     = $( '#add_message_form #insuredAdd').val();
     var roleName       = $( '#add_message_form #roleName').val();
     var pincode        = $( '#add_message_form #pincode').val();
-    
-  /*   var assigneeId       = $( '#add_message_form #assigneeId').val(); */
+    var assigneeId       = $( '#add_message_form #assigneeId').val();
     
     var currentDate = new Date();
     var insuredDateOfBirth = new Date(insuredDOB);
@@ -309,17 +318,10 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     $("#insuredAdd").removeClass('has-error-2');
     $("#roleName").removeClass('has-error-2');
     $("#pincode").removeClass('has-error-2');
-  /*   $("#assigneeId").removeClass('has-error-2'); */
+    $("#assigneeId").removeClass('has-error-2');
     
     var errorFlag = 0;
-    
-  /*   if(assigneeId == null)
-    {
-        toastr.error('Please select User','Error');
-        $("#assigneeId").addClass('has-error-2');
-        $("#assigneeId").focus();
-        errorFlag = 1;
-    } */
+  
     if(roleName == null)
     {
         toastr.error('Role Name cannot be empty','Error');
@@ -346,6 +348,13 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
    	}
     if(!(msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
    	{
+    	if(assigneeId == null)
+        {
+            toastr.error('Please select User','Error');
+            $("#assigneeId").addClass('has-error-2');
+            $("#assigneeId").focus();
+            errorFlag = 1;
+        }
     	if(pincode == '')
         {
           toastr.error('Pincode Cannot be empty','Error');
@@ -479,26 +488,42 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-    /*
-    var filter = "/[CU]{1}[0-9]{9}/";
-    console.log("Super" + filter.test(policyNumber));
-	if(policyNumber.test(policyNumber) == "")
+    var filter = /^[CU]{1}[0-9]{9}$/;
+    if(filter.test(policyNumber) == "")
 	{
     	$('#policyNumber').addClass('has-error-2');
         $('#policyNumber').focus();
         errorFlag = 1;
         toastr.error("Policy number should be of 10 chars and start with C or U","Error");
 	}
-    */
+    
     if(errorFlag == 1)
     	return false;
-        
+    
+    if((msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
+   	{
+    	assigneeId = "";
+   	}
     $.ajax({
 	    type: "POST",
 	    url: 'addMessage',
-	    data: {'policyNumber':policyNumber,'msgCategory':msgCategory,'insuredName':insuredName,'insuredDOD':insuredDOD,'insuredDOB':insuredDOB,
-	    	       'sumAssured':sumAssured,'msgIntimationType':msgIntimationType,'claimantCity':claimantCity,'claimantState':claimantState, 'claimantZone': claimantZone,
-	    	       'nomineeName':nomineeName,'nomineeMob':nomineeMob,'nomineeAdd':nomineeAdd,'insuredAdd':insuredAdd, 'roleName':roleName,"pincode":pincode},
+	    data: {	'policyNumber'     : policyNumber,
+	    		'msgCategory'      : msgCategory,
+	    		'insuredName'      : insuredName,
+	    		'insuredDOD'       : insuredDOD,
+	    		'insuredDOB'       : insuredDOB,
+    	       	'sumAssured'       : sumAssured,
+    	       	'msgIntimationType': msgIntimationType,
+    	       	'claimantCity'     : claimantCity,
+    	       	'claimantState'    : claimantState, 
+    	       	'claimantZone'     : claimantZone,
+    	       	'nomineeName'      : nomineeName,
+    	       	'nomineeMob'       : nomineeMob,
+    	       	'nomineeAdd'       : nomineeAdd,
+    	       	'insuredAdd'       : insuredAdd, 
+    	       	'roleName'         : roleName,
+    	       	"pincode"          : pincode,
+    	       	'assigneeId'       : assigneeId},
 	    beforeSend: function() {
 	    	$("#addmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 	        $("#addmessagesubmit").prop('disabled', true);
@@ -532,7 +557,7 @@ function clearForm(){
 }
 </script>
 
-<!-- <script>
+<script>
 $("#roleName").change(function(){
 	console.log($("#roleName option:selected").val());
 	var roleCode = $(this).val();
@@ -540,6 +565,10 @@ $("#roleName").change(function(){
 		if($(this).val() != '-1')
 			$(this).remove();
 	});
+	
+	if($("#msgIntimationType").val == "CDP")
+		return;
+	
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserByRole',
@@ -558,4 +587,4 @@ $("#roleName").change(function(){
 });
 
 });
-</script> -->
+</script>
