@@ -344,13 +344,16 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
         $("#roleName").focus();
         errorFlag = 1;
     }
-    if(insuredAdd == '')
-    {
-        toastr.error('Please enter Insured Address','Error');
-        $("#insuredAdd").addClass('has-error-2');
-        $("#insuredAdd").focus();
-        errorFlag = 1;
-    }
+    if(msgIntimationType == "CDP")
+   	{
+	    if(insuredAdd == '')
+	    {
+	        toastr.error('Please enter Insured Address','Error');
+	        $("#insuredAdd").addClass('has-error-2');
+	        $("#insuredAdd").focus();
+	        errorFlag = 1;
+	    }
+   	}
     if(nomineeMob)
    	{
     	if(nomineeMob.length != 10)
@@ -503,15 +506,17 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     	$('#policyNumber').focus();
     	errorFlag = 1;
     }
-    var filter = /^[CU]{1}[0-9]{9}$/;
-    if(filter.test(policyNumber) == "")
-	{
-    	$('#policyNumber').addClass('has-error-2');
-        $('#policyNumber').focus();
-        errorFlag = 1;
-        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
-	}
-    
+    else
+   	{
+	    var filter = /^[CU]{1}[0-9]{9}$/;
+	    if(filter.test(policyNumber) == "")
+		{
+	    	$('#policyNumber').addClass('has-error-2');
+	        $('#policyNumber').focus();
+	        errorFlag = 1;
+	        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
+		}
+   	}
     if(errorFlag == 1)
     	return false;
     

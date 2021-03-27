@@ -260,9 +260,13 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public List<CaseDetailList> getAssignedCaseList(String username) {
 		try {
-			String sql = "SELECT a.caseId, a.policyNumber, a.insuredName, a.investigationId, "
-					+ "a.sumAssured, a.caseStatus, a.intimationType,b.zone "
-					+ "FROM case_lists a, audit_case_movement b where a.caseId = b.caseId and" + " b.fromId = ? ";
+			
+			String sql = "select * from case_lists a, ("
+					+ "select a.* from audit_case_movement a, ("
+					+ "select caseId, max(updatedDate) as updatedDate from audit_case_movement "
+					+ "group by caseId ) b "
+					+ "where a.caseId = b.caseId and a.updatedDate = b.updatedDate) b "
+					+ "where a.caseId = b.caseId and b.fromId = ?";
 			List<CaseDetailList> casedetailList = template.query(sql, new Object[] { username },
 					(ResultSet rs, int rowCount) -> {
 						CaseDetailList casedetail = new CaseDetailList();

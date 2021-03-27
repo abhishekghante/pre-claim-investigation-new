@@ -372,10 +372,10 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                  </div>
                   <%if(!case_detail.getExcelFilePath().equals("")) {%>
                    <div class="col-md-3 text-center">
-	                	<a href="<%= Config.upload_url + case_detail.getExcelFilePath() %>" 
-	                		target = "_blank">
-	                		<img src = "<%= Config.upload_url + case_detail.getExcelFilePath() %>" 
-	                			height="170px" width="auto">
+                		<img src = "${pageContext.request.contextPath}/resources/img/excel.png" 
+                			height="120px" width="auto">
+	              		<a href="<%= Config.upload_url + case_detail.getExcelFilePath() %>" 
+	                		target = "_blank"><i class = "fa fa-download"></i> Download
 	              		</a>
                  </div>                 
                   <%} %>               
@@ -812,8 +812,8 @@ $("document").ready(function(){
 				
 			});
 	
-	 $("#editmessagesubmit").click(function(){
-		    
+	 $("#editmessagesubmit").click(function()
+	 {
 			var policyNumber   = $( '#edit_message_form #policyNumber' ).val();
 		    var msgCategory    = $( '#edit_message_form #msgCategory' ).val();
 		    var insuredName    = $( '#edit_message_form #insuredName' ).val();
@@ -917,13 +917,16 @@ $("document").ready(function(){
 			   		validFlag = 0;	   		
 				}
 		   	}
-		    if(insuredAdd == '')
-		    {
-		        toastr.error('Please enter Insured Address','Error');
-		        $("#insuredAdd").addClass('has-error-2');
-		        $("#insuredAdd").focus();
-		        errorFlag = 1;
-		    }
+		    if(msgIntimationType == "CDP")
+		   	{
+			    if(insuredAdd == '')
+			    {
+			        toastr.error('Please enter Insured Address','Error');
+			        $("#insuredAdd").addClass('has-error-2');
+			        $("#insuredAdd").focus();
+			        errorFlag = 1;
+			    }
+		   	}
 		    if(!(msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
 		   	{
 		    	if(pincode == '')
@@ -1062,14 +1065,17 @@ $("document").ready(function(){
 		    	$('#policyNumber').focus();
 		    	errorFlag = 1;
 		    }
-		    var filter = /^[CU]{1}[0-9]{9}$/;
-		    if(filter.test(policyNumber) == "")
-			{
-		    	$('#policyNumber').addClass('has-error-2');
-		        $('#policyNumber').focus();
-		        errorFlag = 1;
-		        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
-			}
+		    else
+		   	{
+			    var filter = /^[CU]{1}[0-9]{9}$/;
+			    if(filter.test(policyNumber) == "")
+				{
+			    	$('#policyNumber').addClass('has-error-2');
+			        $('#policyNumber').focus();
+			        errorFlag = 1;
+			        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
+				}
+		   	}
 		    
 		    if(errorFlag == 1)
 		    	return false;

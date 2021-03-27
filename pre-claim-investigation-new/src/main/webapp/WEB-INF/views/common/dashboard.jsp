@@ -78,7 +78,7 @@ for(String item: dashboard.keySet())
                 <div class="desc"> <% if(dashboard.size() >= 3) {%><%= keys.get(2)%><%} %> </div>
             </div>
             <a class="more" href="javascript:;"> 
-                <a href="${pageContext.request.contextPath}/message/active_message" 
+                <a href="${pageContext.request.contextPath}/message/pending_message" 
                 	class="btn btn-info">View more</a>
             </a>
         </div>
