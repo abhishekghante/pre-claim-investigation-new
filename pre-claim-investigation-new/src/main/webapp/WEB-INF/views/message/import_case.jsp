@@ -1,4 +1,5 @@
 <%@page import = "java.util.List" %>
+<%@page import = "com.preclaim.config.Config" %>
 <%@page import = "com.preclaim.models.ScreenDetails" %>
 <%@page import = "com.preclaim.models.UserRole"%>
 <%@page import="com.preclaim.models.UserDetails" %>
@@ -82,7 +83,7 @@ UserDetails user = (UserDetails) session.getAttribute("User_Login");
                   	Import
                   </button>
                   <%if(!(details.getSuccess_message1().equals(""))){%>
-                  		<a href = "${pageContext.request.contextPath}/message/downloadErrorReport" 
+                  		<a href = "<%=Config.upload_url + "error_log.xlsx" %>" target = "_blank" 
                   			id = "error_log"><i class =" fa fa-exclamation"></i> Error Log</a>
                   	<%}%>
               </div>
