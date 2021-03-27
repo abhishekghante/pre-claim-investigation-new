@@ -171,6 +171,8 @@ public class CaseController {
 			HttpSession session, HttpServletRequest request) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		String role = request.getParameter("roleName");
+		String assigneeId = request.getParameter("assigneeId");
+		System.out.println("assigneeId"+assigneeId);
 		String message = "";
 		// File Uploading Routine
 		if (userfile != null) {
@@ -182,7 +184,7 @@ public class CaseController {
 				Path path = Paths.get(Config.upload_directory + filename);
 				Files.write(path, temp);
 
-				message = caseDao.addBulkUpload(filename, user, role);
+				message = caseDao.addBulkUpload(filename, user, role,assigneeId);
 				if (message.equals("****")) {
 					userDao.activity_log("RCUTEAM", "Excel", "BULKUPLOAD", user.getUsername());
 					session.setAttribute("success_message", "File Uploaded successfully");
@@ -200,6 +202,18 @@ public class CaseController {
 							mail.setReceipent(user.getUser_email());
 							mailConfigDao.sendMail(mail);
 						}
+						
+						if(assigneeId != null) {
+							UserDetails toUser = userDao.getUserDetails(assigneeId);
+							mail.setSubject("New Cases Assigned From Bulk-upload - Claims");
+							String message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";
+							message_body = message_body.replace("<User>", toUser.getFull_name());
+							message_body += "Thanks & Regards,\n Claims";
+							mail.setMessageBody(message_body);
+							mail.setReceipent(toUser.getUser_email());
+							mailConfigDao.sendMail(mail);
+							}		
+						
 					} 
 					catch (Exception e) 
 					{

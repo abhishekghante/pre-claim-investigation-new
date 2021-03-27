@@ -75,12 +75,12 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public String addBulkUpload(String filename, UserDetails fromUser, String user_role) {
+	public String addBulkUpload(String filename, UserDetails fromUser, String user_role,String assigneeId) {
 
 		String extension = StringUtils.getFilenameExtension(filename).toLowerCase();
 		String error = "";
 		if (extension.equals("xlsx"))
-			error = readCaseXlsx(filename, fromUser, user_role);
+			error = readCaseXlsx(filename, fromUser, user_role,assigneeId);
 		else
 			error = "Invalid File extension";
 		return error;
@@ -401,7 +401,7 @@ public class CaseDaoImpl implements CaseDao {
 
 	
 	@Transactional
-	public String readCaseXlsx(String filename, UserDetails fromUser, String user_role) {
+	public String readCaseXlsx(String filename, UserDetails fromUser, String user_role,String assigneeId) {
 		try {
 			Set<String> value = new TreeSet<String>();
 			File error_file = new File(Config.upload_directory + "error_log.xlsx");
@@ -471,9 +471,26 @@ public class CaseDaoImpl implements CaseDao {
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
 					caseDetails.setIntimationType(readCellStringValue(cell));
-					if (!intimation_list.contains(caseDetails.getIntimationType()))
-						error_message += "Invalid Intimation Type";
-					intimationType = caseDetails.getIntimationType().toUpperCase();
+					if (!intimation_list.contains(caseDetails.getIntimationType())) {
+						error_message += "Invalid Intimation Type";					
+					}
+					//-------------//////
+					
+					if (assigneeId!=null) {
+						if(!caseDetails.getIntimationType().equals("CDP")) {
+							error_message += "Intimation Type should be CDP";
+						}
+						intimationType = caseDetails.getIntimationType().toUpperCase();
+					
+					}
+					else
+					{
+						intimationType = caseDetails.getIntimationType().toUpperCase();
+						
+					}
+					
+					////----------/////
+						
 				}
 				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
@@ -597,6 +614,8 @@ public class CaseDaoImpl implements CaseDao {
 					caseMovement.setCaseId(caseId);
 					caseMovement.setFromId(fromUser.getUsername());
 					caseMovement.setUser_role(user_role);
+					if (assigneeId!=null)
+					caseMovement.setToId(assigneeId);
 					caseMovement.setZone(caseDetails.getClaimantZone());
 					case_movementDao.CreatecaseMovement(caseMovement);
 					userDao.activity_log("CASE HISTORY", caseDetails.getPolicyNumber(), "ADD CASE", 
@@ -610,15 +629,16 @@ public class CaseDaoImpl implements CaseDao {
 				}
 			}
 			wb.close();
+			if (assigneeId==null) {
 			for(String val :value) 
 			{
 				System.out.println(val);	
 				getExcelMail(val);
-			}
+			}}
 			
 			// Error File
-			//if (error_case.size() != 0)
-			writeErrorCase(error_case);
+			if (error_case.size() != 0)
+				writeErrorCase(error_case);
 			return "****";
 		} 
 		catch (Exception e) 
