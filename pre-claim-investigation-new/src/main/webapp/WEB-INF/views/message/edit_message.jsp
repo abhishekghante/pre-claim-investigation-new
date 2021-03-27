@@ -237,7 +237,15 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                	  </textarea>
                 </div>
               </div>
-              
+              <div class="form-group">
+               <label class="col-md-4 control-label" for="pincode">Pincode
+               	<span class="text-danger">*</span>
+              	</label>
+               <div class="col-md-8">
+                 <input type="number" placeholder="Pincode" name="pincode" id="pincode" 
+                 	class="form-control" value = "<%=case_detail.getPincode()%>">
+               </div>
+              </div>
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
                 <div class="col-md-8">

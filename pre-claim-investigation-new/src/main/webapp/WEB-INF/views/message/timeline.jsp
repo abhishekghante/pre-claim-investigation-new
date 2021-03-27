@@ -198,12 +198,16 @@ session.removeAttribute("case_history");
 							<div class = "row">
 								<div class = "col-md-12">Role :- <%=list.getRole() %></div>
 							</div>
+							<%if(!(list.getCaseStatus().equals("") && 
+									(list.getRole().equals("RCU Team") || 
+											list.getRole().equals("Claims")))) {%>
 							<div class = "row">
 								<div class = "col-md-12">Status :- <%=list.getCaseStatus() %></div>
 							</div>
 							<div class = "row">
 								<div class = "col-md-12">Remarks :- <%=list.getRemarks() %></div>
 							</div>
+							<%} %>
 						</div>
 					</div>
 					<%} %>

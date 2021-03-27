@@ -152,15 +152,7 @@ session.removeAttribute("userRole");
                 <div class="col-md-8">
                   	<input type = "text" name="claimantZone" id="claimantZone" class="form-control" readonly disabled>
                 </div>
-              </div>
-                <div class="form-group">
-                <label class="col-md-4 control-label" for="pincode">Pincode
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="number" placeholder="Pincode" name="pincode" id="pincode" class="form-control" >
-                </div>
-              </div>                         
+          	  </div>                         
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nomineeName">Nominee Name
                 	<span class="text-danger cdp_mode">*</span>
@@ -186,6 +178,14 @@ session.removeAttribute("userRole");
                 <div class="col-md-8">
                   <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"></textarea>
                 </div>
+              </div>
+              <div class="form-group">
+               <label class="col-md-4 control-label" for="pincode">Pincode
+               	<span class="text-danger">*</span>
+              	</label>
+               <div class="col-md-8">
+                 <input type="number" placeholder="Pincode" name="pincode" id="pincode" class="form-control" >
+               </div>
               </div>
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredAdd">Insured Address

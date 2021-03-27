@@ -221,7 +221,7 @@ $("#roleName").change(function(){
 	
 	if($("#msgIntimationType").val == "CDP")
 		return;
-	
+	$("#assigneeId").prop("disabled",true);	
 	$.ajax({
 	    type: "POST",
 	    url: 'getUserByRole',
@@ -236,6 +236,7 @@ $("#roleName").change(function(){
 	  			}
 	  		console.log(options);
 	    	$("#assigneeId").append(options);
+	    	$("#assigneeId").prop("disabled",false);
 	    }
 });
 
