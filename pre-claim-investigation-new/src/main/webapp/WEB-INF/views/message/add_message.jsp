@@ -83,7 +83,7 @@ session.removeAttribute("userRole");
               </div>
               <div class="form-group">
                 <label class="col-md-4 control-label" for="insuredDOD"> Date of Death
-                	<span class="text-danger">*</span>
+                	<span class="text-danger cdp_mode">*</span>
                	</label>
                 <div class="col-md-8">
                   <input type="date" placeholder="Date of Death" name="insuredDOD" id="insuredDOD" 
@@ -163,7 +163,7 @@ session.removeAttribute("userRole");
               </div>                         
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nomineeName">Nominee Name
-                	<span class="text-danger">*</span>
+                	<span class="text-danger cdp_mode">*</span>
                 </label>
                 <div class="col-md-8">
                   <input type="text" placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
@@ -171,20 +171,26 @@ session.removeAttribute("userRole");
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number</label>
+                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number
+                	<span class="text-danger cdp_mode">*</span>
+                </label>
                 <div class="col-md-8">
                   <input type="number" placeholder="Nominee Contact Number" name="nomineeMob" id="nomineeMob" 
                   	class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address</label>
+                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address
+               		<span class="text-danger cdp_mode">*</span>
+               	</label>
                 <div class="col-md-8">
                   <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"></textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
+                <label class="col-md-4 control-label" for="insuredAdd">Insured Address
+                	<span class="text-danger cdp_mode2">*</span>
+                </label>
                 <div class="col-md-8">
                   <textarea name="insuredAdd" id="insuredAdd" class="form-control" rows="6"></textarea>
                 </div>
@@ -202,7 +208,7 @@ session.removeAttribute("userRole");
                   </select>
                 </div>
                 
-                <div class = "assigneeDetails">
+                <div id = "assigneeDetails">
 	                <label class="col-md-2 control-label" for="assigneeId">Select User 
 	                	<span class="text-danger">*</span></label>
 	                <div class="col-md-3">
@@ -240,11 +246,20 @@ $("document").ready(function(){
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
 	});
 	//Intimation Type Change
+	$("#msgIntimationType").trigger("change");
 	$("#msgIntimationType").change(function(){
 		if($(this).val() == "CDP")
+		{
 			$("#assigneeDetails").show();
+			$(".cdp_mode").show();
+			$(".cdp_mode2").hide();
+		}
 		else
+		{
 			$("#assigneeDetails").hide();
+			$(".cdp_mode").hide();
+			$(".cdp_mode2").show();
+		}
 	});
 	
 });

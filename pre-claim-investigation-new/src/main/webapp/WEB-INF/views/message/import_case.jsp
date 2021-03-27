@@ -68,10 +68,9 @@ ScreenDetails details = (ScreenDetails) session.getAttribute("ScreenDetails");
                   <button type="button" class="btn btn-info btn-sm" name="importfile" id ="importfile" onclick="importData()">
                   	Import
                   </button>
-                  <%if(!(details.getSuccess_message1().equals("File Uploaded successfully") 
-                		  || details.getSuccess_message1().equals(""))){%>
+                  <%if(!(details.getSuccess_message1().equals(""))){%>
                   		<a href = "${pageContext.request.contextPath}/message/downloadErrorReport" 
-                  			id = "error_log"><i class =" fa fa-exclamation"></i></a>
+                  			id = "error_log"><i class =" fa fa-exclamation"></i> Error Log</a>
                   	<%}%>
               </div>
             </form>

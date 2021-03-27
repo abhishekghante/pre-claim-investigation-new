@@ -1,4 +1,5 @@
 <%@page import="java.util.Base64"%>
+<%@page import="com.preclaim.config.Config"%>
 <%
 String username = "";
 String password= "";
@@ -99,7 +100,7 @@ if(cookies != null)
               	<a href = "${pageContext.request.contextPath}/forgotpass">Forgot Password</a>
               </div>
               <div class="forget-password">
-                <p class="text-center">UAT Version 2.1</p>
+                <p class="text-center"><%=Config.version %></p>
               </div>
 		</form>
           <!-- END LOGIN FORM -->
