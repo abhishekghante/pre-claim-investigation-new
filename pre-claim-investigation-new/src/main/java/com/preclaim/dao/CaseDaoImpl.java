@@ -297,14 +297,15 @@ public class CaseDaoImpl implements CaseDao {
 			String sql = "UPDATE case_lists SET policyNumber = ?, investigationId = ?, insuredName = ?, "
 					+ "insuredDOD = ?, insuredDOB = ?, sumAssured = ?, intimationType = ?, locationId = ?, "
 					+ "nominee_Name = ?, nominee_ContactNumber = ?, nominee_address = ?, "
-					+ "insured_address = ?, pdf1FilePath = ?, pdf2FilePath = ?, pdf3FilePath = ?,pincode=?, caseStatus = ?,"
-					+ " caseSubstatus = ?, notCleanCategory = ?, updatedDate = getdate(), updatedBy = ? where caseId = ?";
+					+ "insured_address = ?, pincode=?, caseStatus = ?, caseSubstatus = ?, "
+					+ "notCleanCategory = ?, updatedDate = getdate(), updatedBy = ? where caseId = ?";
 			template.update(sql, casedetail.getPolicyNumber(), casedetail.getInvestigationId(),
 					casedetail.getInsuredName(), casedetail.getInsuredDOD(), casedetail.getInsuredDOB(),
 					casedetail.getSumAssured(), casedetail.getIntimationType(), casedetail.getLocationId(),
-					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), casedetail.getNominee_address(),
-					casedetail.getInsured_address(), casedetail.getPdf1FilePath(),casedetail.getPdf2FilePath(),casedetail.getPdf3FilePath(),casedetail.getPincode(),
-					casedetail.getCaseStatus(), casedetail.getCaseSubStatus(),casedetail.getNotCleanCategory(), casedetail.getUpdatedBy(), casedetail.getCaseId());
+					casedetail.getNominee_name(), casedetail.getNomineeContactNumber(), 
+					casedetail.getNominee_address(), casedetail.getInsured_address(), 
+					casedetail.getPincode(), casedetail.getCaseStatus(), casedetail.getCaseSubStatus(),
+					casedetail.getNotCleanCategory(), casedetail.getUpdatedBy(), casedetail.getCaseId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,10 +318,10 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public String updateCaseTypeAndSubType(CaseDetails casedetail) {
 		try {
-			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseStatus = ?, caseSubStatus =?, pdf1FilePath=?, pdf2FilePath=?, pdf3FilePath=? where caseId = ?";
-			template.update(sql,casedetail.getNotCleanCategory(), casedetail.getCaseStatus(),casedetail.getCaseSubStatus(),
-					casedetail.getPdf1FilePath(),casedetail.getPdf2FilePath(),casedetail.getPdf3FilePath()
-					,casedetail.getCaseId());
+			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseStatus = ?, caseSubStatus = ? "
+					+ "where caseId = ?";
+			template.update(sql,casedetail.getNotCleanCategory(), casedetail.getCaseStatus(),
+					casedetail.getCaseSubStatus(), casedetail.getCaseId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			CustomMethods.logError(e);
@@ -332,7 +333,8 @@ public class CaseDaoImpl implements CaseDao {
 	@Override
 	public String bulkUpdateCaseTypeAndSubType(CaseDetails casedetail,String list) {
 		try {
-			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseStatus = ?, caseSubStatus =? where caseId in(" + list + ")";
+			String sql = "UPDATE case_lists SET notCleanCategory = ? ,caseStatus = ?, caseSubStatus = ? "
+					+ "where caseId in(" + list + ")";
 			template.update(sql,casedetail.getNotCleanCategory(), casedetail.getCaseStatus(),
 					casedetail.getCaseSubStatus());
 		} catch (Exception e) {
@@ -366,8 +368,10 @@ public class CaseDaoImpl implements CaseDao {
 			CaseSubStatus status = caseDao.getCaseStatus(fromUser.getAccount_type(),user_role, 1);
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
-			List<Location> location_list = locationDao.getActiveLocationList();	
-			UserDetails userDetails = userDao.getUserDetails(assigneeId);
+			List<Location> location_list = locationDao.getActiveLocationList();
+			UserDetails userDetails = new UserDetails();
+			if(assigneeId != null)
+				userDetails = userDao.getUserDetails(assigneeId);
 			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext()) {
 				error_message = "";
@@ -890,6 +894,41 @@ public class CaseDaoImpl implements CaseDao {
 		if(template.queryForObject(sql, Integer.class) == 0)
 			return true;
 		return false;
+	}
+
+	@Override
+	public String updateCandidateDoc(long caseId, String filename, String type) {
+		String sql = "";
+		switch(type)
+		{
+			case "pdf1":
+			{
+				sql = "update case_lists set pdf1FilePath = ? where caseId = ?";
+				break;
+			}
+			case "pdf2":
+			{
+				sql = "update case_lists set pdf2FilePath = ? where caseId = ?";
+				break;
+			}
+			case "pdf3":
+			{
+				sql = "update case_lists set pdf3FilePath = ? where caseId = ?";
+				break;
+			}
+		}
+		try
+		{
+			template.update(sql, new Object[] {filename, caseId});
+			return "****";
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			CustomMethods.logError(e);
+			return e.getMessage();
+		}
+
 	}
 	
 

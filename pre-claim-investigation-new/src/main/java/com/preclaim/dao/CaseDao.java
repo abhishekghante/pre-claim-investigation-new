@@ -24,4 +24,5 @@ public interface CaseDao {
     String bulkUpdateCaseTypeAndSubType(CaseDetails casedetail,String list);
     CaseSubStatus getCaseStatus(String fromRole, String user_role, int level);
     boolean checkPolicyNumber(String policyNumber);
+    String updateCandidateDoc(long caseId, String filename, String type);
 }

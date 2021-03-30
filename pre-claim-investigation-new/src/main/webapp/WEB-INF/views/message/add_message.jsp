@@ -184,7 +184,8 @@ session.removeAttribute("userRole");
                	<span class="text-danger cdp_mode">*</span>
               	</label>
                <div class="col-md-8">
-                 <input type="number" placeholder="Pincode" name="pincode" id="pincode" class="form-control" >
+                 <input type="text" placeholder="Pincode" name="pincode" id="pincode" 
+                 	class="form-control">
                </div>
               </div>
               <div class="form-group">
@@ -436,13 +437,22 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     if(pincode != "")
    	{
     	var filter = /^[0-9]{6}$/;
-   		if(filter.test(pincode) == "")
+    	if(!filter.test(pincode))
 		{
    		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
    	      $("#pincode").addClass('has-error-2');
    	      $("#pincode").focus();
    	      errorFlag = 1;
 		}
+   		
+   		if(!Number.isInteger(pincode) || pincode.length != 6)
+   		{
+     		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
+     	      $("#pincode").addClass('has-error-2');
+     	      $("#pincode").focus();
+     	      errorFlag = 1;
+  		}
+   		
    	}
     if(msgIntimationType == '')
     {

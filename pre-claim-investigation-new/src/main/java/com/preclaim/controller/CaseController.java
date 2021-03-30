@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -355,7 +356,11 @@ public class CaseController {
 	}
 
 	@RequestMapping(value = "/updateMessageDetails", method = RequestMethod.POST)
-	public @ResponseBody String updateMessageDetails(HttpSession session, HttpServletRequest request) {
+	public @ResponseBody String updateMessageDetails(HttpSession session, HttpServletRequest request,
+			@RequestParam(name = "pdf1FilePath", required = false) MultipartFile pdf1 , 
+			@RequestParam(name = "pdf2FilePath", required = false) MultipartFile pdf2 , 
+			@RequestParam(name = "pdf3FilePath", required = false) MultipartFile pdf3 
+			) {
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		if (user == null)
 			return "common/login";
@@ -376,9 +381,64 @@ public class CaseController {
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setUpdatedBy(user.getUsername());
 		caseDetail.setCaseId(Long.parseLong(request.getParameter("caseId")));
-		caseDetail.setPdf1FilePath(request.getParameter("filename"));
-		caseDetail.setPdf2FilePath(request.getParameter("filename2"));
-		caseDetail.setPdf3FilePath(request.getParameter("filename3"));
+		
+		//File Upload
+		if(pdf1 != null)
+		{
+			try
+			{
+				String filename = caseDetail.getCaseId() + "_doc1." 
+						+ StringUtils.getFilenameExtension(pdf1.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf1.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseDetail.getCaseId(), filename, "pdf1");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
+		
+		if(pdf2 != null)
+		{
+			try
+			{
+				String filename = caseDetail.getCaseId() + "_doc2." 
+						+ StringUtils.getFilenameExtension(pdf2.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf2.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseDetail.getCaseId(), filename, "pdf2");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
+		
+		if(pdf3 != null)
+		{
+			try
+			{
+				String filename = caseDetail.getCaseId() + "_doc3." + 
+						StringUtils.getFilenameExtension(pdf3.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf3.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseDetail.getCaseId(), filename, "pdf3");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
@@ -441,11 +501,72 @@ public class CaseController {
 	}
 
 	@RequestMapping(value = "/assignCase", method = RequestMethod.POST)
-	public @ResponseBody String assignToRM(HttpServletRequest request, HttpSession session) 
+	public @ResponseBody String assignCase(HttpServletRequest request, HttpSession session,
+			@RequestParam(name = "pdf1FilePath", required = false) MultipartFile pdf1 , 
+			@RequestParam(name = "pdf2FilePath", required = false) MultipartFile pdf2 , 
+			@RequestParam(name = "pdf3FilePath", required = false) MultipartFile pdf3 
+			) 
 	{
 		UserDetails user = (UserDetails) session.getAttribute("User_Login");
 		CaseDetails caseDetail = new CaseDetails();
 		long caseId = Integer.parseInt(request.getParameter("caseId"));
+		
+		if(pdf1 != null)
+		{
+			try
+			{
+				String filename = caseId + "_doc1." +
+						StringUtils.getFilenameExtension(pdf1.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf1.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseId, filename, "pdf1");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
+		
+		if(pdf2 != null)
+		{
+			try
+			{
+				String filename = caseId + "_doc2." 
+						+ StringUtils.getFilenameExtension(pdf2.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf2.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseId, filename, "pdf2");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
+		
+		if(pdf3 != null)
+		{
+			try
+			{
+				String filename = caseId + "_doc3." 
+						+ StringUtils.getFilenameExtension(pdf3.getOriginalFilename()); 
+				Files.write(Paths.get(Config.upload_directory + filename), pdf3.getBytes());
+				String error_message = caseDao.updateCandidateDoc(caseId, filename, "pdf3");
+				if(!error_message.equals("****"))
+					return error_message;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				CustomMethods.logError(e);
+				return e.getMessage();
+			}
+		}
 		
 		String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
@@ -453,9 +574,6 @@ public class CaseController {
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
 		String NotCleanCategory = request.getParameter("NotCleanCategory");
-		caseDetail.setPdf1FilePath(request.getParameter("filename"));
-		caseDetail.setPdf2FilePath(request.getParameter("filename2"));
-		caseDetail.setPdf3FilePath(request.getParameter("filename3"));
 		caseDetail.setCaseId(caseId);
 		CaseSubStatus status = new CaseSubStatus();
 		//Approved

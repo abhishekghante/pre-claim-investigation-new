@@ -579,66 +579,41 @@ $("document").ready(function(){
 		$(".cdp_mode2").show();
 	}
 	
+	$("#claimantState").val($("#claimantCity option:selected").data("state"));
+	$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
 	// for pdf
 	
-	var filename ="";
 	$("#img_userpdf").on('click', function() {                                      //pdf1
 	    $("#input_userpdf").trigger('click');
 	  });
 
-	$("#input_userpdf").change(function(e){
-		if($(this).val() != "")
-		{
-			filename = $("#caseId").val() + "_" +e.target.files[0].name;
-			$("#userpdf").val(filename); 
-			uploadFiles();
-			$("#img_userpdf").attr("src","../resources/img/pdf.png");
-		}
-		else	
-		{
-			filename = "";
-			$("#img_userpdf").attr("src","../resources/img/upload_img.png");
-		}
-	  });
-	
-	var filename2 ="";                                                             //pdf2
 	$("#img_userpdf2").on('click', function() {
 	    $("#input_userpdf2").trigger('click');
 	  });
-
-	$("#input_userpdf2").change(function(e){ 
-		if($(this).val() != "")
-		{
-			filename2 = $("#caseId").val() + "_" +e.target.files[0].name;
-			$("#userpdf2").val(filename2); 
-			uploadFiles();
-			$("#img_userpdf2").attr("src","../resources/img/pdf.png");
-		}
-		else	
-		{
-			filename2 = "";
-			$("#img_userpdf2").attr("src","../resources/img/upload_img.png");
-		}
-	  });
 	
-	var filename3 ="";                                                             //pdf3
 	$("#img_userpdf3").on('click', function() {
 	    $("#input_userpdf3").trigger('click');
 	  });
 
+	$("#input_userpdf").change(function(e){
+		if($(this).val() != "")
+			$("#img_userpdf").attr("src","../resources/img/pdf.png");
+		else	
+			$("#img_userpdf").attr("src","../resources/img/upload_img.png");
+	  });
+	
+	$("#input_userpdf2").change(function(e){ 
+		if($(this).val() != "")
+			$("#img_userpdf2").attr("src","../resources/img/pdf.png");
+		else	
+			$("#img_userpdf2").attr("src","../resources/img/upload_img.png");
+	  });
+	
 	$("#input_userpdf3").change(function(e){ 
 		if($(this).val() != "")
-		{
-			filename3 = $("#caseId").val() + "_" +e.target.files[0].name;
-			$("#userpdf3").val(filename3); 
-			uploadFiles();
 			$("#img_userpdf3").attr("src","../resources/img/pdf.png");
-		}
 		else	
-		{
-			filename3 = "";
 			$("#img_userpdf3").attr("src","../resources/img/upload_img.png");
-		}
 	  });
 	
 	$("#Not-CleanCategory").hide();
@@ -647,6 +622,8 @@ $("document").ready(function(){
 	<%}else{%>
 		$("#case-SubStatus").hide();
 	<%}%>
+	$("#claimantCity").trigger("change");
+	$("#toStatus").trigger("change");
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
@@ -668,9 +645,6 @@ $("document").ready(function(){
 			$(".cdp_mode2").show();
 		}
 	});
-	
-	$("#claimantCity").trigger("change");
-	$("#toStatus").trigger("change");
 	
 	$("#caseSubStatus").change(function(){
 		var caseSubStatus = $(this).val();
@@ -703,153 +677,131 @@ $("document").ready(function(){
 		});
 	});
 	
-	function uploadFiles() {
-	    var formData = new FormData();
-		var files = $("input[type = 'file']");
-		$(files).each(function (i,value) {
-	         		formData.append('file[]', value.files[i]);
-	    });
-	    formData.append("prefix","<%=case_detail.getCaseId()%>");
-	    $.ajax({
-	        type: "POST",
-	        url: '${pageContext.request.contextPath}/uploadFile',
-	        data: formData,
-	        contentType: false, //used for multipart/form-data
-	        processData: false, //doesn't modify or encode the String
-	        cache: false, 
-	        async: false,//wait till the execution finishes
-	        success:function(result)
-	        {
-				if(result == "****")
-					toastr.success("File uploaded successfully","Success");
-	        }
-	    });
-	    return false;
-	}
-	
-	
 	$("#assignmessagesubmit").click(function()
 	{
-				//Validation for Case Closure
-				var caseId = $( '#edit_message_form #caseId' ).val();
-				var toStatus = $( '#edit_message_form #toStatus' ).val();
-			    var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
-			    var caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
-			    var NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
-			    
-			    var toId = "";
-			    var toRole = "";
-			    var validFlag = 1;
-			    console.log(filename);
-			    if(filename == "")
-			   	{
-			   		filename = "<%=case_detail.getPdf1FilePath()%>";
-			   	}
-			    
-			    if(filename2 == "")
-			   	{
-			   		filename2 = "<%=case_detail.getPdf2FilePath()%>";
-			   	}
-			    if(filename3 == "")
-			   	{
-			   		filename3 = "<%=case_detail.getPdf3FilePath()%>";
-			   	}
-			    
-			    if(toStatus == null)
-			   	{
-			   		toastr.error("Kindly select status", "Error");
-			   		validFlag = 0;
-			   	}
-			    
-			    
-			    if(toStatus != "Closed")
-			   	{
-				    toId = $( '#edit_message_form #toId' ).val();
-				    toRole = $( '#edit_message_form #toRole' ).val();
-			   	
-				    if(toId == null)
-				   	{
-				   		toastr.error("Kindly select user", "Error");
-				   		validFlag = 0;
-				   	}
-				    
-				    if(toRole == null)
-				   	{
-				   		toastr.error("Kindly select User Role", "Error");
-				   		validFlag = 0;
-				   	}
-			   	}
-			    else if(toStatus == "Closed")
-			    {	
-			   		toId = $( '#edit_message_form #toId' ).val();
-				    toRole = $( '#edit_message_form #toRole' ).val();
-				    
-				    if(caseSubStatus == null)
-				   	{
-				   		toastr.error("Kindly select Case Sub-status", "Error");
-				   		validFlag = 0;
-				   		   		
-				   	}
-				    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
-					{
-				   		toastr.error("Kindly select Not-clean category", "Error");
-				   		validFlag = 0;	   		
-					}
-			   	}
-			    
-			    if(toStatus == "Rejected" && toRemarks == "")
-			   	{
-			   		toastr.error("Kindly enter Rejection reason");
-			   		validFlag = 0;
-			   	}
-			    
-			    
-			    if(validFlag == 0)
-			   	{
-					return false;    	
-			   	}
-			    
-			    $("#assignmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
-			    $("#assignmessagesubmit").prop('disabled', true);
-			    $('#assignmessagesubmit').css("opacity",".5");
-			    
-			    
-			    $.ajax({
-				    type: "POST",
-				    url: 'assignCase',
-				    data:{
-				    	"toId"            : toId, 
-				    	"toRole"          : toRole, 
-				    	"toStatus"        : toStatus, 
-				    	"toRemarks"       : toRemarks, 
-				    	"caseId"          : caseId,
-				    	"caseSubStatus"   : caseSubStatus,
-				    	"NotCleanCategory": NotCleanCategory,
-				    	 "filename"      : filename,
-				    	 "filename2"      : filename2,
-				    	 "filename3"      : filename3
-				    	 },
-				    success:function(message)
-				    {
-				    	$("#editmessagesubmit").html('Assign Case');
-				        $("#editmessagesubmit").prop('disabled', false);
-				        $('#editmessagesubmit').css("opacity","");
-				        
-				    	if(message == "****")
-				    		{
-					    		toastr.success("Case assigned successfully", "Success");
-					    		location.href = "${pageContext.request.contextPath}/message/pending_message";
-					    		return;
-				    		}
-				    	else
-				    		{
-				    			toastr.error(message,"Error");
-			    				return;
-				    		}
-				    }
-			    });
-				
-			});
+		//Validation for Case Closure
+		var caseId = $( '#edit_message_form #caseId' ).val();
+		var toStatus = $( '#edit_message_form #toStatus' ).val();
+	    var toRemarks = $( '#edit_message_form #toRemarks').val().trim();
+	    var caseSubStatus = "";
+	    var NotCleanCategory = ""; 
+	    
+	    var toId = "";
+	    var toRole = "";
+	    var validFlag = 1;
+	    
+	    if(toStatus == null)
+	   	{
+	   		toastr.error("Kindly select status", "Error");
+	   		validFlag = 0;
+	   	}
+	    
+	    if(toStatus != "Closed")
+	   	{
+		    toId = $( '#edit_message_form #toId' ).val();
+		    toRole = $( '#edit_message_form #toRole' ).val();
+		    caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
+		    NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+		    
+		    if(toId == null)
+		   	{
+		   		toastr.error("Kindly select user", "Error");
+		   		validFlag = 0;
+		   	}
+		    
+		    if(toRole == null)
+		   	{
+		   		toastr.error("Kindly select User Role", "Error");
+		   		validFlag = 0;
+		   	}
+		    if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
+			{
+		   		toastr.error("Kindly select Not-clean category", "Error");
+		   		validFlag = 0;	   		
+			}
+		    
+		    if(caseSubStatus == null)
+		    	caseSubStatus = "";
+		    if(NotCleanCategory == null)
+		    	NotCleanCategory = "";
+	   	}
+	    else if(toStatus == "Closed")
+	    {	
+	   		toId = $( '#edit_message_form #toId' ).val();
+		    toRole = $( '#edit_message_form #toRole' ).val();
+		    caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
+		    NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+		    
+		    if(caseSubStatus == null)
+		   	{
+		   		toastr.error("Kindly select Case Sub-status", "Error");
+		   		validFlag = 0;
+		   		   		
+		   	}
+		    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
+			{
+		   		toastr.error("Kindly select Not-clean category", "Error");
+		   		validFlag = 0;	   		
+			}
+	   	}
+	    
+	    if(toStatus == "Reopen" && toRemarks == "")
+	   	{
+	   		toastr.error("Kindly enter Rejection reason");
+	   		validFlag = 0;
+	   	}
+	    
+	    
+	    if(validFlag == 0)
+	   		return false;    	
+	   	
+	    $("#assignmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
+	    $("#assignmessagesubmit").prop('disabled', true);
+	    $('#assignmessagesubmit').css("opacity",".5");
+	    
+	    var formData = new FormData();
+		formData.append("toId",toId);
+		formData.append("toRole",toRole);
+		formData.append("toStatus",toStatus);
+		formData.append("toRemarks",toRemarks);
+		formData.append("caseId",caseId);
+		formData.append("caseSubStatus",caseSubStatus);
+		formData.append("NotCleanCategory",NotCleanCategory);
+		if($("#input_userpdf").val() != "")
+			formData.append("pdf1FilePath",$("#input_userpdf")[0].files[0]);
+		if($("#input_userpdf2").val() != "")
+			formData.append("pdf2FilePath",$("#input_userpdf2")[0].files[0]);
+		if($("#input_userpdf3").val() != "")
+			formData.append("pdf3FilePath",$("#input_userpdf3")[0].files[0]);
+		$.ajax({
+		    type: "POST",
+		    url: 'assignCase',
+		    data:formData,
+	   	    contentType: false, //used for multipart/form-data
+	        processData: false, //doesn't modify or encode the String
+	        cache: false, 
+	        async: true,//wait till the execution finishes        
+		    success:function(message)
+		    {
+		    	$("#editmessagesubmit").html('Assign Case');
+		        $("#editmessagesubmit").prop('disabled', false);
+		        $('#editmessagesubmit').css("opacity","");
+		        
+		    	if(message == "****")
+		    		{
+			    		toastr.success("Case assigned successfully", "Success");
+			    		location.href = "${pageContext.request.contextPath}/message/pending_message";
+			    		return;
+		    		}
+		    	else
+		    		{
+		    			toastr.error(message,"Error");
+	    				return;
+		    		}
+		    }
+	    });
+		
+	});
 	
 	 $("#editmessagesubmit").click(function()
 	 {
@@ -900,27 +852,14 @@ $("document").ready(function(){
 		    $("#caseSubstatus").removeClass('has-error-2');
 		    
 		    var errorFlag = 0;
-		   
-		    console.log(filename);
-		    if(filename == "")
-		   	{
-		   		filename = "<%=case_detail.getPdf1FilePath()%>";
-		   	}
-		    
-		    if(filename2 == "")
-		   	{
-		   		filename2 = "<%=case_detail.getPdf2FilePath()%>";
-		   	}
-		    if(filename3 == "")
-		   	{
-		   		filename3 = "<%=case_detail.getPdf3FilePath()%>";
-		   	}
-		    
-		    
+		  
 		    if(toStatus != "Closed")
 		    {   
 		    	caseSubstatus = "";
 		    	NotCleanCategory = "";
+		    	caseSubStatus = $( '#edit_message_form #caseSubStatus').val();
+			    NotCleanCategory = $( '#edit_message_form #NotCleanCategory').val(); 
+			    
 			    if(toId == null)
 			    {
 			        toastr.error('Please select User','Error');
@@ -936,6 +875,15 @@ $("document").ready(function(){
 			        errorFlag = 1;
 			    }
 			    
+			    if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
+				{
+			   		toastr.error("Kindly select Not-clean category", "Error");
+			   		validFlag = 0;	   		
+				}
+			    if(caseSubStatus == null)
+			    	caseSubStatus = "";
+			    if(NotCleanCategory == null)
+			    	NotCleanCategory = "";
 		    }
 		    else if(toStatus == "Closed")
 		   	{
@@ -947,8 +895,7 @@ $("document").ready(function(){
 		   		if(caseSubStatus == null)
 			   	{
 			   		toastr.error("Kindly select Case Sub-status", "Error");
-			   		validFlag = 0;
-			   		   		
+			   		validFlag = 0;	   		
 			   	}
 			    else if(caseSubStatus == 'Not-Clean' && NotCleanCategory == null)
 				{
@@ -961,7 +908,7 @@ $("document").ready(function(){
 		   	{
 		    	if(pincode == '')
 		        {
-		          toastr.error('Pincode Cannot be empty','Error');
+		          toastr.error('Pincode cannot be empty','Error');
 		          $("#pincode").addClass('has-error-2');
 		          $("#pincode").focus();
 		          errorFlag = 1;
@@ -1015,8 +962,8 @@ $("document").ready(function(){
 		    }
 		    if(pincode != "")
 		   	{
-		    	var filter = /^[0-9]{6}$/
-		   		if(filter.test(pincode) == "")
+		    	var filter = /^[0-9]{6}$/;
+		    	if(filter.test(pincode) == "")
 				{
 		   		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
 		   	      $("#pincode").addClass('has-error-2');
@@ -1123,45 +1070,58 @@ $("document").ready(function(){
 		    
 		    if(errorFlag == 1)
 		    	return false;
+		    
+		    if(caseSubStatus == null)
+		    	caseSubStatus = "";
+		    
+		    if(NotCleanCategory == null)
+		    	NotCleanCategory = "";
+		    
 		        
 		    $("#editmessagesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
 		    $("#editmessagesubmit").prop('disabled', true);
 		    $('#editmessagesubmit').css("opacity",".5");
 
+		    var formData = new FormData();
+			
+		    formData.append("policyNumber",policyNumber);
+		    formData.append("msgCategory",msgCategory);
+		    formData.append("insuredDOD",insuredDOD);
+		    formData.append("insuredDOB",insuredDOB);
+		    formData.append("insuredName",insuredName);
+		    formData.append("sumAssured",sumAssured);
+		    formData.append("msgIntimationType",msgIntimationType);
+		    formData.append("locationId",locationId);
+		    formData.append("nomineeName",nomineeName);
+		    formData.append("nomineeMob",nomineeMob);
+		    formData.append("nomineeAdd",nomineeAdd);
+		    formData.append("pincode",pincode);
+		    formData.append("insuredAdd",insuredAdd);
 		    
-		    var formdata = {
-		    		'policyNumber'     : policyNumber,
-		   	    	'msgCategory'      : msgCategory,
-		   	       	'insuredDOD'       : insuredDOD,
-		   	      	'insuredDOB'       : insuredDOB,
-		   	      	'insuredName'      : insuredName,
-		          	'sumAssured'       : sumAssured,
-		          	'msgIntimationType': msgIntimationType,
-		          	'locationId'       : locationId,
-			       	'nomineeName'      : nomineeName,
-			       	'nomineeMob'       : nomineeMob,
-			       	'nomineeAdd'       : nomineeAdd,
-			       	'pincode'          : pincode,
-			       	'insuredAdd'       : insuredAdd,
-			       	'toRole'           : toRole,
-			       	'toStatus'         : toStatus,
-		        	'toRemarks'        : toRemarks,
-		        	'caseId'           : caseId,
-		        	'caseSubStatus'    : caseSubstatus,
-		        	'NotCleanCategory' : NotCleanCategory,
-		        	"toId"             : toId,
-		        	"pincode"          :pincode,
-		        	"filename"         : filename,
-			    	"filename2"        : filename2,
-			    	"filename3"        : filename3
-		        	};
-		    console.log(formdata);
+		    formData.append("toId",toId);
+			formData.append("toRole",toRole);
+			formData.append("toStatus",toStatus);
+			formData.append("toRemarks",toRemarks);
+			formData.append("caseId",caseId);
+			formData.append("caseSubStatus",caseSubStatus);
+			formData.append("NotCleanCategory",NotCleanCategory);
+			
+			if($("#input_userpdf").val() != "")
+				formData.append("pdf1FilePath",$("#input_userpdf")[0].files[0]);
+			if($("#input_userpdf2").val() != "")
+				formData.append("pdf2FilePath",$("#input_userpdf2")[0].files[0]);
+			if($("#input_userpdf3").val() != "")
+				formData.append("pdf3FilePath",$("#input_userpdf3")[0].files[0]);
+			
 		    
 		    $.ajax({
 			    type: "POST",
 			    url: 'updateMessageDetails',
-			    data: formdata,
-
+			    data:formData,
+		   	    contentType: false, //used for multipart/form-data
+		        processData: false, //doesn't modify or encode the String
+		        cache: false, 
+		        async: true,//wait till the execution finishes        
 			    success: function( data )
 			    {
 			        $("#editmessagesubmit").html('Update Case');
