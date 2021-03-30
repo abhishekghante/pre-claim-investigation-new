@@ -609,14 +609,14 @@ $("document").ready(function(){
 	$("#input_userpdf2").change(function(e){ 
 		if($(this).val() != "")
 		{
-			filename = $("#caseId").val() + "_" +e.target.files[0].name;
-			$("#userpdf2").val(filename); 
+			filename2 = $("#caseId").val() + "_" +e.target.files[0].name;
+			$("#userpdf2").val(filename2); 
 			uploadFiles();
 			$("#img_userpdf2").attr("src","../resources/img/pdf.png");
 		}
 		else	
 		{
-			filename = "";
+			filename2 = "";
 			$("#img_userpdf2").attr("src","../resources/img/upload_img.png");
 		}
 	  });
@@ -629,14 +629,14 @@ $("document").ready(function(){
 	$("#input_userpdf3").change(function(e){ 
 		if($(this).val() != "")
 		{
-			filename = $("#caseId").val() + "_" +e.target.files[0].name;
-			$("#userpdf3").val(filename); 
+			filename3 = $("#caseId").val() + "_" +e.target.files[0].name;
+			$("#userpdf3").val(filename3); 
 			uploadFiles();
 			$("#img_userpdf3").attr("src","../resources/img/pdf.png");
 		}
 		else	
 		{
-			filename = "";
+			filename3 = "";
 			$("#img_userpdf3").attr("src","../resources/img/upload_img.png");
 		}
 	  });
