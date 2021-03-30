@@ -4,6 +4,7 @@ public class CaseSubStatus {
 
 	private long id;
 	private String user_role;
+	private String fromRole;
 	private String Case_status;
 	private String caseSubStatus;
 	private int level;
@@ -11,6 +12,7 @@ public class CaseSubStatus {
 	public CaseSubStatus() {
 		id = 0;
 		user_role = "";
+		fromRole = "";
 		Case_status = "";
 		level = 0;
 
@@ -56,10 +58,18 @@ public class CaseSubStatus {
 		this.level = level;
 	}
 
+	public String getFromRole() {
+		return fromRole;
+	}
+
+	public void setFromRole(String fromRole) {
+		this.fromRole = fromRole;
+	}
+
 	@Override
 	public String toString() {
-		return "CaseSubStatus [id=" + id + ", user_role=" + user_role + ", Case_status=" + Case_status
-				+ ", caseSubStatus=" + caseSubStatus + ", level=" + level + "]";
+		return "CaseSubStatus [id=" + id + ", user_role=" + user_role + ", fromRole=" + fromRole + ", Case_status="
+				+ Case_status + ", caseSubStatus=" + caseSubStatus + ", level=" + level + "]";
 	}
 
 }

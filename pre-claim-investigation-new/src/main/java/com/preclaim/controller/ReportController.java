@@ -527,6 +527,14 @@ public class ReportController {
 				newRow = regionwise_sheet.createRow(rowNum);
 			}
 			
+			regionwise_sheet.autoSizeColumn(0);
+			regionwise_sheet.autoSizeColumn(1);
+			regionwise_sheet.autoSizeColumn(2);
+			regionwise_sheet.autoSizeColumn(4);
+			regionwise_sheet.autoSizeColumn(5);
+			regionwise_sheet.autoSizeColumn(6);
+			regionwise_sheet.autoSizeColumn(7);
+			
 			//Legends
 			//newRow = investigator_sheet.getRow(2);
 		

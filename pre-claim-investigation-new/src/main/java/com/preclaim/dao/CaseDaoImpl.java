@@ -423,10 +423,11 @@ public class CaseDaoImpl implements CaseDao {
 				wb.close();
 				return error_message;
 			}
-			CaseSubStatus status = caseDao.getCaseStatus(fromUser.getAccount_type(), 1);
+			CaseSubStatus status = caseDao.getCaseStatus(fromUser.getAccount_type(),user_role, 1);
 			List<InvestigationType> investigation_list = investigationDao.getActiveInvestigationList();
 			List<String> intimation_list = intimationTypeDao.getActiveIntimationTypeStringList();
-			List<Location> location_list = locationDao.getActiveLocationList();
+			List<Location> location_list = locationDao.getActiveLocationList();	
+			UserDetails userDetails = userDao.getUserDetails(assigneeId);
 			Map<CaseDetails, String> error_case = new HashMap<CaseDetails, String>();
 			while (itr.hasNext()) {
 				error_message = "";
@@ -445,7 +446,7 @@ public class CaseDaoImpl implements CaseDao {
 						error_message += "Policy Number is not equal to 10 chars, ";	
 					else if(caseDetails.getPolicyNumber().length() == 10)	   
 					{
-						String regex = "[C/U]{1}[0-9]{9}";
+						String regex = "[CU]{1}[0-9]{9}";
 						Pattern p = Pattern.compile(regex);
 						Matcher m = p.matcher(caseDetails.getPolicyNumber());
 						if(m.matches() == false) 
@@ -530,20 +531,44 @@ public class CaseDaoImpl implements CaseDao {
 					}
 				}
 				if (cellIterator.hasNext()) {
-					cell = cellIterator.next();
+					cell = cellIterator.next();	
 					caseDetails.setClaimantCity(readCellStringValue(cell));
-					for (Location list : location_list) {
-						if (caseDetails.getClaimantCity().equalsIgnoreCase(list.getCity())) {
-							caseDetails.setLocationId(list.getLocationId());
-							caseDetails.setClaimantState(list.getState());
-							caseDetails.setClaimantZone(list.getZone());
-							break;
+					if (caseDetails.getClaimantCity().equals(""))
+						error_message = "City cannot be blank, ";
+					for (Location list : location_list)
+					{
+						System.out.println("userDetails.getAccount_type()"+userDetails.getAccount_type());
+						
+						if(fromUser.getAccount_type().equals("CLAMAN"))
+						{
+							if (caseDetails.getClaimantCity().equalsIgnoreCase(userDetails.getCity())) {
+								caseDetails.setLocationId(list.getLocationId());
+								caseDetails.setClaimantState(list.getState());
+								caseDetails.setClaimantZone(list.getZone());
+								break;
+																
+							}	
+							if (caseDetails.getClaimantState().equals("") || !caseDetails.getClaimantCity().equalsIgnoreCase(userDetails.getCity() ))
+								error_message = "Assign user city not match please check..!!!, ";								
 						}
-					}
-					if (caseDetails.getClaimantState().equals(""))
-						error_message = "City not present in database, ";
+						else
+						{	
+							if (caseDetails.getClaimantCity().equalsIgnoreCase(list.getCity()))
+							{
+								caseDetails.setLocationId(list.getLocationId());
+								caseDetails.setClaimantState(list.getState());
+								caseDetails.setClaimantZone(list.getZone());
+								break;
+							}
+							
+							if (caseDetails.getClaimantState().equals(""))
+								error_message = "City not present in database, ";
+			      }
 				}
-				if (cellIterator.hasNext()) {
+					
+    		}					
+					
+    				if (cellIterator.hasNext()) {
 					cell = cellIterator.next();
 					caseDetails.setNominee_name(readCellStringValue(cell));
 					if (caseDetails.getNominee_name().equals("")) {
@@ -882,14 +907,15 @@ public class CaseDaoImpl implements CaseDao {
 	}
 
 	@Override
-	public CaseSubStatus getCaseStatus(String user_role, int level) {
+	public CaseSubStatus getCaseStatus(String fromRole, String user_role, int level) {
 		try
 		{
 			CaseSubStatus detail = new CaseSubStatus();
-			String sql = "SELECT * FROM case_substatus where user_role = ? and level = ?";
-			template.query(sql, new Object[] {user_role, level},
+			String sql = "SELECT * FROM case_substatus where fromRole =? and user_role = ? and level = ? ";
+			template.query(sql, new Object[] {fromRole,user_role, level},
 					(ResultSet rs, int rowCount) -> {
 						detail.setId(rs.getLong("id"));
+						detail.setFromRole(rs.getString("fromRole"));
 						detail.setUser_role(rs.getString("user_role"));
 						detail.setCase_status(rs.getString("Case_status"));
 						detail.setCaseSubStatus(rs.getString("caseSubStatus"));

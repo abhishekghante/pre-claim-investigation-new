@@ -256,7 +256,7 @@ public class CaseController {
 		caseDetail.setPincode(request.getParameter("pincode"));
 		caseDetail.setCreatedBy(user.getUsername());
 		//Get Case Status
-		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(), 1);
+		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(),request.getParameter("roleName"), 1);
 		caseDetail.setCaseStatus(status.getCase_status());
 		caseDetail.setCaseSubStatus(status.getCaseSubStatus());
 		
@@ -396,15 +396,9 @@ public class CaseController {
 		{
 			if(caseSubStatus.equals(""))
 			{
-				if(user.getAccount_type().equals("AGNSUP") && toRole.equals("REGMAN"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-				else if(user.getAccount_type().equals("REGMAN") && toRole.equals("UW"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-				else if(user.getAccount_type().equals("AGNSUP") && toRole.equals("CLAMAN"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 3);	
-				else
-					status = caseDao.getCaseStatus(user.getAccount_type(), 1);
-				if(status == null)
+	    		status = caseDao.getCaseStatus(user.getAccount_type(), toRole , 1);
+		
+	    		if(status == null)
 					status = new CaseSubStatus();
 				caseDetail.setCaseStatus(status.getCase_status());
 				caseDetail.setCaseSubStatus(status.getCaseSubStatus());
@@ -418,10 +412,9 @@ public class CaseController {
 		}
 		//Reopen
 		else if(toStatus.equals("Reopen"))
-		{
-			status = caseDao.getCaseStatus(user.getAccount_type(), -1);
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		{	
+			caseDetail.setCaseStatus("Reopen");
+			caseDetail.setCaseSubStatus("Further Requirement");
 		}
 		//Closed
 		else if(toStatus.equals("Closed"))
@@ -471,15 +464,9 @@ public class CaseController {
 		{
 			if(caseSubStatus.equals(""))
 			{
-				if(user.getAccount_type().equals("AGNSUP") && toRole.equals("REGMAN"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-				else if(user.getAccount_type().equals("REGMAN") && toRole.equals("UW"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-				else if(user.getAccount_type().equals("AGNSUP") && toRole.equals("CLAMAN"))
-					status = caseDao.getCaseStatus(user.getAccount_type(), 3);	
-				else
-					status = caseDao.getCaseStatus(user.getAccount_type(), 1);
-				if(status == null)
+	    		status = caseDao.getCaseStatus(user.getAccount_type(), toRole , 1);
+		
+	    		if(status == null)
 					status = new CaseSubStatus();
 				caseDetail.setCaseStatus(status.getCase_status());
 				caseDetail.setCaseSubStatus(status.getCaseSubStatus());
@@ -493,10 +480,9 @@ public class CaseController {
 		}
 		//Reopen
 		else if(toStatus.equals("Reopen"))
-		{
-			status = caseDao.getCaseStatus(user.getAccount_type(), -1);
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		{	
+			caseDetail.setCaseStatus("Reopen");
+			caseDetail.setCaseSubStatus("Further Requirement");
 		}
 		//Closed
 		else if(toStatus.equals("Closed"))
@@ -567,31 +553,33 @@ public class CaseController {
 		String toStatus = request.getParameter("toStatus");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
 		String NotCleanCategory = request.getParameter("NotCleanCategory");
-		
+		System.out.println("caseSubStatus"+caseSubStatus);
 		/* caseDetail.setCaseId(caseId); */
 		CaseSubStatus status = new CaseSubStatus();
 		//Approved
 		if(toStatus.equals("Approved"))
 		{
-			if(user.getAccount_type().equals("AGNSUP") && toRole.equals("REGMAN"))
-				status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-			else if(user.getAccount_type().equals("REGMAN") && toRole.equals("UW"))
-				status = caseDao.getCaseStatus(user.getAccount_type(), 2);
-			else if(user.getAccount_type().equals("AGNSUP") && toRole.equals("CLAMAN"))
-				status = caseDao.getCaseStatus(user.getAccount_type(), 3);	
+			if(caseSubStatus == null)
+			{
+	    		status = caseDao.getCaseStatus(user.getAccount_type(), toRole , 1);
+		
+	    		if(status == null)
+					status = new CaseSubStatus();
+				caseDetail.setCaseStatus(status.getCase_status());
+				caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			}
 			else
-				status = caseDao.getCaseStatus(user.getAccount_type(), 1);
-			if(status == null)
-				status = new CaseSubStatus();
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+			{
+				caseDetail.setCaseStatus("Open");
+				caseDetail.setCaseSubStatus(caseSubStatus);
+				caseDetail.setNotCleanCategory(NotCleanCategory);
+			}
 		}
 		//Reopen
 		else if(toStatus.equals("Reopen"))
-		{
-			status = caseDao.getCaseStatus(user.getAccount_type(), -1);
-			caseDetail.setCaseStatus(status.getCase_status());
-			caseDetail.setCaseSubStatus(status.getCaseSubStatus());
+		{	
+			caseDetail.setCaseStatus("Reopen");
+			caseDetail.setCaseSubStatus("Further Requirement");
 		}
 		//Closed
 		else if(toStatus.equals("Closed"))
@@ -621,7 +609,9 @@ public class CaseController {
 					mailConfigDao.sendMail(mail);
 
 					// To ID
+					
 					if(toId.length() > 0) {
+					System.out.println("toid"+toId);
 					UserDetails toUser = userDao.getUserDetails(toId);
 					mail.setSubject("New Bulk Case Assigned - Claims");
 					message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";

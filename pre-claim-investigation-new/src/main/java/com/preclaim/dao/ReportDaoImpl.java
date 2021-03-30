@@ -315,7 +315,7 @@ public class ReportDaoImpl implements ReportDao {
 		});
 		
 		sql =
-				"select b.toId,  a.caseSubStatus , count(*) as substatusTotal from case_lists a, "
+				"select b.toId as toid,  a.caseSubStatus , count(*) as substatusTotal from case_lists a, "
 				+ "(select a.caseId, a.toId, a.updatedDate from audit_case_movement a, "
 				+ "(select caseId,  max(updatedDate) as updatedDate from audit_case_movement where user_role = 'AGNSUP' "
 				+ "group by  caseId ) b where a.caseId = b.caseId and a.user_role = 'AGNSUP' and a.updatedDate = b.updatedDate "
@@ -330,7 +330,7 @@ public class ReportDaoImpl implements ReportDao {
 		template.query(sql,new Object[] {region, startDate, endDate}, (ResultSet rs, int rowNum) -> {
 			do 
 			{
-				wip.put(rs.getString("b.toId"),rs.getInt("substatusTotal"));
+				wip.put(rs.getString("toid"),rs.getInt("substatusTotal"));
 			}while(rs.next());
 			
 			return "";
