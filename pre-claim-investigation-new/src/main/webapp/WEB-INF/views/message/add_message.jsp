@@ -181,7 +181,7 @@ session.removeAttribute("userRole");
               </div>
               <div class="form-group">
                <label class="col-md-4 control-label" for="pincode">Pincode
-               	<span class="text-danger">*</span>
+               	<span class="text-danger cdp_mode">*</span>
               	</label>
                <div class="col-md-8">
                  <input type="number" placeholder="Pincode" name="pincode" id="pincode" class="form-control" >
@@ -344,16 +344,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
         $("#roleName").focus();
         errorFlag = 1;
     }
-    if(msgIntimationType == "CDP")
-   	{
-	    if(insuredAdd == '')
-	    {
-	        toastr.error('Please enter Insured Address','Error');
-	        $("#insuredAdd").addClass('has-error-2');
-	        $("#insuredAdd").focus();
-	        errorFlag = 1;
-	    }
-   	}
+    
     if(nomineeMob)
    	{
     	if(nomineeMob.length != 10)
@@ -375,7 +366,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
         }
     	if(pincode == '')
         {
-          toastr.error('Pincode Cannot be empty','Error');
+          toastr.error('Pincode cannot be empty','Error');
           $("#pincode").addClass('has-error-2');
           $("#pincode").focus();
           errorFlag = 1;
@@ -394,6 +385,18 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
 	        errorFlag = 1;
 	        toastr.error("Kindly enter Nominee Mobile number","Error");		
 	   	}
+	    
+	    if(nomineeMob != "")
+    	{
+	    	var filter = /^[0-9]{10}$/;
+		    if(filter.test(nomineeMob) == "")
+	    	{
+		    	$('#nomineeMob').addClass('has-error-2');
+		        $('#nomineeMob').focus();
+		        errorFlag = 1;
+		        toastr.error("Mobile number should be of 10 digits","Error");
+	    	}
+    	}
 	    if(nomineeName == '')
 	    {
 	        toastr.error('Please enter Nominee Name','Error');
@@ -432,9 +435,10 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     }
     if(pincode != "")
    	{
-   		if(pincode.length != 6)
+    	var filter = /^[0-9]{6}$/
+   		if(filter.test(pincode) == "")
 		{
-   		  toastr.error('Pincode should be of 6 digits','Error');
+   		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
    	      $("#pincode").addClass('has-error-2');
    	      $("#pincode").focus();
    	      errorFlag = 1;
@@ -517,13 +521,22 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
 	        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
 		}
    	}
-    if(errorFlag == 1)
-    	return false;
     
     if((msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
    	{
     	assigneeId = "";
+    	if(insuredAdd == '')
+	    {
+	        toastr.error('Please enter Insured Address','Error');
+	        $("#insuredAdd").addClass('has-error-2');
+	        $("#insuredAdd").focus();
+	        errorFlag = 1;
+	    }
    	}
+    
+    if(errorFlag == 1)
+    	return false;
+    
     $.ajax({
 	    type: "POST",
 	    url: 'addMessage',

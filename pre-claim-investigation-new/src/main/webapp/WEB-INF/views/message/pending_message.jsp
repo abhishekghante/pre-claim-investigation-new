@@ -4,7 +4,6 @@
 <%@page import = "com.preclaim.models.CaseDetailList"%>
 <%@page import = "com.preclaim.models.CaseDetails"%>
 <%@page import = "com.preclaim.models.Location"%>
-<%@page import = "com.preclaim.models.CaseSubStatus"%>
 <%@page import = "com.preclaim.models.IntimationType" %>
 <%@page import = "com.preclaim.models.InvestigationType" %>
 <%
@@ -18,11 +17,6 @@ session.removeAttribute("intimation_list");
 
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
 session.removeAttribute("case_detail");
-List<CaseSubStatus> CaseSubStatus = (List<CaseSubStatus>) session.getAttribute("level");
-System.out.println(CaseSubStatus);
-session.removeAttribute("level");
-List<Location> location_list = (List<Location>) session.getAttribute("location_list");
-session.removeAttribute("location_list");
 boolean allow_edit = user_permission.contains("messages/add");
 boolean allow_assign = user_permission.contains("messages/assign");
 boolean allow_reopen = user_permission.contains("messages/reopen");
@@ -30,8 +24,6 @@ boolean allow_closure = user_permission.contains("messages/close");
 boolean allow_delete = user_permission.contains("messages/delete");
 boolean allow_add = user_permission.contains("messages/add");
 boolean allow_bulkAssign = user_permission.contains("messages/bulkAssign");
-
-
 
 %>
 <link href="${pageContext.request.contextPath}/resources/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />

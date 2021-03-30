@@ -12,8 +12,6 @@
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 CaseDetails case_detail = (CaseDetails) session.getAttribute("case_detail");
 session.removeAttribute("case_detail");
-List<CaseSubStatus> CaseSubStatus = (List<CaseSubStatus>) session.getAttribute("level");
-session.removeAttribute("level");
 List<InvestigationType> investigationList = (List<InvestigationType>) session.getAttribute("investigation_list");
 session.removeAttribute("investigation_list");
 List<IntimationType> intimationTypeList = (List<IntimationType>) session.getAttribute("intimation_list");
@@ -200,28 +198,22 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                   	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>            
-               <div class="form-group">
-                <label class="col-md-4 control-label" for="pincode">Pincode
-                	<span class="text-danger">*</span>
-               	</label>
-                <div class="col-md-8">
-                  <input type="text" value="<%=case_detail.getPincode()%>" placeholder="pincode" name="pincode" id="pincode" 
-                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
-                </div>
-              </div>             
-              
+                            
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nomineeName">Nominee Name
-                	<span class="text-danger">*</span>
+                	<span class="text-danger cdp_mode">*</span>
                 </label>
                 <div class="col-md-8">
-                  <input type="text" value="<%=case_detail.getNominee_name()%>" placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
+                  <input type="text" value="<%=case_detail.getNominee_name()%>" 
+                  	placeholder="Nominee Name" name="nomineeName" id="nomineeName" 
                   	class="form-control" <%if(!allow_edit) {%>disabled<%} %>>
                 </div>
               </div>
               
               <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number</label>
+                <label class="col-md-4 control-label" for="nomineeMob">Nominee Contact Number
+                	<span class="text-danger cdp_mode">*</span>
+                </label>
                 <div class="col-md-8">
                   <input type="number" value="<%=case_detail.getNomineeContactNumber()%>" 
                   	placeholder="Nominee Contact Number" name="nomineeMob" id="nomineeMob" 
@@ -230,7 +222,9 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
               </div>
               
               <div class="form-group">
-                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address</label>
+                <label class="col-md-4 control-label" for="nomineeAdd">Nominee Address
+                	<span class="text-danger cdp_mode">*</span>
+                </label>
                 <div class="col-md-8">
                   <textarea name="nomineeAdd" id="nomineeAdd" class="form-control" rows="6"
                   	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getNominee_address()%>
@@ -239,15 +233,18 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
               </div>
               <div class="form-group">
                <label class="col-md-4 control-label" for="pincode">Pincode
-               	<span class="text-danger">*</span>
-              	</label>
+               	<span class="text-danger cdp_mode">*</span>
+               </label>
                <div class="col-md-8">
                  <input type="number" placeholder="Pincode" name="pincode" id="pincode" 
-                 	class="form-control" value = "<%=case_detail.getPincode()%>">
+                 	class="form-control" <%if(!allow_edit) {%>disabled<%} %> 
+                 	value = "<%=case_detail.getPincode()%>">
                </div>
               </div>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="insuredAdd">Insured Address</label>
+                <label class="col-md-4 control-label" for="insuredAdd">Insured Address
+                	<span class="text-danger cdp_mode2">*</span>
+                </label>
                 <div class="col-md-8">
                   <textarea name="insuredAdd" id="insuredAdd" class="form-control" rows="6"
                   	<%if(!allow_edit) {%>disabled<%} %>><%=case_detail.getInsured_address()%>
@@ -286,7 +283,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
               
               <%if(!case_detail.getCapturedDate().equals("")) {%>
               <div class="form-group">
-                <label class="col-md-4 control-label" for="capturedDate"> Captured Date
+                <label class="col-md-4 control-label" for="capturedDate">Captured Date
                 	<span class="text-danger">*</span>
                	</label>
                 <div class="col-md-8">
@@ -426,16 +423,14 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	              </div>                    
               <%} %>
 	              <div class="mt-2 form-group selectDiv">
-		                <label class="col-md-4 control-label" for="fromRole">From Role Name 
-		                	<span class="text-danger">*</span></label>
+		                <label class="col-md-4 control-label" for="fromRole">From Role Name</label>
 		                <div class="col-md-3">
 		                  <input name="fromRole" id="fromRole" class="form-control"
 		                  	readonly disabled value = "<%= case_detail.getAssignerRole()%>">
 		                    
 		                </div>
 	                
-		                <label class="col-md-2 control-label" for="fromId">From User 
-		                	<span class="text-danger">*</span></label>
+		                <label class="col-md-2 control-label" for="fromId">From User</label>	
 		                <div class="col-md-3">
 		                  <input name="fromId" id="fromId" class="form-control"
 		                  	readonly disabled value = "<%= case_detail.getAssignerName()%>">           	
@@ -444,9 +439,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 	              </div>
 	              
 	              <div class="form-group">
-	                <label class="col-md-4 control-label" for="fromStatus">Assigner Status
-	                	<span class="text-danger">*</span>
-	                </label>
+	                <label class="col-md-4 control-label" for="fromStatus">Assigner Status</label>
 	                <div class="col-md-8">
 	                  <input type="text" value="<%=case_detail.getApprovedStatus()%>" 
 	                  	name="fromStatus" id="fromStatus" class="form-control" readonly disabled>
@@ -570,6 +563,22 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
 <script>
 $("document").ready(function(){
 	
+	//Intimation Type
+	if($("#msgIntimationType").val() == "CDP")
+	{
+		console.log($("#msgIntimationType").val());
+		$("#assigneeDetails").show();
+		$(".cdp_mode").show();
+		$(".cdp_mode2").hide();
+	}
+	else
+	{
+		console.log($("#msgIntimationType").val());
+		$("#assigneeDetails").hide();
+		$(".cdp_mode").hide();
+		$(".cdp_mode2").show();
+	}
+	
 	// for pdf
 	
 	var filename ="";
@@ -582,7 +591,6 @@ $("document").ready(function(){
 		{
 			filename = $("#caseId").val() + "_" +e.target.files[0].name;
 			$("#userpdf").val(filename); 
-			console.log($("#userpdf").val());
 			uploadFiles();
 			$("#img_userpdf").attr("src","../resources/img/pdf.png");
 		}
@@ -599,11 +607,18 @@ $("document").ready(function(){
 	  });
 
 	$("#input_userpdf2").change(function(e){ 
-		filename2 = $("#caseId").val() + "_" +e.target.files[0].name;
-		$("#userpdf2").val(filename2); 
-		console.log($("#userpdf2").val());
-		uploadFiles();
-		$("#img_userpdf2").attr("src","../resources/img/pdf.png");
+		if($(this).val() != "")
+		{
+			filename = $("#caseId").val() + "_" +e.target.files[0].name;
+			$("#userpdf2").val(filename); 
+			uploadFiles();
+			$("#img_userpdf2").attr("src","../resources/img/pdf.png");
+		}
+		else	
+		{
+			filename = "";
+			$("#img_userpdf2").attr("src","../resources/img/upload_img.png");
+		}
 	  });
 	
 	var filename3 ="";                                                             //pdf3
@@ -612,22 +627,46 @@ $("document").ready(function(){
 	  });
 
 	$("#input_userpdf3").change(function(e){ 
-		filename3 = $("#caseId").val() + "_" +e.target.files[0].name;
-		$("#userpdf3").val(filename3); 
-		console.log($("#userpdf3").val());
-		uploadFiles();
-		$("#img_userpdf3").attr("src","../resources/img/pdf.png");
+		if($(this).val() != "")
+		{
+			filename = $("#caseId").val() + "_" +e.target.files[0].name;
+			$("#userpdf3").val(filename); 
+			uploadFiles();
+			$("#img_userpdf3").attr("src","../resources/img/pdf.png");
+		}
+		else	
+		{
+			filename = "";
+			$("#img_userpdf3").attr("src","../resources/img/upload_img.png");
+		}
 	  });
 	
 	$("#Not-CleanCategory").hide();
 	<%if(allow_substatus){%>
-	$("#case-SubStatus").show();
+		$("#case-SubStatus").show();
 	<%}else{%>
-	$("#case-SubStatus").hide();
+		$("#case-SubStatus").hide();
 	<%}%>
 	$("#claimantCity").change(function(){
 		$("#claimantState").val($("#claimantCity option:selected").data("state"));
 		$("#claimantZone").val($("#claimantCity option:selected").data("zone"));
+	});
+	
+	//Intimation Type Change
+	$("#msgIntimationType").trigger("change");
+	$("#msgIntimationType").change(function(){
+		if($(this).val() == "CDP")
+		{
+			$("#assigneeDetails").show();
+			$(".cdp_mode").show();
+			$(".cdp_mode2").hide();
+		}
+		else
+		{
+			$("#assigneeDetails").hide();
+			$(".cdp_mode").hide();
+			$(".cdp_mode2").show();
+		}
 	});
 	
 	$("#claimantCity").trigger("change");
@@ -917,16 +956,7 @@ $("document").ready(function(){
 			   		validFlag = 0;	   		
 				}
 		   	}
-		    if(msgIntimationType == "CDP")
-		   	{
-			    if(insuredAdd == '')
-			    {
-			        toastr.error('Please enter Insured Address','Error');
-			        $("#insuredAdd").addClass('has-error-2');
-			        $("#insuredAdd").focus();
-			        errorFlag = 1;
-			    }
-		   	}
+		    
 		    if(!(msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
 		   	{
 		    	if(pincode == '')
@@ -950,16 +980,17 @@ $("document").ready(function(){
 			        $("#nomineeName").focus();
 			        errorFlag = 1;
 			    }
-			    if(nomineeMob)
-			   	{
-			    	if(nomineeMob.length != 10)
-		    		{
+			    if(nomineeMob != "")
+		    	{
+			    	var filter = /^[0-9]{10}$/;
+				    if(filter.test(nomineeMob) == "")
+			    	{
 				    	$('#nomineeMob').addClass('has-error-2');
 				        $('#nomineeMob').focus();
-				        validflag = 0;
-				        toastr.error("Nominee Mobile number should be of 10 digits","Error");
-		    		}
-			   	}
+				        errorFlag = 1;
+				        toastr.error("Mobile number should be of 10 digits","Error");
+			    	}
+		    	}
 			    if(insuredDOD == '')
 			    {
 			      	toastr.error('Insured Date of Death cannot be empty','Error');
@@ -984,9 +1015,10 @@ $("document").ready(function(){
 		    }
 		    if(pincode != "")
 		   	{
-		   		if(pincode.length != 6)
+		    	var filter = /^[0-9]{6}$/
+		   		if(filter.test(pincode) == "")
 				{
-		   		  toastr.error('Pincode should be of 6 digits','Error');
+		   		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
 		   	      $("#pincode").addClass('has-error-2');
 		   	      $("#pincode").focus();
 		   	      errorFlag = 1;
@@ -1075,6 +1107,18 @@ $("document").ready(function(){
 			        errorFlag = 1;
 			        toastr.error("Policy number should be of 10 chars and start with C or U","Error");
 				}
+		   	}
+		    
+		    if((msgIntimationType == "PIV" || msgIntimationType == "PIRV" || msgIntimationType == "LIVE"))
+		   	{
+		    	assigneeId = "";
+		    	if(insuredAdd == '')
+			    {
+			        toastr.error('Please enter Insured Address','Error');
+			        $("#insuredAdd").addClass('has-error-2');
+			        $("#insuredAdd").focus();
+			        errorFlag = 1;
+			    }
 		   	}
 		    
 		    if(errorFlag == 1)
