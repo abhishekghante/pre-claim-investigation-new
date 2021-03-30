@@ -435,7 +435,7 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
     }
     if(pincode != "")
    	{
-    	var filter = /^[0-9]{6}$/
+    	var filter = /^[0-9]{6}$/;
    		if(filter.test(pincode) == "")
 		{
    		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
