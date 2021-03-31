@@ -236,7 +236,7 @@ boolean allow_substatus = user_permission.contains("messages/caseSubStatus");
                	<span class="text-danger cdp_mode">*</span>
                </label>
                <div class="col-md-8">
-                 <input type="number" placeholder="Pincode" name="pincode" id="pincode" 
+                 <input type="text" placeholder="Pincode" name="pincode" id="pincode" 
                  	class="form-control" <%if(!allow_edit) {%>disabled<%} %> 
                  	value = "<%=case_detail.getPincode()%>">
                </div>

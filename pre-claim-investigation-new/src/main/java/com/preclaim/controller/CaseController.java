@@ -240,6 +240,33 @@ public class CaseController {
 		if (user == null)
 			return "common/login";
 
+		//Numeric Field Validation
+		try
+		{
+			if(!request.getParameter("pincode").equals(""))
+				Integer.parseInt(request.getParameter("pincode"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Pincode format. Pincode should be of 6 digits";
+		}
+		try
+		{
+			Double.parseDouble(request.getParameter("sumAssured"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Sum Assured";
+		}
+		try
+		{
+			if(!request.getParameter("nomineeMob").equals(""))
+				Long.parseLong(request.getParameter("nomineeMob"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Mob Number format. Mob no should be of 10 digits";
+		}
 		CaseDetails caseDetail = new CaseDetails();
 		//Add Details
 		caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
@@ -247,7 +274,7 @@ public class CaseController {
 		caseDetail.setInsuredName(request.getParameter("insuredName"));
 		caseDetail.setInsuredDOD(request.getParameter("insuredDOD"));
 		caseDetail.setInsuredDOB(request.getParameter("insuredDOB"));
-		caseDetail.setSumAssured(Integer.parseInt(request.getParameter("sumAssured")));
+		caseDetail.setSumAssured(Double.parseDouble(request.getParameter("sumAssured")));
 		caseDetail.setIntimationType(request.getParameter("msgIntimationType"));
 		caseDetail.setLocationId(Integer.parseInt(request.getParameter("claimantCity")));
 		caseDetail.setNominee_name(request.getParameter("nomineeName"));
@@ -256,6 +283,7 @@ public class CaseController {
 		caseDetail.setInsured_address(request.getParameter("insuredAdd"));
 		caseDetail.setPincode(request.getParameter("pincode"));
 		caseDetail.setCreatedBy(user.getUsername());
+		
 		//Get Case Status
 		CaseSubStatus status = caseDao.getCaseStatus(user.getAccount_type(),request.getParameter("roleName"), 1);
 		caseDetail.setCaseStatus(status.getCase_status());
@@ -365,6 +393,33 @@ public class CaseController {
 		if (user == null)
 			return "common/login";
 
+		//Numeric Field Validation
+		try
+		{
+			if(!request.getParameter("pincode").equals(""))
+				Integer.parseInt(request.getParameter("pincode"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Pincode format. Pincode should be of 6 digits";
+		}
+		try
+		{
+			Double.parseDouble(request.getParameter("sumAssured"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Sum Assured";
+		}
+		try
+		{
+			if(!request.getParameter("nomineeMob").equals(""))
+				Long.parseLong(request.getParameter("nomineeMob"));
+		}
+		catch(Exception e)
+		{
+			return "Invalid Mob Number format. Mob no should be of 10 digits";
+		}
 		CaseDetails caseDetail = new CaseDetails();
 		caseDetail.setPolicyNumber(request.getParameter("policyNumber"));
 		caseDetail.setInvestigationId(Integer.parseInt(request.getParameter("msgCategory")));
