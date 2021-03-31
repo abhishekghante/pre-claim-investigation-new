@@ -445,14 +445,6 @@ function displayUploadImg(input, PlaceholderID, deleteID, linkID) {
    	      errorFlag = 1;
 		}
    		
-   		if(!Number.isInteger(pincode) || pincode.length != 6)
-   		{
-     		  toastr.error('Invalid Pincode format. Pincode should be of 6 digits','Error');
-     	      $("#pincode").addClass('has-error-2');
-     	      $("#pincode").focus();
-     	      errorFlag = 1;
-  		}
-   		
    	}
     if(msgIntimationType == '')
     {
