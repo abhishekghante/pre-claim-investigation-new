@@ -29,4 +29,5 @@ public interface UserDAO {
 	List<UserDetails> getActiveUserList();
 	List<UserRole> getAssigneeRole();
 	List<UserDetails> getUserRoleList(String zone);
+	String updateUserDoc(String filename, String username);
 }

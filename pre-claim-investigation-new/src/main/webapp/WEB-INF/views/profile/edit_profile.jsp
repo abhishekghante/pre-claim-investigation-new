@@ -96,16 +96,10 @@ user_details = (UserDetails) session.getAttribute("User_Login");
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  var filename = "";
   $("#account_picture").on('click', function() {
     $("#userImage").trigger('click');
   });
-  $("#userImage").change(function(e){
-	  uploadFiles($("#username").val());
-	  filename = $("#username").val() + "_" +e.target.files[0].name;
-	  $("#account_image").val(filename);	 
-	  console.log(filename); 
-  });
+  
   $("#edit_profile_form").on('submit', function(e){
     e.preventDefault();
     var full_name    = $.trim($('#edit_profile_form #full_name').val());
@@ -113,8 +107,7 @@ $(document).ready(function(){
     var user_email   = $.trim($('#edit_profile_form #user_email').val());
     var password     = $.trim($('#edit_profile_form #password').val());
     var user_id      = $.trim($('#edit_profile_form #user_id').val());
-    var acc_img      = $.trim($('#edit_profile_form #account_image').val());
-
+    
     $('#full_name').removeClass('has-error-2');
     $('#username').removeClass('has-error-2');
     $('#password').removeClass('has-error-2');
@@ -141,13 +134,25 @@ $(document).ready(function(){
         $('#full_name').addClass('has-error-2');
         $('#full_name').focus();
     }
-    var newdata = {"full_name":full_name,"username":username,"user_email":user_email,
-    		"password":password,"account_img":filename,"user_id":user_id};
+    var newdata = new FormData();
+    newdata.append("full_name",full_name);
+    newdata.append("username",username);
+    newdata.append("user_email",user_email);
+    newdata.append("password",password);
+    newdata.append("user_id",user_id);
+    
+    if($("#account_image").val() != "")
+    	newdata.append("account_image",$("#userImage")[0].files[0]);
+    
     console.log(newdata);
     $.ajax({
         type    : 'POST',
         url     : 'updateProfile',
         data    : newdata,
+        contentType: false, //used for multipart/form-data
+        processData: false, //doesn't modify or encode the String
+        cache: false, 
+        async: true,//wait till the execution finishes
         beforeSend: function() { 
           $("#editprofilesubmit").html('<img src="${pageContext.request.contextPath}/resources/img/input-spinner.gif"> Loading...');
           $("#editprofilesubmit").prop('disabled', true);
@@ -171,31 +176,7 @@ $(document).ready(function(){
     });
   });
 });
-function uploadFiles(prefix) {
-    var formData = new FormData();
-	var files = $("input[type = 'file']");
-	$(files).each(function (i,value) {
-         		formData.append('file[]', value.files[i]);
-    });
-    if(prefix != undefined)
-		formData.set("prefix",prefix);
-    $.ajax({
-        type: "POST",
-        url: "${pageContext.request.contextPath}/uploadFile",
-        data: formData,
-        contentType: false, //used for multipart/form-data
-        processData: false, //doesn't modify or encode the String
-        cache: false, 
-        async: false,//wait till the execution finishes
-        success:function(result)
-        {
-			if(result == "****")
-				toastr.success("File uploaded successfully","Success");
-			else
-				toastr.error(result,"Error");
-        }
-    });
-}
+
 //Validate Email
 function ValidateEmail(email) {
   var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;

@@ -395,10 +395,10 @@ public class UserDAOImpl implements UserDAO{
 		try
 		{
 			String sql = "UPDATE admin_user SET full_name = ?, username = ?, user_email = ?,"
-					+ " password = ?, user_image = ?, updatedDate = getDate(), updatedBy = ? "
+					+ " password = ?, updatedDate = getDate(), updatedBy = ? "
 					+ "where user_id = ?";
 			template.update(sql, user_details.getFull_name(), user_details.getUsername(), 
-					user_details.getUser_email(), user_details.getPassword(),user_details.getUserimage(), 
+					user_details.getUser_email(), user_details.getPassword(), 
 					user_details.getUsername(), user_details.getUserID());				
 		}
 		catch(Exception e)
@@ -482,4 +482,11 @@ public class UserDAOImpl implements UserDAO{
 				return null;
 			}		
 		}
+
+	@Override
+	public String updateUserDoc(String filename, String username) {
+		String sql = "UPDATE admin_user set user_image = ? where username = ?";
+		template.update(sql, new Object[] {filename, username});
+		return null;
+	}
 }
