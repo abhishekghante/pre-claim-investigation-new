@@ -452,7 +452,7 @@ public class CaseDaoImpl implements CaseDao {
 				{
 					cell = cellIterator.next();
 					try 
-					{
+					{	
 						caseDetails.setInsuredDOD(readCellDateValue(cell));
 					} 
 					catch (Exception ex) 
@@ -460,6 +460,17 @@ public class CaseDaoImpl implements CaseDao {
 						if (!(intimationType.equals("PIV") || intimationType.equals("PIRV")
 								|| intimationType.equals("LIVE")))
 							error_message += "Insured DOD is mandatory, ";
+						
+						
+						if ((intimationType.equals("PIV") || intimationType.equals("PIRV")
+								|| intimationType.equals("LIVE"))) {
+							System.out.println("calling");
+							   caseDetails.setInsuredDOD(null);
+							   System.out.println("caseDetails.getInsuredDOD()"+caseDetails.getInsuredDOD());
+							
+						}
+						
+						
 					}
 				}
 				//Insured DOB

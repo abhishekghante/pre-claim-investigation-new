@@ -96,6 +96,7 @@ public class CaseController {
 		}
 		session.setAttribute("ScreenDetails", details);
 		session.setAttribute("userRole", userDao.getUserRole_lists(user.getAccount_type(), "Approved"));
+		session.setAttribute("directory", Config.upload_directory);
 
 		return "common/templatecontent";
 	}
@@ -502,7 +503,6 @@ public class CaseController {
 		String toRemarks = request.getParameter("toRemarks");
 		String caseSubStatus  = request.getParameter("caseSubStatus");
 		String NotCleanCategory = request.getParameter("NotCleanCategory");
-		
 		//Get Case Status
 		CaseSubStatus status = new CaseSubStatus();
 		//Approved
@@ -534,9 +534,10 @@ public class CaseController {
 		//Closed
 		else if(toStatus.equals("Closed"))
 		{
+			System.out.println("toId1"+toId);
 			caseDetail.setNotCleanCategory(NotCleanCategory);
 			caseDetail.setCaseStatus(toStatus);
-			caseDetail.setCaseSubStatus(caseSubStatus);			
+			caseDetail.setCaseSubStatus(caseSubStatus);		
 		}
 		
 		String update = caseDao.updateCaseDetails(caseDetail);
@@ -544,9 +545,8 @@ public class CaseController {
 			return update;
 		
 		long caseId = caseDetail.getCaseId();
-		
-		CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks, toRole);
-		String message = caseMovementDao.updateCaseMovement(case_movement);
+		   CaseMovement case_movement = new CaseMovement(caseId, fromId, toId, toStatus, toRemarks, toRole);
+	    	String message = caseMovementDao.updateCaseMovement(case_movement);
 		if (message.equals("****")) 
 		{
 			session.setAttribute("success_message", "Case Details updated successfully");
@@ -623,7 +623,7 @@ public class CaseController {
 			}
 		}
 		
-		String toRole = request.getParameter("toRole");
+	 	String toRole = request.getParameter("toRole");
 		String toId = request.getParameter("toId");
 		String fromId = user.getUsername();
 		String toStatus = request.getParameter("toStatus");
@@ -662,7 +662,9 @@ public class CaseController {
 		{
 			caseDetail.setNotCleanCategory(NotCleanCategory);
 			caseDetail.setCaseStatus(toStatus);
-			caseDetail.setCaseSubStatus(caseSubStatus);			
+			caseDetail.setCaseSubStatus(caseSubStatus);	
+			     toRole =" ";
+				 toId   = " ";			
 		}
 		caseDao.updateCaseTypeAndSubType(caseDetail);
 		String toRemarks = request.getParameter("toRemarks");

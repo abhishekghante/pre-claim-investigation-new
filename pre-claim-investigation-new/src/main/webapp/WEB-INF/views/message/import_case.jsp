@@ -1,9 +1,13 @@
+<%@page import="org.apache.poi.util.SystemOutLogger"%>
 <%@page import = "java.util.List" %>
 <%@page import = "com.preclaim.config.Config" %>
 <%@page import = "com.preclaim.models.ScreenDetails" %>
 <%@page import = "com.preclaim.models.UserRole"%>
 <%@page import="com.preclaim.models.UserDetails" %>
+<%@page import = "java.io.File" %>
 <%
+String dirName = (String) session.getAttribute("directory");
+System.out.println("error"+dirName);
 List<String>user_permission=(List<String>)session.getAttribute("user_permission");
 List<UserRole> userRole =(List<UserRole>)session.getAttribute("userRole");
 session.removeAttribute("userRole");
@@ -58,7 +62,7 @@ UserDetails user = (UserDetails) session.getAttribute("User_Login");
                 	<span class="text-danger">*</span></label>
                 <div class="col-md-2">
                   <select name="roleName" id="roleName" class="form-control" tabindex="-1" required>
-                    <option value="-1" selected disabled>Select</option>
+                    <option value="-1" selected>Select</option>
                      <%if(userRole != null){
                     	for(UserRole userRoleLists: userRole){%>
                     	<option value = "<%=userRoleLists.getRole_code()%>"><%=userRoleLists.getRole() %></option>
@@ -78,14 +82,42 @@ UserDetails user = (UserDetails) session.getAttribute("User_Login");
                 </div>                
                 <%} %>
               </div>
-              <div class="col-md-4 control-label">
+              <div class="col-md-4 control-label" id="fileList">
                   <button type="button" class="btn btn-info btn-sm" name="importfile" id ="importfile" onclick="importData()">
                   	Import
                   </button>
-                  <%if(!(details.getSuccess_message1().equals(""))){%>
+<%--                   <%if(!(details.getSuccess_message1().equals(""))){%>
                   		<a href = "<%=Config.upload_url + "error_log.xlsx" %>" target = "_blank" 
                   			id = "error_log"><i class =" fa fa-exclamation"></i> Error Log</a>
+                  	<%}%> --%>
+                  	
+                  <%if(!(details.getSuccess_message1().equals(""))){%>
+							
+                                 <% File filelist = new File(dirName);
+                                 
+                                        if(filelist.exists())
+
+                                        {
+                                               for(File item:filelist.listFiles())
+                                               {
+                                                     if(item.isFile() && item.getName().equals("error_log.xlsx"))
+                                                     {
+
+                                 %>
+                                     <input type="hidden" id ="fileName" value=<%=item.getName() %>>
+                                                               
+
+                                     <a href = "#"><i class="fa fa-download pr-1"></i> Download error log</a>
+                          
+
+                                 <%
+                                                     }                                             
+                                               }
+                                        }
+                                 %>
                   	<%}%>
+                  	            
+                  	
               </div>
             </form>
           </div>
@@ -242,4 +274,17 @@ $("#roleName").change(function(){
 });
 
 });
+</script>
+<script>
+$("#fileList").on("click","a",function()
+	{
+		/* let filename = $(this).parent().parent().children().eq(1).text(); */
+		let filename = $('#fileName').val();
+		console.log(filename);
+		let fileDir = $("#fileDir").val();
+		window.location.href = "${pageContext.request.contextPath}/report/downloadSysFile?filename=" + 
+			encodeURIComponent(filename);	
+	});
+	
+
 </script>
