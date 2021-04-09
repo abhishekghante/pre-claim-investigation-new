@@ -685,18 +685,39 @@ public class CaseController {
 					mail.setMessageBody(message_body);
 					mail.setReceipent(user.getUser_email());
 					mailConfigDao.sendMail(mail);
-
-					// To ID
-					if(toId.length() > 0) {
-					UserDetails toUser = userDao.getUserDetails(toId);
-					mail.setSubject("New Case Assigned - Claims");
-					message_body = "Dear <User>, \n Your are required to take action on new cases\n\n";
-					message_body = message_body.replace("<User>", toUser.getFull_name());
-					message_body += "Thanks & Regards,\n Claims";
-					mail.setMessageBody(message_body);
-					mail.setReceipent(toUser.getUser_email());
-					mailConfigDao.sendMail(mail);
+					
+					String AppointmentPath = Config.Path+"Appointment Letter.docx";
+					String AuthorizationPath = Config.Path+"Authorization Letter.docx";
+					
+					if(toStatus.equals("Approved") && toRole.equals("AGNSUP") && (user.getAccount_type().equals("REGMAN") || user.getAccount_type().equals("CLAMAN"))) {
+						
+						CaseDetails casdetail = caseDao.getCaseDetail(caseId);
+						UserDetails toUser = userDao.getUserDetails(toId);
+						mailConfigDao.textReplaceForAppointment(AppointmentPath, casdetail,toUser);
+						mailConfigDao.textReplaceForAuthorization(AuthorizationPath, casdetail,toUser);
+											
+						mail.setSubject("Case Assigned - Claims");
+						String message_body1 = "Dear <User>, \n Case has been assigned successfull and check the attached file \n\n";
+						message_body1 = message_body1.replaceAll("<User>", user.getFull_name());
+						message_body1 += "Thanks & Regards,\n Claims";
+						mail.setMessageBody(message_body1);
+						mail.setReceipent(toUser.getUser_email());
+						mail.setAppointmentPath(Config.Path+caseId+"_Appointment Letter.docx");
+						mail.setAuthorizationPath(Config.Path+caseId+"_Authorization Letter.docx");
+						mailConfigDao.sendMailWithAttachment(mail);
+						
 					}
+
+					// To ID	
+					else if(toId.length() > 0) 
+					  {
+						  UserDetails toUser = userDao.getUserDetails(toId);
+					  mail.setSubject("New Case Assigned - Claims");
+					  message_body ="Dear <User>, \n Your are required to take action on new cases\n\n";
+					  message_body = message_body.replace("<User>", toUser.getFull_name());
+					  message_body += "Thanks & Regards,\n Claims";
+					  mail.setMessageBody(message_body); mail.setReceipent(toUser.getUser_email());
+					  mailConfigDao.sendMail(mail); }	 
 				}
 			} 
 			catch (Exception e) 

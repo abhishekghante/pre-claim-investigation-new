@@ -10,6 +10,8 @@ public class MailConfig {
 	private String receipent;
 	private String subject;
 	private String messageBody;
+	private String AppointmentPath;
+	private String AuthorizationPath;
 	
 	public MailConfig()
 	{
@@ -21,6 +23,8 @@ public class MailConfig {
 		receipent = "";
 		subject = "";
 		messageBody = "";
+		AppointmentPath="";
+		AuthorizationPath="";
 	}
 	public String getHost() {
 		return host;
@@ -70,11 +74,26 @@ public class MailConfig {
 	public void setMessageBody(String messageBody) {
 		this.messageBody = messageBody;
 	}
+	
+	
+	public String getAppointmentPath() {
+		return AppointmentPath;
+	}
+	public void setAppointmentPath(String appointmentPath) {
+		AppointmentPath = appointmentPath;
+	}
+	public String getAuthorizationPath() {
+		return AuthorizationPath;
+	}
+	public void setAuthorizationPath(String authorizationPath) {
+		AuthorizationPath = authorizationPath;
+	}
 	@Override
 	public String toString() {
 		return "MailConfig [host=" + host + ", port=" + port + ", username=" + username + ", password=" + password
 				+ ", encryptionType=" + encryptionType + ", receipent=" + receipent + ", subject=" + subject
-				+ ", messageBody=" + messageBody + "]";
+				+ ", messageBody=" + messageBody + ", AppointmentPath=" + AppointmentPath + ", AuthorizationPath="
+				+ AuthorizationPath + "]";
 	}
 	
 }

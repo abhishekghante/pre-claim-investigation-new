@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -464,9 +465,13 @@ public class CaseDaoImpl implements CaseDao {
 						
 						if ((intimationType.equals("PIV") || intimationType.equals("PIRV")
 								|| intimationType.equals("LIVE"))) {
-							System.out.println("calling");
-							   caseDetails.setInsuredDOD(null);
-							   System.out.println("caseDetails.getInsuredDOD()"+caseDetails.getInsuredDOD());
+							
+							String pattern = "MM-dd-yyyy";
+							SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+							String date = simpleDateFormat.format(new java.util.Date());
+							String zeroDate = "01-01-9999";
+							date=zeroDate;
+							caseDetails.setInsuredDOD(date);
 							
 						}
 						

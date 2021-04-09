@@ -8,4 +8,5 @@ public interface Config {
 	String version = "UAT version 0.4";
 	String upload_directory = "C:\\Pre-Claim Investigation\\uploads" + File.separator;
 	String upload_url = "http://13.235.150.162/Claims/";
+	String Path ="C:\\Pre-Claim Investigation\\uploads\\";
 }
